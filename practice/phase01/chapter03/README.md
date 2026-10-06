@@ -139,3 +139,10 @@ main
 ## 제출 URL
 
 https://github.com/cyw0927/fullstack-web-course/blob/main/practice/phase01/chapter03/assignment.html
+
+## 프로필 이미지와 웹 실행 링크
+
+사용자가 제공한 프로필 이미지를 `images/profile.png`로 보관하고 실습과 과제에 추가했다. `alt`에는 인물과 배경의 의미를 설명했다. 기존 강의 로드맵 이미지는 과정 소개에 유지했다.
+
+- [과제 웹페이지](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/assignment.html)
+- [실습 웹페이지](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/index.html)

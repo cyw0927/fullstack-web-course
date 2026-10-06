@@ -57,7 +57,9 @@ practice/
    └─ chapter03/
       ├─ index.html
       ├─ assignment.html
-      └─ README.md
+      ├─ README.md
+      └─ images/
+         └─ profile.png
 ```
 
 ## 로컬 실행
@@ -89,3 +91,10 @@ body
 - [Chapter 03 과제](practice/phase01/chapter03/assignment.html)
 
 Chapter 03에서는 브라우저에서 로드맵 이미지가 표시되는지, 표의 제목과 데이터 행이 구분되는지, 각 입력란의 `label for`와 `input id`가 연결되는지 확인합니다. CSS, JavaScript, API, DB 연결 없이 HTML만 사용합니다.
+
+## 웹페이지 바로가기
+
+- [Chapter 03 수강 신청 과제](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/assignment.html)
+- [Chapter 03 회원 관리 실습](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/index.html)
+
+GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 제공한 프로필 이미지는 두 페이지의 학습자 프로필 영역에 표시됩니다.
