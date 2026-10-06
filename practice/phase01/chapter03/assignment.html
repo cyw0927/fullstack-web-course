@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Course Registration</title>
+</head>
+<body>
+  <header>
+    <h1>Frontend Course Registration</h1>
+    <p>Frontend Basic 과정 수강 신청 페이지</p>
+
+    <nav>
+      <a href="https://github.com/cyw0927/fullstack-web-course" target="_blank">
+        My Course GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>과정 소개</h2>
+      <img
+        src="https://raw.githubusercontent.com/GilbertMoon/fullstack-web-course/main/assets/images/phase01/overview/01-fullstack-roadmap.svg"
+        alt="Frontend부터 Backend까지 이어지는 Full-stack 학습 로드맵"
+        width="600"
+      >
+      <p>HTML, CSS, JavaScript를 시작으로 API와 Backend까지 연결하는 웹 개발 과정을 학습합니다.</p>
+    </section>
+
+    <section>
+      <h2>수강생 정보</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>관심 분야</th>
+            <th>진행 단계</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>조영우</td>
+            <td>Frontend</td>
+            <td>HTML 기초</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>김민수</td>
+            <td>Backend</td>
+            <td>Python 기초</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>이서연</td>
+            <td>Fullstack</td>
+            <td>웹 구조 학습</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>수강 신청</h2>
+      <form>
+        <div>
+          <label for="student-name">이름</label>
+          <input id="student-name" name="name" type="text" required>
+        </div>
+
+        <div>
+          <label for="student-email">이메일</label>
+          <input id="student-email" name="email" type="email" required>
+        </div>
+
+        <div>
+          <label for="interest">관심 분야</label>
+          <input id="interest" name="interest" type="text" required>
+        </div>
+
+        <button type="submit">수강 신청</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>Phase 01 · Chapter 03 Assignment</p>
+  </footer>
+</body>
+</html>
