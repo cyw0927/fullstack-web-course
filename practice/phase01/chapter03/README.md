@@ -82,10 +82,10 @@ main
 
 직접 확인할 항목:
 
-- [ ] `table` 내부에 `thead`와 `tbody`가 나뉘어 있는지 확인
-- [ ] 한 명의 수강생 정보가 하나의 `tr`에 들어 있는지 확인
-- [ ] `label for`와 `input id`가 연결되어 있는지 확인
-- [ ] `form` 안에 제출 `button`이 있는지 확인
+- [x] `table` 내부에 `thead`와 `tbody`가 나뉘어 있는지 확인
+- [x] 한 명의 수강생 정보가 하나의 `tr`에 들어 있는지 확인
+- [x] `label for`와 `input id`가 연결되어 있는지 확인
+- [x] `form` 안에 제출 `button`이 있는지 확인
 
 ## 과제 체크리스트
 
@@ -103,8 +103,39 @@ main
 - [x] JavaScript 사용 안 함
 - [x] 실제 API 전송 구현 안 함
 - [x] DB 저장 구현 안 함
-- [ ] 브라우저에서 assignment.html 직접 실행 확인
-- [ ] 링크 정상 동작 확인
-- [ ] 이미지 표시 확인
-- [ ] DevTools Elements에서 구조 확인
+- [x] 브라우저에서 assignment.html 직접 실행 확인
+- [x] 링크 정상 동작 확인
+- [x] 이미지 표시 확인
+- [x] DevTools Elements에서 구조 확인
 - [x] GitHub에 학습 결과 반영
+
+## 이번 점검에서 수정한 내용
+
+실습의 GitHub 링크를 강사 저장소에서 `cyw0927/fullstack-web-course`로 변경했다. 두 표에는 `caption`과 `th scope="col"`을 추가해 표의 주제와 열 제목을 명확히 했다. 강의에 나온 공개 로드맵 이미지를 그대로 사용하며, 이미지 주소의 정상 응답과 두 페이지의 브라우저 표시를 확인했다.
+
+## 검증 결과
+
+- 두 HTML 문서의 태그 중첩, 제목 계층, 시멘틱 구조를 점검했다.
+- 실습 표는 4열·2개 데이터 행, 과제 표는 4열·3개 데이터 행이다.
+- `label for`와 `input id`가 일치하며 모든 입력란에 `name`이 있다.
+- 브라우저에서 과제의 이름·이메일·관심 분야를 실제 입력해 연결을 확인했다.
+- 외부 SVG 이미지는 HTTP 200으로 응답하며 두 페이지에서 표시된다.
+- HTML에 CSS, JavaScript, API 또는 DB 연결을 추가하지 않았다.
+- 폼 제출은 브라우저의 기본 동작만 수행하며 실제 등록이나 저장을 하지 않는다.
+
+## 제출 전 체크리스트
+
+- [x] assignment.html이 브라우저에서 열린다.
+- [x] GitHub 링크의 목적지와 정상 응답을 확인했다.
+- [x] 웹 이미지 표시와 적절한 alt를 확인했다.
+- [x] table에 최소 3개 컬럼과 3개 데이터 행이 있다.
+- [x] form에 이름·이메일·관심 분야·제출 버튼이 있다.
+- [x] 시멘틱 태그를 사용했다.
+- [x] README.md에 LLM 활용 기록을 작성했다.
+- [x] Git commit을 만들었다.
+- [x] GitHub에 push했다.
+- [x] GitHub에서 과제 파일을 직접 열어 확인했다.
+
+## 제출 URL
+
+https://github.com/cyw0927/fullstack-web-course/blob/main/practice/phase01/chapter03/assignment.html

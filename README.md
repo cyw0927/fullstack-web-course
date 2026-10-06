@@ -33,6 +33,14 @@
 - [x] LLM 학습 기록 작성
 - [ ] DevTools Elements 탭에서 HTML 트리 직접 확인
 
+#### Chapter 03
+- [x] Member Management 실습 페이지 작성
+- [x] Course Registration Page 과제 작성
+- [x] 링크, 웹 이미지, 표, 입력 폼 구현
+- [x] LLM 학습 기록 작성
+- [x] HTML 구조와 과제 조건 점검
+- [x] 브라우저에서 웹 이미지 표시 확인
+
 ## 실습 구조
 
 ```text
@@ -42,7 +50,11 @@ practice/
    │  ├─ index.html
    │  ├─ profile.html
    │  └─ README.md
-   └─ chapter02/
+   ├─ chapter02/
+   │  ├─ index.html
+   │  ├─ assignment.html
+   │  └─ README.md
+   └─ chapter03/
       ├─ index.html
       ├─ assignment.html
       └─ README.md
@@ -71,3 +83,9 @@ body
 
 - [Chapter 01 학습 기록](practice/phase01/chapter01/README.md)
 - [Chapter 02 학습 기록](practice/phase01/chapter02/README.md)
+
+- [Chapter 03 학습 기록](practice/phase01/chapter03/README.md)
+- [Chapter 03 실습](practice/phase01/chapter03/index.html)
+- [Chapter 03 과제](practice/phase01/chapter03/assignment.html)
+
+Chapter 03에서는 브라우저에서 로드맵 이미지가 표시되는지, 표의 제목과 데이터 행이 구분되는지, 각 입력란의 `label for`와 `input id`가 연결되는지 확인합니다. CSS, JavaScript, API, DB 연결 없이 HTML만 사용합니다.
