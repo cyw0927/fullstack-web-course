@@ -142,7 +142,11 @@ https://github.com/cyw0927/fullstack-web-course/blob/main/practice/phase01/chapt
 
 ## 프로필 이미지와 웹 실행 링크
 
-사용자가 제공한 프로필 이미지를 `images/profile.png`로 보관하고 실습과 과제에 추가했다. `alt`에는 인물과 배경의 의미를 설명했다. 기존 강의 로드맵 이미지는 과정 소개에 유지했다.
+사용자가 제공한 프로필 이미지를 `images/profile.png`로 보관하고 실습과 과제에 추가했다. `alt`에는 인물과 배경의 의미를 설명했다. 과제의 과정 소개에는 강의 로드맵 이미지를 유지했다. 실습은 사용자 예시에 맞춰 Frontend Learning 영역에 프로필 이미지 하나를 표시한다.
 
 - [과제 웹페이지](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/assignment.html)
 - [실습 웹페이지](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/index.html)
+
+## 실습 화면 구성 수정
+
+사용자가 제공한 예시 화면에 맞춰 실습 index.html을 제목, Course GitHub 링크, Frontend Learning과 128×128 프로필 이미지, 회원 목록, 회원 등록 폼, footer 순서로 정리했다. 별도의 학습자 소개와 표 caption을 제거하고 CSS나 JavaScript 없이 기본 HTML 표시를 유지했다.
