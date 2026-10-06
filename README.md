@@ -19,28 +19,55 @@
 
 ### Phase 01 — Frontend Basic
 
-- [x] Chapter 01 실습 구조 생성
+#### Chapter 01
 - [x] 첫 HTML 페이지 작성
 - [x] 자기소개 페이지 작성
 - [x] 학습 기록 작성
 - [ ] Live Server로 로컬 실행 확인
 - [ ] DevTools Network 탭에서 HTML GET 요청 확인
 
-실습 파일은 아래 경로에 있습니다.
+#### Chapter 02
+- [x] 시멘틱 HTML 실습 페이지 작성
+- [x] Member Learning Page 작성
+- [x] 과제 `assignment.html` 작성
+- [x] LLM 학습 기록 작성
+- [ ] DevTools Elements 탭에서 HTML 트리 직접 확인
+
+## 실습 구조
 
 ```text
 practice/
 └─ phase01/
-   └─ chapter01/
+   ├─ chapter01/
+   │  ├─ index.html
+   │  ├─ profile.html
+   │  └─ README.md
+   └─ chapter02/
       ├─ index.html
-      ├─ profile.html
+      ├─ assignment.html
       └─ README.md
 ```
 
-## 실행 방법
+## 로컬 실행
 
-VS Code에서 `practice/phase01/chapter01/index.html`을 열고 Live Server로 실행합니다.
+권장 로컬 위치:
 
-브라우저 주소가 `localhost` 또는 `127.0.0.1`로 열리는지 확인한 뒤, 개발자 도구의 **Network** 탭에서 HTML 문서가 **GET** 요청으로 전달되는지 확인합니다.
+```text
+C:\dev\fullstack-web-course
+```
 
-자세한 학습 기록과 완료 조건은 [Chapter 01 README](practice/phase01/chapter01/README.md)를 참고합니다.
+저장소를 받은 뒤 VS Code에서 원하는 Chapter의 `index.html` 또는 `assignment.html`을 열고 Live Server로 실행합니다.
+
+Chapter 01에서는 Network 탭에서 HTML GET 요청을, Chapter 02에서는 Elements 탭에서 다음 시멘틱 계층 구조를 확인합니다.
+
+```text
+body
+├─ header
+├─ main
+│  ├─ section
+│  └─ section
+└─ footer
+```
+
+- [Chapter 01 학습 기록](practice/phase01/chapter01/README.md)
+- [Chapter 02 학습 기록](practice/phase01/chapter02/README.md)
