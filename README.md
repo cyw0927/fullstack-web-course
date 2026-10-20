@@ -98,3 +98,14 @@ Chapter 03에서는 브라우저에서 로드맵 이미지가 표시되는지, �
 - [Chapter 03 회원 관리 실습](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/index.html)
 
 GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 제공한 프로필 이미지는 두 페이지의 학습자 프로필 영역에 표시됩니다.
+
+## Chapter 06 — Flexbox와 Grid
+
+6강 자료를 기준으로 독립 실행 가능한 실습과 과제를 추가했습니다. **4·5강은 현재 저장소에 없는 상태**라 임의로 작성하지 않았습니다.
+
+- [6강 회원관리 레이아웃 실습](practice/phase01/chapter06/index.html)
+- [6강 대시보드 과제 (6개 카드)](practice/phase01/chapter06/dashboard.html)
+- [6강 학습 기록과 검증 항목](practice/phase01/chapter06/README.md)
+
+실행: `practice/phase01/chapter06/index.html` 또는 `dashboard.html`을 Live Server로 엽니다.
+검색·등록·상세 버튼은 정적 배치 실습용 UI이며 DB/이벤트는 연결되지 않았습니다.

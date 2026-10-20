@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Management | Chapter 06</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1>Member Management</h1>
+    <nav class="main-nav" aria-label="주 메뉴">
+      <a href="#home">Home</a>
+      <a href="#members">Members</a>
+      <a href="#register">Add Member</a>
+      <a href="dashboard.html">Dashboard 과제</a>
+    </nav>
+  </header>
+
+  <main class="page-container" id="home">
+    <section class="intro-panel" aria-labelledby="intro-title">
+      <p class="eyebrow">Frontend Basic / Chapter 06</p>
+      <h2 id="intro-title">Flexbox와 Grid를 활용한 회원 관리</h2>
+      <p>헤더와 검색 도구는 Flexbox로, 회원 카드 목록은 Grid로 배치합니다.</p>
+    </section>
+
+    <section id="members" aria-labelledby="members-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Members</p>
+          <h2 id="members-title">회원 목록</h2>
+        </div>
+        <span class="count-label">예시 회원 3명</span>
+      </div>
+
+      <div class="toolbar">
+        <label class="visually-hidden" for="member-search">회원 이름 검색</label>
+        <input id="member-search" type="search" placeholder="회원 이름 검색">
+        <button type="button">검색</button>
+        <a class="button button-primary" href="#register">회원 추가</a>
+      </div>
+      <p class="helper-text">이번 장은 레이아웃 실습입니다. 검색 버튼의 기능은 Chapter 11에서 연결합니다.</p>
+
+      <div class="member-grid">
+        <article class="member-card">
+          <span class="avatar" aria-hidden="true">홍</span>
+          <h3>홍길동</h3>
+          <p class="member-email">hong@example.com</p>
+          <p class="member-course">Frontend Basic</p>
+          <div class="card-actions">
+            <button type="button">상세</button>
+            <button type="button">수정</button>
+          </div>
+        </article>
+
+        <article class="member-card">
+          <span class="avatar" aria-hidden="true">김</span>
+          <h3>김영희</h3>
+          <p class="member-email">kim@example.com</p>
+          <p class="member-course">Frontend Basic</p>
+          <div class="card-actions">
+            <button type="button">상세</button>
+            <button type="button">수정</button>
+          </div>
+        </article>
+
+        <article class="member-card">
+          <span class="avatar" aria-hidden="true">이</span>
+          <h3>이철수</h3>
+          <p class="member-email">lee@example.com</p>
+          <p class="member-course">Frontend Basic</p>
+          <div class="card-actions">
+            <button type="button">상세</button>
+            <button type="button">수정</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="register-panel" id="register" aria-labelledby="register-title">
+      <div>
+        <p class="eyebrow">Register</p>
+        <h2 id="register-title">회원 등록 폼</h2>
+        <p class="helper-text">레이아웃 확인을 위한 화면입니다. 데이터 저장 기능은 연결되지 않았습니다.</p>
+      </div>
+      <form class="register-form" action="#" onsubmit="return false;">
+        <div class="field">
+          <label for="member-name">이름</label>
+          <input id="member-name" name="name" type="text" placeholder="이름">
+        </div>
+        <div class="field">
+          <label for="member-email">이메일</label>
+          <input id="member-email" name="email" type="email" placeholder="name@example.com">
+        </div>
+        <button type="button" class="button-primary">회원 등록 (UI 실습)</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Frontend Basic · Chapter 06 · Flexbox + Grid</p>
+  </footer>
+</body>
+</html>

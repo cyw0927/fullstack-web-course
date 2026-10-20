@@ -1,0 +1,76 @@
+/* 과제 필수 항목: 헤더/툴바/버튼 Flexbox + 6개 카드 Grid */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+.dashboard-hero {
+  background: linear-gradient(120deg, #20365e, #315ac5);
+  color: white;
+  padding: 34px;
+  border-radius: 18px;
+  margin-bottom: 34px;
+}
+.dashboard-hero .eyebrow { color: #c3d4ff; }
+.dashboard-hero h2 { font-size: 2rem; margin: 8px 0; }
+.dashboard-hero > p:not(.eyebrow) { margin: 0 0 16px; color: #e2e9fc; }
+.demo-label {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid rgba(255,255,255,0.38);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.dashboard-toolbar input { flex: 1; }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 5px 18px rgba(25, 55, 102, 0.045);
+}
+.card-category {
+  align-self: flex-start;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  padding: 3px 11px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.dashboard-card h3 { font-size: 1.05rem; margin: 12px 0 2px; }
+.card-value {
+  margin: 4px 0;
+  font-size: 2.25rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+.card-value span { font-size: 0.95rem; font-weight: 500; margin-left: 5px; color: var(--muted); }
+.card-detail { margin: 0; color: var(--muted); font-size: 0.86rem; }
+.dashboard-card .card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+@media (max-width: 800px) {
+  .dashboard-header { flex-wrap: wrap; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .dashboard-toolbar { flex-wrap: wrap; }
+  .dashboard-toolbar input { flex-basis: 100%; }
+}
