@@ -1,0 +1,68 @@
+/* Chapter 07 독립 과제: Responsive Course Dashboard */
+/* 공통 모바일 우선 규칙은 style.css에서 불러옵니다. */
+.dashboard-header {
+  display: flex;
+  flex-direction: column;  /* 작은 화면: 제목 위, 메뉴 아래 */
+  gap: 12px;
+  align-items: flex-start;
+}
+.dashboard-intro {
+  padding: clamp(20px, 4vw, 36px);
+  margin-bottom: 30px;
+  border-radius: 18px;
+  background: linear-gradient(115deg, #20365e, #4167c7);
+  color: white;
+}
+.dashboard-intro .eyebrow { color: #c4d4ff; }
+.dashboard-intro h2 { margin: 8px 0; font-size: clamp(1.4rem, 3vw, 2.15rem); overflow-wrap: anywhere; }
+.dashboard-intro p:not(.eyebrow) { color: #e3ebff; }
+.demo-note { display: inline-block; padding: 5px 10px; border: 1px solid #a7baed; border-radius: 999px; font-size: .8rem; }
+.dashboard-toolbar { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.dashboard-toolbar input, .dashboard-toolbar select {
+  min-width: 0;
+  border: 1px solid #c5d2e1;
+  border-radius: 10px;
+  background: white;
+  padding: 10px;
+}
+.course-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile: 1 column */
+  gap: 16px;
+}
+.course-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 20px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.card-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.course-number { color: var(--muted); font-size: .75rem; font-weight: 800; letter-spacing: .08em; }
+.course-status { border-radius: 999px; padding: 3px 10px; font-size: .8rem; font-weight: 700; }
+.course-status.completed { color: #17633b; background: #e5f4eb; }
+.course-status.progress { color: #88530b; background: #fff0d1; }
+.course-status.planned { color: #536172; background: #eef2f5; }
+.course-card h3 { margin: 16px 0 4px; font-size: 1.15rem; }
+.course-card > p { margin: 0; color: var(--muted); }
+.course-card .card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+.course-card .card-actions button { flex: 1; }
+/* Tablet: 768px부터 2열, 헤더 가로 */
+@media (min-width: 768px) {
+  .dashboard-header { flex-direction: row; justify-content: space-between; align-items: center; }
+  .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .dashboard-toolbar { flex-direction: row; align-items: center; }
+  .dashboard-toolbar input { flex: 1; width: auto; }
+  .dashboard-toolbar select { width: auto; }
+}
+/* Desktop: 1024px부터 3열 */
+@media (min-width: 1024px) {
+  .course-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

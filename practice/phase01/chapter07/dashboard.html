@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Course Dashboard | Chapter 07</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <header class="site-header dashboard-header">
+    <h1>Course Dashboard</h1>
+    <nav class="main-nav" aria-label="주 메뉴">
+      <a href="index.html">회원관리 실습</a>
+      <a href="#courses">강의 목록</a>
+      <a href="#about">학습 안내</a>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <section class="dashboard-intro" id="about" aria-labelledby="dashboard-title">
+      <p class="eyebrow">Frontend Basic / Chapter 07</p>
+      <h2 id="dashboard-title">Responsive Course Dashboard</h2>
+      <p>하나의 HTML로 모바일·태블릿·데스크톱 화면을 대응합니다.</p>
+      <span class="demo-note">강의 상태는 학습용 예시이며 실제 진도와 연동되지 않습니다.</span>
+    </section>
+
+    <section id="courses" aria-labelledby="courses-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">My Courses</p>
+          <h2 id="courses-title">강의 카드 목록</h2>
+        </div>
+        <span class="count-label">총 6개 카드</span>
+      </div>
+      <div class="dashboard-toolbar">
+        <label class="visually-hidden" for="course-search">강의 검색</label>
+        <input id="course-search" type="search" placeholder="강의 검색 (레이아웃 실습)">
+        <label class="visually-hidden" for="course-status">진행 상태</label>
+        <select id="course-status">
+          <option>전체 상태</option>
+          <option>완료</option>
+          <option>진행 중</option>
+          <option>예정</option>
+        </select>
+        <button type="button">검색</button>
+      </div>
+      <p class="helper-text">버튼과 필터의 동작은 후속 JavaScript 강의에서 구현합니다.</p>
+      <div class="course-grid">
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 01</span>
+            <span class="course-status completed">완료</span>
+          </div>
+          <h3>HTML 문서 구조</h3>
+          <p>시멘틱 태그와 문서 계층</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 02</span>
+            <span class="course-status completed">완료</span>
+          </div>
+          <h3>HTML 링크·폼</h3>
+          <p>링크, 이미지, 표, 입력 폼</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 03</span>
+            <span class="course-status completed">완료</span>
+          </div>
+          <h3>CSS Box Model</h3>
+          <p>margin, border, padding</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 04</span>
+            <span class="course-status progress">진행 중</span>
+          </div>
+          <h3>Flexbox와 Grid</h3>
+          <p>정렬과 카드 그리드 배치</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 05</span>
+            <span class="course-status progress">진행 중</span>
+          </div>
+          <h3>반응형 웹</h3>
+          <p>viewport와 media query</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+        <article class="course-card">
+          <div class="card-head">
+            <span class="course-number">COURSE 06</span>
+            <span class="course-status planned">예정</span>
+          </div>
+          <h3>JavaScript 입문</h3>
+          <p>DOM과 이벤트 학습 준비</p>
+          <div class="card-actions">
+            <button type="button">강의 정보</button>
+            <button type="button">학습 기록</button>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Chapter 07 · Mobile First · 375px / 768px / 1024px 화면을 비교해 보세요.</p>
+  </footer>
+</body>
+</html>

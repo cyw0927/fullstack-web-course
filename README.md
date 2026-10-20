@@ -109,3 +109,15 @@ GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 �
 
 실행: `practice/phase01/chapter06/index.html` 또는 `dashboard.html`을 Live Server로 엽니다.
 검색·등록·상세 버튼은 정적 배치 실습용 UI이며 DB/이벤트는 연결되지 않았습니다.
+
+## Chapter 07 — 반응형 웹
+
+7강 Mobile First 실습 및 독립 대시보드 과제를 추가했습니다.
+
+- [7강 반응형 회원관리 실습](practice/phase01/chapter07/index.html)
+- [7강 Responsive Course Dashboard (6개 강의 카드)](practice/phase01/chapter07/dashboard.html)
+- [7강 README 및 화면 크기별 검증 방법](practice/phase01/chapter07/README.md)
+
+기본 1열, 768px 이상 2열, 1024px 이상 3열로 바뀝니다. Chrome DevTools Device Toolbar에서 375/768/1024px를 직접 시험하세요.
+
+**로컬에서 별도 작성 중인 6강 하위 폴더** (`CSSGrid/`, `flexbox/`, `member/`)의 미추적 파일은 이번 커밋에서 건드리지 않았습니다.
