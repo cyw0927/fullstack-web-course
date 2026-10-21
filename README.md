@@ -121,3 +121,14 @@ GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 �
 기본 1열, 768px 이상 2열, 1024px 이상 3열로 바뀝니다. Chrome DevTools Device Toolbar에서 375/768/1024px를 직접 시험하세요.
 
 **로컬에서 별도 작성 중인 6강 하위 폴더** (`CSSGrid/`, `flexbox/`, `member/`)의 미추적 파일은 이번 커밋에서 건드리지 않았습니다.
+
+## Chapter 08 — JavaScript 기초
+
+강의 8강의 **변수, 자료형, 연산자, 조건문, 반복문**을 회원관리 Console 예제로 학습합니다. 이 장에서는 DOM 이벤트나 실제 화면 업데이트를 구현하지 않습니다.
+
+- [8강 기본 실습](practice/phase01/chapter08/index.html) · [app.js](practice/phase01/chapter08/app.js)
+- [8강 독립 과제 실행 페이지](practice/phase01/chapter08/assignment.html)
+- [8강 제출 파일 assignment.js](practice/phase01/chapter08/assignment.js)
+- [8강 학습 기록](practice/phase01/chapter08/README.md)
+
+Live Server에서 각 HTML 파일을 열고 **F12 → Console** 탭을 확인하세요. 다른 강의 폴더는 수정하지 않았습니다.
