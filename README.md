@@ -132,3 +132,11 @@ GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 �
 - [8강 학습 기록](practice/phase01/chapter08/README.md)
 
 Live Server에서 각 HTML 파일을 열고 **F12 → Console** 탭을 확인하세요. 다른 강의 폴더는 수정하지 않았습니다.
+
+
+## Chapter 15 — 통합 실습 및 개인 프로젝트 준비
+
+- [Book Explorer 사전 통합 실습](practice/phase01/chapter15-prepractice/index.html) · [단계별 검증 기록](practice/phase01/chapter15-prepractice/README.md)
+- [Member Management 개인 프로젝트 준비판](practice/phase01/chapter15/index.html) · [작업 기록과 명세 유의사항](practice/phase01/chapter15/README.md)
+
+Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상세 API 명세가 없어 **회원 GET/POST를 사용하는 임시 학습판**으로 시작했습니다. 공식 본 과제 자료를 받으면 이를 기준으로 보완합니다. 실제 Live Server·Network 검증은 별도로 필요합니다.

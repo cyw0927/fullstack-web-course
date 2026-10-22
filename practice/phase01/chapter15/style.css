@@ -1,0 +1,109 @@
+/* Chapter 15 개인 프로젝트 준비판: 기본 HTML/CSS/JS 학습 */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #f3f6fb;
+  color: #24334a;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  line-height: 1.6;
+}
+
+.page { width: min(100% - 32px, 1000px); margin: 36px auto 48px; }
+.page-header { margin-bottom: 26px; }
+.page-header h1 { font-size: 2.1rem; margin: 5px 0; color: #1e4a8d; }
+.page-header > p:last-child { margin: 0; color: #5b687d; }
+.eyebrow {
+  margin: 0;
+  font-size: .78rem;
+  letter-spacing: .06em;
+  font-weight: 700;
+  color: #5977aa;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #e1e7f0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(26, 46, 79, .04);
+}
+h2 { margin: 0 0 14px; color: #24539a; font-size: 1.25rem; }
+.section-heading h2 { margin-bottom: 4px; }
+.section-heading p { margin: 0 0 18px; font-size: .92rem; color: #5e6d81; }
+
+.search-form, .form-stack { display: flex; flex-direction: column; gap: 9px; }
+label { font-weight: 700; font-size: .92rem; }
+input {
+  border-radius: 7px;
+  padding: 12px;
+  border: 1px solid #becbe0;
+  font: inherit;
+  min-width: 0;
+  background: white;
+}
+input:focus-visible, button:focus-visible { outline: 3px solid #8fb4f4; outline-offset: 2px; }
+.search-controls { display: flex; gap: 10px; }
+.search-controls input { flex: 1; }
+button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  background: #2459ae;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+button:hover { background: #16468f; }
+button:disabled { opacity: .6; cursor: wait; }
+.form-stack button { align-self: flex-start; margin-top: 6px; }
+
+.feedback {
+  border-radius: 7px;
+  background: #f0f4fb;
+  color: #4c617d;
+  margin: 15px 0 0;
+  padding: 10px 12px;
+  overflow-wrap: anywhere;
+}
+.feedback[data-state="success"] { background: #edf8f1; color: #18653f; }
+.feedback[data-state="error"] { background: #fff0f1; color: #a42e38; }
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+.content-grid > * { min-width: 0; }
+.member-list { padding: 0; margin: 0; list-style: none; }
+.member-list li + li { margin-top: 9px; }
+.member-item {
+  display: block;
+  text-align: left;
+  width: 100%;
+  background: #f4f7fc;
+  color: #24334a;
+  padding: 14px;
+  border: 1px solid #dce5f2;
+}
+.member-item:hover { background: #ebf2ff; border-color: #7ea2e1; }
+.member-item strong { display: block; }
+.member-item small { display: block; margin-top: 2px; color: #5d6a80; font-weight: 400; }
+
+.detail { min-height: 80px; color: #526078; overflow-wrap: anywhere; }
+.detail-list { margin: 0; }
+.detail-list dt { font-weight: bold; color: #24539a; margin-top: 12px; }
+.detail-list dt:first-child { margin-top: 0; }
+.detail-list dd { margin: 3px 0 0; }
+.footer { color: #76849b; font-size: .85rem; text-align: center; margin-top: 18px; }
+
+@media (max-width: 700px) {
+  .page { width: min(100% - 24px, 1000px); margin: 18px auto 32px; }
+  .page-header h1 { font-size: 1.65rem; }
+  .panel { padding: 18px; }
+  .content-grid { display: block; }
+  .search-controls { flex-direction: column; }
+  .form-stack button { width: 100%; }
+}

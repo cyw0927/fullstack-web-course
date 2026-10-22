@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Management | Chapter 15</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <p class="eyebrow">FRONTEND BASIC / CHAPTER 15 · 개인 프로젝트 준비판</p>
+      <h1>Member Management</h1>
+      <p>회원 목록 조회, 검색, 상세 확인, 등록 요청까지 API와 화면을 연결하는 실습입니다.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="search-heading">
+      <div class="section-heading">
+        <h2 id="search-heading">회원 조회 및 검색</h2>
+        <p>이름·사용자명·이메일로 검색하거나 빈칸으로 전체 목록을 조회하세요.</p>
+      </div>
+      <form id="search-form" class="search-form">
+        <label for="search-input">검색어</label>
+        <div class="search-controls">
+          <input id="search-input" name="keyword" type="search" placeholder="예: Leanne" autocomplete="off">
+          <button type="submit">회원 조회</button>
+        </div>
+      </form>
+      <p id="status-message" class="feedback" role="status" aria-live="polite">회원 조회 버튼을 눌러 시작하세요.</p>
+    </section>
+
+    <div class="content-grid">
+      <section class="panel" aria-labelledby="list-heading">
+        <h2 id="list-heading">회원 목록</h2>
+        <ul id="member-list" class="member-list" aria-label="조회된 회원"></ul>
+      </section>
+      <section class="panel" aria-labelledby="detail-heading">
+        <h2 id="detail-heading">회원 상세</h2>
+        <div id="member-detail" class="detail">회원을 선택하세요.</div>
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="register-heading">
+      <div class="section-heading">
+        <h2 id="register-heading">회원 등록 요청</h2>
+        <p>테스트 API에 POST 요청을 전송합니다. 실제 회원 DB에는 저장되지 않습니다.</p>
+      </div>
+      <form id="member-form" class="form-stack">
+        <label for="member-name">이름</label>
+        <input id="member-name" name="name" type="text" placeholder="예: 홍길동" required>
+        <label for="member-username">사용자명</label>
+        <input id="member-username" name="username" type="text" placeholder="예: hong123" required>
+        <label for="member-email">이메일</label>
+        <input id="member-email" name="email" type="email" placeholder="예: hong@example.com" required>
+        <button type="submit">등록 요청</button>
+      </form>
+      <p id="form-message" class="feedback" role="status" aria-live="polite">이름, 사용자명, 이메일을 입력하세요.</p>
+    </section>
+
+    <footer class="footer">학습용 프로토타입 · HTML + CSS + Vanilla JavaScript · GET / POST</footer>
+  </main>
+</body>
+</html>
