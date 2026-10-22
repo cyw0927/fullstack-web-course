@@ -148,3 +148,11 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 - [브라우저 GET/POST 검증과 최종 제출 체크리스트](practice/phase01/chapter15/FINAL_CHECKLIST.md)
 
 두 실습의 DOM·API 로직을 가상 응답으로 실행하는 **53개 검사 통과**를 확인했습니다. 외부 API 실제 통신 및 DevTools 스크린샷은 사용자 브라우저에서 직접 확인해야 합니다. 회원관리 페이지는 강의 본 과제 명세가 제공되지 않은 **학습용 준비판**입니다.
+
+
+## RAG 특강 — Upstage Solar (2026-10-22)
+
+- [특강 준비 폴더](practice/special/rag-solar/)
+- [비전공자용 설치/실습 안내](practice/special/rag-solar/README.md)
+
+서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사가 제공하는 Starter Kit 코드와 개인 API Key는 아직 포함하지 않았습니다.** 기존 수업 파일은 수정하지 않았습니다.

@@ -1,0 +1,8 @@
+# 강의 가이드에 명시된 기본 패키지(준비용)
+# 강사가 배포한 Starter Kit의 requirements.txt가 있으면 그 목록을 우선 비교합니다.
+openai
+requests
+numpy
+fastapi
+uvicorn
+python-dotenv
