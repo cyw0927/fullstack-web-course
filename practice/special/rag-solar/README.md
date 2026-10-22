@@ -3,7 +3,44 @@
 > 준비일: 2026-10-22  
 > 소속: `cyw0927/fullstack-web-course` / `practice/special/rag-solar`  
 > 기준: 강사 「RAG 특강 실습 가이드(Solar)」  
-> 상태: **기초 환경 준비용 파일 작성. 강사 Starter Kit 원본은 아직 제공되지 않았고, API 실행 검증도 하지 않음.**
+> 상태: **강사 ZIP 다운로드·설치 자동화 스크립트 준비됨. 사용자 Windows 실행·API 호출은 미검증.**
+
+
+## 중요 업데이트: 강사 Starter Kit 원본 발견 (2026-10-22)
+
+강사 GitHub에 실제 배포 ZIP 파일이 올라온 것을 확인했습니다.
+
+- 강사 저장소: https://github.com/GilbertMoon/policy_rag_assistant
+- 원본 ZIP: https://github.com/GilbertMoon/policy_rag_assistant/blob/044f9d930c7c5b01bec07c2581a61b08b2bd136f/starter-kit-20261022T062047Z-1-001.zip
+- 파일 크기: 318,392바이트 / Git blob SHA: `1ad7b50a3f261c649595249cca7836a954d32c4d`
+- **주의:** 강사 저장소의 일반 소스(README)는 Gemini/MySQL 기반의 *다른 RAG 예제*입니다. 이번 Solar 강의는 루트의 `starter-kit-20261022T062047Z-1-001.zip`을 내려받아야 합니다.
+- 강사 배포 ZIP 내부 파일은 이 환경에서 직접 압축 해제하지 못했으므로, 로컬 설치 스크립트가 실제 파일 목록을 검사하도록 구성했습니다.
+
+### 강의 5번(필수 패키지 설치)까지 한 번에 준비
+
+VS Code PowerShell에서:
+
+```powershell
+cd C:\dev\fullstack-web-course
+git status
+git pull --ff-only origin main
+cd .\practice\special\rag-solar
+.\install-lecture-starter.ps1
+```
+
+스크립트는 **강사 ZIP 다운로드 → Git SHA 검증 → `starter-kit` 폴더에 압축 해제 → 강의 필수 Python 파일 확인 → Python 가상환경 생성 → 강사 원본 `requirements.txt` 패키지 설치**를 진행합니다. 기존 `starter-kit` 폴더가 있다면 덮어쓰지 않습니다. `.downloads/`, `starter-kit/`, `.venv/`는 Git에서 제외됩니다.
+
+PowerShell에서 스크립트 실행이 막히면 다음 명령을 사용합니다.
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-lecture-starter.ps1
+```
+
+여기서 `Bypass`는 해당 PowerShell 프로세스에만 적용합니다. **강사 원본 코드임을 확인한 뒤에만 실행**하세요.
+
+실행이 성공하면 마지막에 표시된 **실제 실습 위치**를 VS Code로 여세요. 이 과정은 API 키 발급이나 Solar API 호출은 하지 않습니다.
+
+> **확인 범위:** 강사 ZIP 파일의 존재·크기·SHA는 원격에서 확인했지만, 사용자의 Windows 가상환경 생성 및 패키지 설치는 아직 직접 확인하지 못했습니다. 네 컴퓨터에서 명령을 실행한 뒤 결과를 확인해야 합니다.
 
 ## 이번 수업에서는 무엇을 하나요?
 

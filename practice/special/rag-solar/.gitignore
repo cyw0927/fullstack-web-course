@@ -18,3 +18,7 @@ __pycache__/
 # 운영체제 및 에디터 임시 파일
 .DS_Store
 Thumbs.db
+
+# 공식 강사 ZIP 다운로드·압축 해제본. 별도 Git 저장소로 복제하지 않음.
+/.downloads/
+/starter-kit/

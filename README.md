@@ -155,4 +155,4 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 - [특강 준비 폴더](practice/special/rag-solar/)
 - [비전공자용 설치/실습 안내](practice/special/rag-solar/README.md)
 
-서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사가 제공하는 Starter Kit 코드와 개인 API Key는 아직 포함하지 않았습니다.** 기존 수업 파일은 수정하지 않았습니다.
+서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사 원본 Starter Kit ZIP을 찾아 다운로드·설치용 PowerShell 스크립트를 추가했습니다.** 실제 ZIP은 사용자 로컬에서 내려받아 압축 해제합니다. 개인 API Key는 포함하지 않습니다. 기존 수업 파일은 수정하지 않았습니다.
