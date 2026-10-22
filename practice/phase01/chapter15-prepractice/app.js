@@ -127,6 +127,7 @@ function renderBookDetail(book) {
 searchForm.addEventListener("submit", async event => {
   event.preventDefault();
   const keyword = searchInput.value.trim();
+  console.log("검색어:", keyword); // STEP 06: submit 이벤트 입력값 확인
 
   if (!keyword) {
     statusMessage.dataset.state = "empty";
@@ -179,6 +180,7 @@ bookForm.addEventListener("submit", async event => {
   }
 
   const bookRequest = { title, author };
+  console.log("등록 요청 데이터:", bookRequest); // STEP 13: POST 전 Object 확인
   formMessage.dataset.state = "loading";
   formMessage.textContent = "등록 요청 중...";
   registerButton.disabled = true;
