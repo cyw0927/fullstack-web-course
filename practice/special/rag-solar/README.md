@@ -1,3 +1,23 @@
+## PowerShell 5.1 encoding fix (2026-10-22)
+
+The first version of the installer contained Korean text in a UTF-8 file without a BOM. Windows PowerShell 5.1 read it with a legacy code page and reported ParserError around line 50. The installer and setup.ps1 have now been replaced with ASCII-only versions.
+
+If the terminal already shows PS C:\dev\fullstack-web-course\practice\special\rag-solar>, run only:
+
+```powershell
+git pull --ff-only origin main
+.\install-lecture-starter.ps1
+```
+
+If PowerShell denies execution:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-lecture-starter.ps1
+```
+
+Do not run cd practice\special\rag-solar a second time if you are already in that folder. The official ZIP is downloaded and installed locally, not committed to this repository. Existing files are preserved; Python/pip installation needs to be verified on the Windows machine.
+
+---
 # RAG 특강 준비 — Upstage Solar / 서울시 조례 Q&A
 
 > 준비일: 2026-10-22  
