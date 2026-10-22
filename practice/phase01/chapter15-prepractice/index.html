@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Explorer | Chapter 15 사전 실습</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="container">
+    <header class="page-header">
+      <p class="eyebrow">FRONTEND BASIC · CHAPTER 15 사전 실습</p>
+      <h1>Book Explorer</h1>
+      <p>도서를 검색하고 상세 정보를 확인한 뒤, 학습용 등록 요청까지 연습합니다.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="search-heading">
+      <h2 id="search-heading">도서 검색</h2>
+      <form id="search-form" class="form-stack">
+        <label for="search-input">검색어</label>
+        <input id="search-input" name="keyword" type="search" placeholder="예: javascript" required>
+        <button type="submit">검색</button>
+      </form>
+      <p id="status-message" class="feedback" role="status" aria-live="polite">검색어를 입력하세요.</p>
+    </section>
+
+    <div class="content-grid">
+      <section class="panel" aria-labelledby="list-heading">
+        <h2 id="list-heading">검색 결과</h2>
+        <ul id="book-list" class="book-list" aria-label="검색된 도서 목록"></ul>
+      </section>
+
+      <section class="panel" aria-labelledby="detail-heading">
+        <h2 id="detail-heading">도서 상세</h2>
+        <div id="book-detail" class="detail">도서를 선택하세요.</div>
+      </section>
+    </div>
+
+    <section class="panel" aria-labelledby="register-heading">
+      <h2 id="register-heading">도서 등록 요청</h2>
+      <p class="help-text">학습용 API에 POST 요청만 전송합니다. 실제 도서 DB에는 저장되지 않습니다.</p>
+      <form id="book-form" class="form-stack">
+        <label for="book-title">도서 제목</label>
+        <input id="book-title" name="title" type="text" placeholder="예: Clean Code" required>
+        <label for="book-author">저자</label>
+        <input id="book-author" name="author" type="text" placeholder="예: Robert C. Martin" required>
+        <button type="submit">등록 요청</button>
+      </form>
+      <p id="form-message" class="feedback" role="status" aria-live="polite">제목과 저자를 입력하세요.</p>
+    </section>
+  </main>
+</body>
+</html>

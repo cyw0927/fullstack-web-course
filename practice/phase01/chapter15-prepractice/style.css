@@ -1,0 +1,111 @@
+/* Chapter 15 사전 실습: 기능 확인을 우선한 단순한 반응형 UI */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 28px 18px 56px;
+  color: #202c40;
+  background: #f3f5fa;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  line-height: 1.5;
+}
+
+.container { width: 100%; max-width: 1000px; margin: 0 auto; }
+
+.page-header { margin-bottom: 24px; }
+.page-header h1 { margin: 6px 0 8px; color: #234d9e; font-size: 2rem; }
+.page-header p { margin: 0; }
+.eyebrow { color: #526e9c; font-size: .78rem; font-weight: bold; letter-spacing: .08em; }
+
+.panel {
+  margin-bottom: 18px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e0e6ef;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(20, 40, 80, .04);
+}
+
+.panel h2 { margin: 0 0 16px; color: #234d9e; font-size: 1.2rem; }
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 18px;
+}
+.content-grid > * { min-width: 0; }
+
+.form-stack { display: flex; flex-direction: column; gap: 10px; }
+.form-stack label { font-weight: bold; font-size: .94rem; }
+.form-stack input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #bdc9dc;
+  border-radius: 7px;
+  font: inherit;
+}
+.form-stack input:focus-visible, button:focus-visible {
+  outline: 3px solid #8bb1fb;
+  outline-offset: 2px;
+}
+.form-stack button {
+  align-self: flex-start;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: 7px;
+  background: #315cb1;
+  color: white;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+.form-stack button:hover { background: #234d9e; }
+.form-stack button:disabled { opacity: .55; cursor: wait; }
+
+.feedback {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  color: #3b536f;
+  background: #f0f4fb;
+  border-radius: 7px;
+  overflow-wrap: anywhere;
+}
+.feedback[data-state="success"] { color: #13633c; background: #ebf7f0; }
+.feedback[data-state="error"] { color: #a72d2d; background: #fff0f0; }
+
+.book-list { margin: 0; padding: 0; list-style: none; }
+.book-list li + li { margin-top: 9px; }
+.book-item {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  text-align: left;
+  background: #f6f8fc;
+  border: 1px solid #dce4f0;
+  border-radius: 8px;
+  color: #26384f;
+  font: inherit;
+  cursor: pointer;
+}
+.book-item:hover { border-color: #315cb1; background: #edf3ff; }
+.book-item strong { display: block; margin-bottom: 4px; }
+.book-item span { display: block; font-size: .87rem; color: #51647b; }
+
+.detail {
+  min-height: 80px;
+  color: #4a5a71;
+  overflow-wrap: anywhere;
+}
+.book-detail-list { margin: 0; }
+.book-detail-list dt { margin-top: 12px; font-weight: bold; color: #234d9e; }
+.book-detail-list dt:first-child { margin-top: 0; }
+.book-detail-list dd { margin: 4px 0 0; }
+.help-text { margin: -6px 0 16px; color: #5a6b82; font-size: .9rem; }
+
+@media (max-width: 700px) {
+  body { padding: 16px 12px 32px; }
+  .page-header h1 { font-size: 1.6rem; }
+  .panel { padding: 18px; }
+  .content-grid { grid-template-columns: 1fr; gap: 0; }
+  .form-stack button { width: 100%; }
+}
