@@ -107,3 +107,105 @@
 `book-form`의 `submit` 리스너는 1개이며, `event.preventDefault()` → `FormData` → 공백 제거 → `bookRequest` 생성 및 Console 출력 → "등록 요청 중..." → `await createBookRequest(bookRequest)` → 성공 메시지·POST Response Console·Form reset / 실패 메시지·Console Error의 순서입니다. 응답 성공 시에도 검색 결과의 `books` 배열에 새 책을 추가하지 않습니다.
 
 **추후 단계:** STEP 16에서는 POST Network의 Method, Payload, Status, Response를 브라우저에서 직접 검증합니다.
+
+
+## 2026-10-22 이어서 — STEP 16~21 점검 및 기록
+
+이번 점검에서는 **기존 index.html / style.css / app.js 코드를 변경하지 않았습니다.** 강의의 GET/POST 흐름을 기존 코드와 대조하고, 가상 DOM 및 가상 HTTP 응답을 제공하여 JavaScript 동작을 점검했습니다. 실제 Live Server, Chrome Network 탭, 외부 서버 응답은 이 테스트로 대체할 수 없습니다.
+
+| 강의 단계 | 수행 내용 | 결과 |
+| --- | --- | --- |
+| **STEP 16** | POST의 URL, Method, Content-Type, JSON Payload, 성공/실패 처리 점검 | 가상 응답 테스트 통과. **Chrome Network 실측 미완료** |
+| **STEP 17** | GET의 `docs: []` 응답 시 Empty 표시·목록 초기화 확인 | 가상 응답 테스트 통과. **브라우저에서의 수동 테스트 미완료** |
+| **STEP 18** | GET HTTP 503 응답 시 Error 표시·Console Error 확인 | 가상 응답 테스트 통과. **브라우저에서의 수동 테스트 미완료** |
+| **STEP 19** | 검색/상세/등록 전체 데이터 흐름을 코드와 대조 | 확인·아래에 기록 |
+| **STEP 20** | API 상수·DOM ID·필수 함수·submit 리스너 구조 점검 | 정적 점검 통과 |
+| **STEP 21** | 강의자료 기준 구조·상태·이벤트·API·DOM 코드 리뷰 | 수행·아래에 기록 |
+
+### API 응답/DOM 모의 테스트 결과
+
+외부 서버 접속 없이 **실제 app.js 내용을 가상 DOM 환경에서 실행**하고, `fetch()`의 반환값만 통제해 아래 16개 항목을 검사했습니다.
+
+- [x] 검색 submit 리스너 1개, 등록 submit 리스너 1개
+- [x] 검색 submit에서 `preventDefault()` 호출
+- [x] GET 주소의 검색어, `limit=10`, `fields` 구성
+- [x] GET 성공 시 도서 2권 목록 렌더링
+- [x] 누락된 저자·출판연도 대체 문구
+- [x] 도서 버튼 클릭 시 상세 렌더링
+- [x] 결과 0권에서 Empty 상태 표시
+- [x] GET 503에서 Error 상태 표시
+- [x] GET 실패를 `console.error()`로 기록
+- [x] 등록 submit에서 `preventDefault()` 호출
+- [x] POST URL 및 Method
+- [x] `Content-Type: application/json` 및 trim된 JSON Payload
+- [x] POST 201에서 성공 메시지 및 Form 초기화
+- [x] POST 성공 시 `books` 배열에 가짜 저장하지 않음
+- [x] POST 503에서 오류 메시지 및 `console.error()`
+- [x] 요청 완료 후 disabled 버튼 상태 복구
+
+**결과: 16 / 16 통과.** 실패를 의도적으로 만들어 낸 GET/POST Error 테스트에서 Console Error가 발생한 것은 예상한 동작이며 실제 브라우저에 오류가 없음을 뜻하지 않습니다.
+
+### STEP 16 — Chrome Network에서 실제 POST 증거 확인 (미완료)
+
+1. Live Server에서 `index.html` 열기 → F12 → **Network** 선택.
+2. 도서 등록 폼에 `Clean Code`와 `Robert C. Martin` 입력 → **등록 요청** 클릭.
+3. `posts` 요청을 선택해 **Request Method = POST**인지 확인.
+4. Payload에서 `{"title":"Clean Code","author":"Robert C. Martin"}`인지 확인.
+5. Status Code와 Response 기록. JSONPlaceholder는 정상 상황에서 보통 **201 Created**를 응답하지만, 실제 값은 Network에서 확인하기 전까지 기록하지 않음.
+6. 화면의 성공/실패 메시지와 Console의 `POST Response`를 확인.
+
+> JSONPlaceholder의 POST 성공은 등록 흐름 학습용 모의 응답이며 실제 도서 DB 저장이 아닙니다.
+
+### STEP 17 — Empty 상태 브라우저 테스트 (미완료)
+
+강의자료대로 `app.js` 맨 아래에 다음 두 줄을 **잠깐 추가**하고 저장해 화면이 `검색 결과가 없습니다.`로 바뀌는지 확인합니다.
+
+```javascript
+books = [];
+renderBooks();
+```
+
+**확인 후 위 두 줄을 반드시 제거하여 원상 복구합니다.** 자동화된 모의 테스트에서는 `docs: []` 결과로 Empty 상태를 확인했습니다.
+
+### STEP 18 — Error 상태 브라우저 테스트 (미완료)
+
+`app.js`의 검색 API 주소를 **임시로만** 다음과 같이 바꿉니다.
+
+```javascript
+const SEARCH_API_URL = "https://openlibrary.org/invalid-search.json";
+```
+
+검색을 실행해 화면의 `도서를 불러오지 못했습니다.`, Console Error, Network의 실패 상태 코드를 확인합니다. **검증 직후 원래 주소 `https://openlibrary.org/search.json`으로 되돌려야 합니다.** 자동화된 모의 테스트에서는 HTTP 503을 주입해 Error 상태를 확인했습니다.
+
+### STEP 19 — 전체 데이터 흐름 설명
+
+**검색:** 검색어 입력 → `submit` Event → `preventDefault()` → `keyword` → `renderLoading()` → `searchBooks()` → GET → Open Library → JSON 응답 → `data.docs` → `books` 배열 → `renderBooks()` → 도서 목록 DOM.
+
+**상세:** 도서 목록의 `button` 클릭 → click Event → 해당 `book` 객체 → `renderBookDetail(book)` → 도서 상세 DOM.
+
+**등록:** 제목·저자 입력 → `submit` Event → `preventDefault()` → `FormData` → `{title,author}` 객체 → `JSON.stringify()` → POST → JSONPlaceholder → Response → `form-message` 피드백. 실제 DB 저장은 수행하지 않음.
+
+### STEP 20 — 최종 구조 Checkpoint
+
+- API 상태: `SEARCH_API_URL`, `POST_API_URL`, `books` 확인
+- DOM: `searchForm`, `searchInput`, `statusMessage`, `bookList`, `bookDetail`, `bookForm`, `formMessage` 확인
+- API: `searchBooks(keyword)`, `createBookRequest(book)` 확인
+- Rendering: `renderLoading()`, `renderError(message)`, `renderEmpty()`, `renderBooks()`, `renderBookDetail(book)` 확인
+- Event: 검색 Form·등록 Form의 submit Listener 각각 하나, 도서 버튼 click Listener 확인
+
+### STEP 21 — 코드 리뷰 (강의 기준)
+
+| 검토 항목 | 결과 |
+| --- | --- |
+| 1. 요구사항 누락 | 코드상 요구사항 대부분 반영. **실제 Network 검증 미완료** |
+| 2. Event/Form | 각 submit 리스너 1개, `preventDefault()`, trim 및 `FormData` 적용 |
+| 3. GET | URL/필드/응답 상태/예외 처리 반영. 외부 호출 성공 여부는 미확인 |
+| 4. POST | JSON 헤더·Payload·상태 확인·성공/실패 메시지 반영. 영구 저장으로 오인하지 않음 |
+| 5. JSON | `response.json()`, `Array.isArray(data.docs)`, `JSON.stringify(book)` 적용 |
+| 6. DOM | 검색 목록과 상세에 `createElement()`·`textContent` 사용 |
+| 7. Loading / Empty / Error | 모의 응답 기준 동작 확인. 브라우저 상태 확인 필요 |
+| 8. Network | GET 및 POST 요청 각각 URL/Method/Status/Response(/Payload) 실측 필요 |
+| 9. Console | 의도한 실패 테스트에서만 `console.error()` 확인. 실제 콘솔은 추후 확인 |
+| 10. 수정 우선순위 | ① 실제 브라우저 GET/POST Network 검증 → ② Empty/Error 수동 시연 → ③ 확인 결과 기록 |
+
+추가 프레임워크나 Backend는 필요하지 않으며, 이 단계에서 원본 코드를 전면 재작성할 근거도 발견되지 않았습니다. 이 기록은 **가상 테스트 합격과 실제 브라우저 실행 성공을 동일하게 취급하지 않습니다.**
