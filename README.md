@@ -140,3 +140,11 @@ Live Server에서 각 HTML 파일을 열고 **F12 → Console** 탭을 확인하
 - [Member Management 개인 프로젝트 준비판](practice/phase01/chapter15/index.html) · [작업 기록과 명세 유의사항](practice/phase01/chapter15/README.md)
 
 Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상세 API 명세가 없어 **회원 GET/POST를 사용하는 임시 학습판**으로 시작했습니다. 공식 본 과제 자료를 받으면 이를 기준으로 보완합니다. 실제 Live Server·Network 검증은 별도로 필요합니다.
+
+
+### Chapter 15 재현 가능한 테스트 및 제출 체크
+
+- [오프라인 자동 검사 (Node.js, 외부 패키지 불필요)](practice/phase01/chapter15/tests/run-tests.cjs)
+- [브라우저 GET/POST 검증과 최종 제출 체크리스트](practice/phase01/chapter15/FINAL_CHECKLIST.md)
+
+두 실습의 DOM·API 로직을 가상 응답으로 실행하는 **53개 검사 통과**를 확인했습니다. 외부 API 실제 통신 및 DevTools 스크린샷은 사용자 브라우저에서 직접 확인해야 합니다. 회원관리 페이지는 강의 본 과제 명세가 제공되지 않은 **학습용 준비판**입니다.

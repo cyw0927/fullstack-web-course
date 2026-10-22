@@ -209,3 +209,11 @@ const SEARCH_API_URL = "https://openlibrary.org/invalid-search.json";
 | 10. 수정 우선순위 | ① 실제 브라우저 GET/POST Network 검증 → ② Empty/Error 수동 시연 → ③ 확인 결과 기록 |
 
 추가 프레임워크나 Backend는 필요하지 않으며, 이 단계에서 원본 코드를 전면 재작성할 근거도 발견되지 않았습니다. 이 기록은 **가상 테스트 합격과 실제 브라우저 실행 성공을 동일하게 취급하지 않습니다.**
+
+
+## 최종 검사 연결
+
+- 자동 검사: `node practice/phase01/chapter15/tests/run-tests.cjs` (저장소 루트에서 실행)
+- 검증 기록: [Chapter 15 최종 검증·제출 체크리스트](../chapter15/FINAL_CHECKLIST.md)
+
+강의 STEP 01~21 코드는 구현/모의 검증을 진행했고, 자료 후반의 Definition of Done 항목 가운데 **실제 브라우저 Network(GET/POST), 화면 상태, Console 증거 확인은 아직 수동 체크 필요**합니다. Open Library 사용 가이드: https://openlibrary.org/developers/api

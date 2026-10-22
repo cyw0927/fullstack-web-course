@@ -86,3 +86,21 @@ GitHub 반영 전, 실제 `app.js`를 가상 DOM 객체 및 가상 `fetch()` 응
 - [x] 외부 문자열을 `innerHTML`로 삽입하지 않음
 
 **추가 현장 검증:** Live Server 실행, 실제 GET/POST Network의 URL·Method·Status·Response/Payload, 콘솔 오류 유무. 본 과제 공식 명세를 확보하면 API 및 필드가 맞는지 재확인합니다.
+
+
+## 최종 자동 검사 및 제출 단계
+
+외부 패키지가 필요 없는 재현 가능한 자동 테스트 파일을 추가했습니다.
+
+```powershell
+cd C:devullstack-web-course
+node practice/phase01/chapter15/tests/run-tests.cjs
+```
+
+Book Explorer와 Member Management 두 페이지를 대상으로 **총 53개 오프라인 검사 통과**를 확인했습니다. 이 검사는 실제 `app.js`의 코드에 가상 DOM과 가상 API 응답을 공급해 실행한 결과이며, 실제 네트워크 연결 성공을 보증하지 않습니다.
+
+**[최종 브라우저 실측·제출 체크리스트](FINAL_CHECKLIST.md)**를 열어 GET·POST Network의 실제 Method, Status, Payload, Response를 채워야 합니다.
+
+참고 공식 문서:
+- JSONPlaceholder 회원 API: https://jsonplaceholder.dev/api/users
+- JSONPlaceholder CORS/HTTP: https://jsonplaceholder.dev/api/
