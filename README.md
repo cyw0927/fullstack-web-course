@@ -156,3 +156,21 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 - [비전공자용 설치/실습 안내](practice/special/rag-solar/README.md)
 
 서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사 원본 Starter Kit ZIP을 찾아 다운로드·설치용 PowerShell 스크립트를 추가했습니다.** 실제 ZIP은 사용자 로컬에서 내려받아 압축 해제합니다. 개인 API Key는 포함하지 않습니다. 기존 수업 파일은 수정하지 않았습니다.
+
+
+## Phase 02 — Backend / Chapter 01 (2026-10-29)
+
+프론트엔드 실습은 `practice/phase01/`에 유지하고, 백엔드는 `practice/phase02/`에 분리합니다.
+
+- [1강: 첫 FastAPI /members · /courses API](practice/phase02/chapter01/main.py)
+- [1강 학습 기록 및 API Contract](practice/phase02/chapter01/README.md)
+- [자동 검증 4개](practice/phase02/chapter01/test_api.py)
+
+```powershell
+cd C:\dev\fullstack-web-course\practice\phase02\chapter01
+python -m uvicorn main:app --reload
+# 다른 터미널에서 실행하거나 서버를 종료한 다음:
+python -m unittest -v test_api.py
+```
+
+서버 실행 후 `http://127.0.0.1:8000/docs`에서 GET /, GET /members, GET /courses를 시험할 수 있습니다. 자동 검증은 통과했으며, Swagger Execute 및 브라우저 Network 수동 증거는 사용자 PC에서 확인해야 합니다.
