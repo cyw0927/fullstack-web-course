@@ -191,3 +191,20 @@ python -m unittest -v test_api.py
 ```
 
 Swagger UI `http://127.0.0.1:8000/docs`에서 `/members/{member_id}`, `/members/search/`, `/members/filter/`, `/courses/{course_id}`, `/courses/filter/`를 검증합니다. 별도 TestClient 자동 검사는 통과했으며, 사용자 PC에서의 Swagger Execute와 DevTools Network 확인은 남아 있습니다.
+
+## Phase 02 — Backend / Chapter 03 (2026-10-29)
+
+회원·강좌 POST Request Body와 Pydantic Validation 학습 및 과제입니다. 이전 2강 GET 기능을 유지합니다.
+
+- [3강 main.py — POST /members · POST /courses](practice/phase02/chapter03/main.py)
+- [3강 README — Contract / Evidence / 실행법](practice/phase02/chapter03/README.md)
+- [3강 test_api.py — 23개 자동 검사](practice/phase02/chapter03/test_api.py)
+
+```powershell
+cd C:\dev\fullstack-web-course\practice\phase02\chapter03
+python -m uvicorn main:app --reload
+# 다른 터미널에서:
+python -m unittest -v test_api.py
+```
+
+자동 테스트는 23개 통과했습니다. /docs의 POST Endpoint에서 정상 Body 201, 누락/타입 오류 422를 직접 확인하세요. Swagger Execute와 사용자의 Chrome Network 확인은 별도입니다.
