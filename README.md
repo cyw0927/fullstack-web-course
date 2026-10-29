@@ -174,3 +174,20 @@ python -m unittest -v test_api.py
 ```
 
 서버 실행 후 `http://127.0.0.1:8000/docs`에서 GET /, GET /members, GET /courses를 시험할 수 있습니다. 자동 검증은 통과했으며, Swagger Execute 및 브라우저 Network 수동 증거는 사용자 PC에서 확인해야 합니다.
+
+## Phase 02 — Backend / Chapter 02 (2026-10-29)
+
+Path Parameter와 Query Parameter를 사용한 회원 및 강좌 조회 실습입니다.
+
+- [2강 FastAPI 실습 코드](practice/phase02/chapter02/main.py)
+- [2강 학습 기록과 API Contract](practice/phase02/chapter02/README.md)
+- [2강 자동 검증 (19개)](practice/phase02/chapter02/test_api.py)
+
+```powershell
+cd C:\dev\fullstack-web-course\practice\phase02\chapter02
+python -m uvicorn main:app --reload
+# 다른 터미널에서:
+python -m unittest -v test_api.py
+```
+
+Swagger UI `http://127.0.0.1:8000/docs`에서 `/members/{member_id}`, `/members/search/`, `/members/filter/`, `/courses/{course_id}`, `/courses/filter/`를 검증합니다. 별도 TestClient 자동 검사는 통과했으며, 사용자 PC에서의 Swagger Execute와 DevTools Network 확인은 남아 있습니다.
