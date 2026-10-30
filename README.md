@@ -208,3 +208,20 @@ python -m unittest -v test_api.py
 ```
 
 자동 테스트는 23개 통과했습니다. /docs의 POST Endpoint에서 정상 Body 201, 누락/타입 오류 422를 직접 확인하세요. Swagger Execute와 사용자의 Chrome Network 확인은 별도입니다.
+
+## Phase 02 — Backend / Chapter 04 (2026-10-30)
+
+Request Model과 Response Model 분리, FastAPI `response_model`, 응답 상태 코드 및 회원/강좌 생성 과제입니다.
+
+- [4강 main.py — Member / Course GET·POST](practice/phase02/chapter04/main.py)
+- [4강 README — API Contract, Evidence, 실행 방법](practice/phase02/chapter04/README.md)
+- [4강 test_api.py — 24개 자동 테스트](practice/phase02/chapter04/test_api.py)
+
+```powershell
+cd C:\dev\fullstack-web-course\practice\phase02\chapter04
+python -m uvicorn main:app --reload
+# 다른 터미널에서 실행:
+python -m unittest -v test_api.py
+```
+
+TestClient 기반 자동 테스트 24개를 통과했습니다. `http://127.0.0.1:8000/docs`에서 200 / 201 / 404 / 422 및 Create/Response Schema를 수동으로 확인할 수 있습니다. 브라우저 수동 검증은 아직 사용자가 확인해야 합니다.
