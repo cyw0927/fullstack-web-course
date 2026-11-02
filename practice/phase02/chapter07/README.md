@@ -2,10 +2,80 @@
 
 **강의:** 아토믹데브, 「7강. POST /members + INSERT + Transaction」  
 **기준:** 사용자 제공 수업 자료 (2026-10-29 게시)  
-**학습 상태:** 준비 / 로컬 실습 및 Evidence 미확인  
+**학습 상태:** 코드·테스트·SQL 준비 완료 / 실제 DB와 Swagger 수동 검증 미완료  
 **이전 강의:** [6강. FastAPI와 PostgreSQL 연결](../chapter06/README.md)
 
 > 6강에서는 회원 POST → PostgreSQL INSERT → 201 Created를 먼저 실습했습니다. 이번 7강은 그 기능을 **중복 이메일, 입력 검증, commit/rollback, DB 오류**까지 확장하는 단계입니다. 6강 성공 이력을 7강 전체 완료로 취급하지 않습니다.
+
+## 준비된 실습 파일 (2026-11-02)
+
+이 강의는 이제 README뿐 아니라 **직접 실행 가능한 학습용 코드와 테스트**까지 준비되었습니다. **사용자 PC의 실제 DB 테스트/Swagger 증빙은 아직 미완료**입니다.
+
+| 파일 | 기능 |
+| --- | --- |
+| [main.py](main.py) | MemberCreate/Response, CourseCreate/Response, GET/POST, 201/409/422/500 |
+| [db.py](db.py) | PostgreSQL 연결, SELECT, 중복 검사, parameterized INSERT/RETURNING, commit/rollback |
+| [test_api.py](test_api.py) | Mock 기반 API/Transaction 테스트 **23개 작성** (현재 로컬 실행 결과 미확인) |
+| [sql/01_schema_preparation.sql](sql/01_schema_preparation.sql) | DB 구조·중복 확인 및 선택적 UNIQUE/강좌 테이블 준비 |
+| [sql/02_verify_insert.sql](sql/02_verify_insert.sql) | Swagger POST와 실제 DB 저장 비교를 위한 SELECT |
+| [requirements.txt](requirements.txt) | FastAPI, psycopg, dotenv, Pydantic 이메일 검증, httpx |
+| [.env.example](.env.example) | 실제 비밀번호가 없는 로컬 환경설정 예시 |
+| [.gitignore](.gitignore) | .env 및 Python 캐시 제외 |
+
+### 로컬 실행
+
+```powershell
+cd C:\dev\fullstack-web-course
+.\.venv\Scripts\Activate.ps1
+git status --short
+# 로컬 변경사항이 없다면 먼저 git pull --ff-only origin main
+cd practice\phase02\chapter07
+python -m pip install -r requirements.txt
+```
+
+`chapter06/.env`가 이미 있다면 **Git에 올리지 않고 로컬에서만** 7강 폴더로 복사합니다.
+
+```powershell
+Copy-Item ..\chapter06\.env .\.env
+```
+
+없으면 `.env.example`을 복사하여 실제 접속정보를 입력하세요. `DB_NAME=postgres`, `DB_SCHEMA=public`이 실습용 설정입니다. 비밀번호는 공유하거나 코드에 직접 쓰지 마세요.
+
+**DB 준비:** DBeaver에서 `sql/01_schema_preparation.sql`의 조회문부터 실행하여 기존 `public.members`와 `public.courses` 구조를 확인합니다. `courses`가 없을 때만 테이블을 생성합니다. 이메일/강좌 UNIQUE 인덱스 추가는 중복 검사와 기존 제약조건 확인 후 **주석을 직접 해제하여 실행**합니다. Python 서버는 테이블을 자동으로 만들거나 변경하지 않습니다.
+
+```powershell
+python -m uvicorn main:app --reload
+```
+
+Swagger: http://127.0.0.1:8000/docs
+
+다른 터미널에서 자동 계약 테스트:
+
+```powershell
+python -m unittest -v test_api.py
+```
+
+이 테스트는 **DB를 Mock으로 대체**하므로 연결/INSERT/rollback의 실제 PostgreSQL 증빙을 대신하지 않습니다.
+
+### 즉시 확인할 테스트 요청
+
+회원 정상 요청:
+
+```json
+{"name": "홍길동", "email": "hong-new@example.com", "age": 27}
+```
+
+같은 이메일로 다시 POST하면 **409**가 예상됩니다. `email: "not-email"` 또는 `age: 151`이면 **422**, 정상 등록은 **201**입니다.
+
+강좌 정상 요청:
+
+```json
+{"title": "FastAPI Basic", "instructor": "Kim", "capacity": 30}
+```
+
+중복 강좌 기준은 **같은 title + instructor**입니다. 생성된 ID로 GET 상세를 조회하고 DBeaver에서 `sql/02_verify_insert.sql`을 실행해 실제 저장을 확인하세요. DB 오류 500/rollback은 스키마 확인 이후 개발용 오류 실습으로 검증하고 반드시 코드를 복구합니다.
+
+---
 
 ## 1. API Contract — POST /members
 

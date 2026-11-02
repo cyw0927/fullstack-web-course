@@ -162,7 +162,7 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 
 - [Backend Overview — 전체 Fullstack 인프라 및 15강 로드맵](practice/phase02/README.md)
 - [7강: POST /members + INSERT + Transaction](practice/phase02/chapter07/README.md)
-- 1~6강 기존 파일은 유지하며, 7강은 중복 이메일 409·Validation 422·트랜잭션 commit/rollback과 Course POST 과제의 계획/검증 항목을 정리했습니다.
+- 1~6강 기존 파일은 유지하며, 7강은 중복 이메일 409·Validation 422·commit/rollback·Course POST 과제의 [실습 코드](practice/phase02/chapter07/main.py), [DB 연결 코드](practice/phase02/chapter07/db.py), [테스트](practice/phase02/chapter07/test_api.py), SQL 및 README까지 준비했습니다.
 - 7강 DB 실습의 완료 Evidence는 아직 확인되지 않았습니다.
 
 ## Phase 02 — Backend / Chapter 01 (2026-10-29)

@@ -16,7 +16,7 @@
 
 ## 7강 실습 안내
 
-7강은 **POST /members + INSERT + Transaction**입니다. 6강에서 먼저 수행한 회원 INSERT를 확장하여 이메일 중복 409, Pydantic 422, SQL 오류 500, 트랜잭션 commit/rollback과 Course POST 과제를 연습합니다. 자세한 단계와 미검증 항목은 [7강 README](chapter07/README.md)를 확인하세요.
+7강은 **POST /members + INSERT + Transaction**입니다. 6강에서 먼저 수행한 회원 INSERT를 확장하여 이메일 중복 409, Pydantic 422, SQL 오류 500, 트랜잭션 commit/rollback과 Course POST 과제를 연습합니다. [7강 main.py](chapter07/main.py), [db.py](chapter07/db.py), [자동 테스트](chapter07/test_api.py), [README](chapter07/README.md)와 SQL 준비 파일을 추가했습니다. 실제 DB/Swagger 수동 검증은 남아 있습니다.
 
 ## 실습 원칙
 
