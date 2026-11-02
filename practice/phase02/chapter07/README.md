@@ -1,179 +1,223 @@
-# 7강 — Backend Overview: 전체 Fullstack 인프라와 FastAPI의 역할
+# 7강. POST /members + INSERT + Transaction
 
-> **진도 정정:** 이 자료는 사용자가 진행하는 과정에서 **7강**으로 제공된 개념 강의입니다. 원문 안의 'Backend 15강 전체 로드맵'에서는 07을 'POST + INSERT/Transaction'으로 표시하지만, 이는 원문 로드맵 번호이며 이 파일의 실제 수업 분류와 구분합니다. 본 강의 자체는 별도의 구현 실습이 없는 전체 구조·학습 방향 소개입니다.
+**강의:** 아토믹데브, 「7강. POST /members + INSERT + Transaction」  
+**기준:** 사용자 제공 수업 자료 (2026-10-29 게시)  
+**학습 상태:** 준비 / 로컬 실습 및 Evidence 미확인  
+**이전 강의:** [6강. FastAPI와 PostgreSQL 연결](../chapter06/README.md)
 
-> 아토믹데브의 「Backend Overview — 전체 Fullstack 인프라와 FastAPI의 역할」 강의 자료를 바탕으로 2차 Backend 과정의 전체 구조와 학습 로드맵을 정리한 문서입니다.
+> 6강에서는 회원 POST → PostgreSQL INSERT → 201 Created를 먼저 실습했습니다. 이번 7강은 그 기능을 **중복 이메일, 입력 검증, commit/rollback, DB 오류**까지 확장하는 단계입니다. 6강 성공 이력을 7강 전체 완료로 취급하지 않습니다.
 
-**위치:** `practice/phase02/chapter07/README.md`
+## 1. API Contract — POST /members
 
-**학습 방식:** AI 활용 바이브 코딩 + API Contract 기반 개발. AI가 초안을 만들더라도 설계, 보안, 검증과 완료 판정은 개발자가 책임집니다.
-
-## 1. 전체 웹 서비스 구조
-
-```text
-사용자 / 브라우저
-   │
-   ▼
-Frontend (HTML·CSS·JavaScript, 이후 React / Next.js)
-   │ HTTPS / REST API / JSON
-   ▼
-[운영 환경의 Reverse Proxy / HTTPS 종단 — 선택 사항]
-   │
-   ▼
-Uvicorn (ASGI 서버) + FastAPI (Backend API)
-   ├─ Router / Endpoint: Method·Path를 Python 함수에 연결
-   ├─ Pydantic: Request / Response Schema와 검증
-   ├─ Service: 비즈니스 규칙과 권한
-   └─ Repository / SQLAlchemy: 데이터 접근
-   │ SQL / ORM
-   ▼
-PostgreSQL (데이터 영구 저장, 제약조건, 트랜잭션)
-```
-
-- **Frontend:** 화면 표시, 입력 수집, API 호출 및 결과 렌더링.
-- **Backend:** 요청 처리, 입력 검증, 인증·권한, 비즈니스 로직, DB 접근, 응답 계약 보장.
-- **Database:** 데이터 저장과 검색, 참조 무결성 및 트랜잭션 보장.
-- **Uvicorn:** FastAPI 앱을 HTTP/ASGI 서버로 실행. 모든 배포에서 Reverse Proxy가 필수인 것은 아님.
-- **원칙:** 브라우저가 DB에 직접 연결하지 않고 Backend가 데이터와 권한을 통제.
-
-## 2. 1차 → 2차 → 3차 과정의 연결
-
-| 교육 과정 | 주요 기술 | 실습 목표 |
-| --- | --- | --- |
-| 1차 Frontend | HTML / CSS / JavaScript / `fetch()` | 제공된 API 호출 및 결과 표시 |
-| 2차 Backend | FastAPI / Pydantic / PostgreSQL / SQLAlchemy | API 설계, 구현, 저장, 검증 |
-| 3차 Frontend 고도화 | TypeScript / React / Next.js | 2차에서 만든 동일 API를 컴포넌트 UI에 연결 |
-
-```text
-1차: Browser ── fetch() ──> 제공 API
-2차: Swagger / Browser ──> FastAPI ──> PostgreSQL
-3차: React / Next.js ──> 같은 FastAPI Contract ──> PostgreSQL
-```
-
-React는 Backend를 대체하지 않습니다. 화면 기술이 바뀌어도 API Contract가 유지되면 같은 Backend를 다시 사용할 수 있습니다.
-
-## 3. 요청과 응답이 처리되는 흐름
-
-```text
-Browser / Swagger → GET /members/3
-  → Uvicorn (HTTP / ASGI)
-  → FastAPI Routing (Method + Path)
-  → 입력 추출·검증 (FastAPI + Pydantic)
-  → Endpoint / Service (업무 규칙)
-  → Repository / SQLAlchemy → PostgreSQL (DB 사용 시)
-  → Pydantic Response Model 검증·직렬화
-  → HTTP Status + JSON Response → Client
-```
-
-실제 애플리케이션에서는 미들웨어, 의존성 주입, 인증·권한, 예외 핸들러가 추가될 수 있고 구체적 처리 순서는 구현에 따라 달라집니다.
-
-### 핵심 용어
-
-| 용어 | 의미 |
+| 구분 | 계약 |
 | --- | --- |
-| HTTP | 클라이언트와 서버의 요청·응답 통신 규약 |
-| Endpoint | 특정 Method / URL을 처리하는 API 진입점 |
-| Routing | 요청을 올바른 Python 함수와 연결 |
-| Path Parameter | `/members/3`처럼 특정 자원의 ID를 지정 |
-| Query Parameter | `?name=kim`처럼 검색·필터 조건 지정 |
-| Request Body | 주로 POST / PUT / PATCH에서 보내는 JSON 데이터 |
-| JSON | 구조화된 텍스트 기반 데이터 교환 형식 |
-| Schema / DTO | 필드와 타입 및 규칙에 대한 데이터 계약 |
-| Validation | 요청·응답 데이터가 계약과 맞는지 확인 |
-| Serialization | Python 값을 JSON 응답에 적합하게 변환 |
-| ORM | Python 객체를 이용해 DB의 데이터를 다루는 방법 |
-| Transaction | 여러 DB 작업의 일관성을 보장하는 단위 |
-| API Contract | Method·URL·Request·Response·Status·Error의 약속 |
+| Method / URL | `POST /members` |
+| Content-Type | `application/json` |
+| Request Model | `name: str` (1~100자), `email: EmailStr`, `age: int` (0~150) |
+| 정상 처리 | PostgreSQL `public.members`에 INSERT → RETURNING → commit |
+| Response Model | `id: int`, `name: str`, `email: EmailStr`, `age: int` |
+| 성공 상태 | `201 Created` |
+| 입력 실패 | `422 Unprocessable Content` — 필드 누락/잘못된 이메일/범위 오류 |
+| 중복 실패 | `409 Conflict` — 같은 이메일 |
+| 서버/DB 실패 | `500 Internal Server Error` — 예상 외 오류, rollback |
 
-## 4. 주요 Backend 기술의 역할
+정상 요청 예시:
 
-| 구성요소 | 역할 |
-| --- | --- |
-| Uvicorn | ASGI 서버 실행 |
-| FastAPI | 라우팅, 엔드포인트, HTTP 요청/응답, OpenAPI / Swagger 문서화 |
-| Pydantic | Request / Response 모델, 검증, 직렬화 |
-| Service | 비즈니스 규칙, 권한 확인, 처리 순서 |
-| Repository | DB 호출을 Endpoint에서 분리하는 계층 |
-| SQLAlchemy | SQL / ORM 모델·세션·데이터 접근 |
-| PostgreSQL | 영구 저장, SQL 처리, UNIQUE / FK 등 무결성, Transaction |
-
-```text
-Client JSON → Pydantic Request Model → FastAPI / Service
-            → SQLAlchemy / Repository → PostgreSQL
-            → Pydantic Response Model → Client JSON
+```json
+{
+  "name": "홍길동",
+  "email": "hong@example.com",
+  "age": 27
+}
 ```
 
-- Pydantic은 **API 입출력 DTO** 역할에 가깝고 SQLAlchemy는 **DB 접근/ORM** 역할을 담당합니다.
-- `response_model`이 외부로 내보낼 필드를 제한할 수 있지만 SQL `SELECT` 자체를 자동 최적화하지는 않습니다.
-- Pydantic이 정수 타입을 검증해도 DB에 해당 FK/ID가 실제 존재하는지는 별도 확인이 필요합니다.
-- 입력 Validation 실패는 보통 **422**, 출력 Response Model의 계약 위반은 서버 오류(보통 **500**)가 될 수 있습니다.
+성공 응답은 서버가 발급한 **실제 ID**를 포함하며, ID 값은 실행할 때마다 달라질 수 있습니다.
 
-## 5. API Contract 기반 개발 루프
-
-```text
-요구사항
- → API Contract (Method / URL / Input / Output / Error)
- → Definition of Done (완료 조건)
- → AI 구현 계획
- → FastAPI / Pydantic / DB 구현
- → Swagger + Server Log + DB SELECT + TestClient 검증
- → 계약 위반 수정 / 회귀 테스트
- → Git Commit / Push
+```json
+{
+  "id": 4,
+  "name": "홍길동",
+  "email": "hong@example.com",
+  "age": 27
+}
 ```
 
-예시 Contract:
+### Pydantic 입력/출력 모델 초안
 
-| API | 성공 계약 | 실패 계약 |
-| --- | --- | --- |
-| `GET /members` | 200 + 회원 목록 JSON | DB 오류 등 별도 처리 |
-| `GET /members/3` | 200 + 회원 객체 | 없는 ID: 404, 잘못된 타입: 422 |
-| `POST /members` | 201 + 생성된 회원 JSON | 입력 구조·타입 오류: 422 |
+```python
+from pydantic import BaseModel, EmailStr, Field
 
-**중요:** 201 응답만으로 DB 저장을 확인했다고 단정하지 않습니다. DB에 실제 데이터가 존재하는지 SQL SELECT 및 반환값과 비교해 검증합니다.
+class MemberCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    email: EmailStr
+    age: int = Field(ge=0, le=150)
 
-## 6. Backend 15강 전체 로드맵
+class MemberResponse(MemberCreate):
+    id: int
+```
 
-| 강 | 주제 | 실습 핵심 | 이 저장소 진행 |
-| --- | --- | --- | --- |
-| 01 | Backend 구조와 첫 FastAPI | Uvicorn, Swagger, GET /members | [Chapter 01](chapter01/) |
-| 02 | Path/Query Parameter | 상세 조회·검색·필터, 404/422 | [Chapter 02](chapter02/) |
-| 03 | Request Body/Pydantic | POST JSON, 필수값·타입 검증 | [Chapter 03](chapter03/) |
-| 04 | Response Model/Status Code | Request/Response 모델 구분, 응답 계약 | [Chapter 04](chapter04/) |
-| 05 | PostgreSQL/환경설정 | psycopg, .env, 연결/Secret | [Chapter 05](chapter05/) |
-| 06 | GET + SELECT | 실제 DB 조회와 Swagger 응답 비교 | [Chapter 06](chapter06/) |
-| 07 | POST + INSERT/Transaction | 저장, commit / rollback | 미착수 |
-| 08 | PUT/PATCH + UPDATE | 전체·부분 수정, null 정책 | 미착수 |
-| 09 | DELETE + DELETE SQL | 삭제, 204/404 | 미착수 |
-| 10 | Backend 계층 구조화 | Router / Service / Repository | 미착수 |
-| 11 | SQLAlchemy ORM 기초 | Model, Session, SQL 관계 | 미착수 |
-| 12 | ORM 기반 CRUD | ORM 작업 및 Transaction | 미착수 |
-| 13 | 예외·로그·테스트 | HTTPException, TestClient | 미착수 |
-| 14 | CORS·Frontend 연동·보안 | Origin, 환경 분리, Secret | 미착수 |
-| 15 | AI 기반 Backend 미니 프로젝트 | Contract → DB → ORM → 테스트 → GitHub | 미착수 |
+**패키지 주의:** `EmailStr`을 사용하려면 기존 FastAPI/Pydantic 외에 `email-validator` 패키지가 필요할 수 있습니다. 설치 명령: `python -m pip install "pydantic[email]"`.
 
-> **진도 참고:** 강의 로드맵상 POST + INSERT는 7강이지만, 사용자가 6강에서 추가 과제로 실제 POST /members → PostgreSQL INSERT → 201 응답 구현을 실습했습니다. [Chapter 06](chapter06/) README에 해당 이력을 기록했습니다. 7강 전체가 완료되었다는 뜻은 아닙니다.
+## 2. Transaction 흐름
 
-### 저장소에서 확인할 사항
+```text
+POST /members
+ → Pydantic Request Validation
+   ├─ 입력 형식 오류 → 422 (INSERT 실행 전)
+   └─ 정상 입력
+      → PostgreSQL 연결
+      → 중복 이메일 확인
+      ├─ 중복 → 409 + rollback/종료
+      └─ 신규 → parameterized INSERT ... RETURNING
+                 → commit → 201 + MemberResponse
+                   (DB 오류 → rollback → 500)
+```
 
-- 1~6강 폴더는 이미 만들어졌으며, 코드를 직접 실행하지 않은 항목이나 수동 검증 미완료 항목은 각 Chapter README에 구분되어 있습니다.
-- `chapter05`와 `chapter06`의 비밀정보 `.env`는 GitHub에 저장하지 않고 `.env.example`만 공유합니다.
-- 이 Overview는 교육 내용과 학습 진행 안내 문서이며 **새로운 FastAPI Endpoint를 추가하지 않습니다.**
+- **commit**: 실행한 변경을 DB에 확정합니다.
+- **rollback**: 트랜잭션에서 수행한 변경을 취소합니다.
+- **RETURNING**: INSERT가 생성한 ID/회원 데이터를 곧바로 반환합니다.
+- **parameterized query**: SQL 문자열과 사용자 입력값을 분리하고 `%s` 바인딩을 사용합니다.
+- `psycopg.connect()` 컨텍스트 매니저를 사용하면 정상 종료 시 commit, 예외 시 rollback 후 연결 종료됩니다. 강의의 명시적 `conn.commit()`, `conn.rollback()` 패턴과 둘 중 하나를 일관되게 사용해도 됩니다.
 
-## 7. 학습 확인 질문
+## 3. DB 실습 전에 확인할 실제 구조
 
-1. React로 UI를 다시 만들 때 기존 FastAPI API를 재사용할 수 있는가?
-2. Pydantic이 회원 ID의 타입을 검증하면 해당 회원의 DB 존재까지 보장하는가?
-3. HTTP 200 또는 201 응답만으로 실제 DB 저장을 증명할 수 있는가?
-4. AI가 코드를 생성했다는 사실만으로 과제가 완료되었다고 할 수 있는가?
+6강에서 사용했던 로컬 DB는 `postgres` / `public` / `members(id, name, email, age)`입니다.
 
-## 8. 개념 이해 체크리스트
+DBeaver에서 먼저 확인:
 
-- [ ] Frontend / Backend / Database의 책임을 설명할 수 있다.
-- [ ] 1차 / 2차 / 3차 과정이 어떻게 연결되는지 설명할 수 있다.
-- [ ] FastAPI / Uvicorn / Pydantic / SQLAlchemy / PostgreSQL을 구분할 수 있다.
-- [ ] Request부터 JSON Response까지의 흐름을 설명할 수 있다.
-- [ ] API Contract와 Swagger / DB / 테스트 Evidence의 필요성을 설명할 수 있다.
+```sql
+SELECT current_database(), current_schema();
+
+SELECT column_name, data_type
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name = 'members'
+ORDER BY ordinal_position;
+
+SELECT id, name, email, age
+FROM public.members
+ORDER BY id;
+```
+
+**주의:** 과거 사용자가 공유한 `CREATE TABLE`에는 `email UNIQUE`가 없을 가능성이 있습니다. 7강 중복 요청을 정확히 보호하려면 **사전 SELECT 검사만으로 충분하지 않으므로** DB의 유니크 제약조건 유무도 확인해야 합니다. 동시 요청 사이에 중복이 발생할 수 있기 때문입니다. 기존 데이터와 제약조건을 확인하기 전에 테이블을 임의로 변경하지 않습니다.
+
+제약조건 확인:
+
+```sql
+SELECT conname, contype, pg_get_constraintdef(oid) AS definition
+FROM pg_constraint
+WHERE conrelid = 'public.members'::regclass;
+```
+
+중복 데이터 확인:
+
+```sql
+SELECT email, COUNT(*) AS count
+FROM public.members
+GROUP BY email
+HAVING COUNT(*) > 1;
+```
+
+제약조건을 추가하기 전 기존 중복 데이터와 다른 코드가 받는 영향을 검토합니다. INSERT 중 유니크 충돌이 발생하면 `psycopg.errors.UniqueViolation` 등을 별도로 처리하여 `409`로 대응할 수 있습니다. 예상 외 DB 오류는 세부 연결정보/SQL을 사용자에게 노출하지 않고 로그에만 남깁니다.
+
+## 4. 핵심 SQL
+
+중복 이메일 사전 확인:
+
+```sql
+SELECT id
+FROM public.members
+WHERE email = %s;
+```
+
+INSERT + RETURNING:
+
+```sql
+INSERT INTO public.members (name, email, age)
+VALUES (%s, %s, %s)
+RETURNING id, name, email, age;
+```
+
+Python의 `cur.execute(sql, (member.name, member.email, member.age))`처럼 바인딩합니다. SQL에 사용자 입력을 f-string으로 직접 삽입하지 않습니다.
+
+## 5. 실습 순서 (직접 코딩)
+
+1. `chapter06`의 작동한 코드, `db.py`, `.env.example`을 참고하되 기존 장은 수정하지 않고 **chapter07 별도 실습**으로 진행합니다.
+2. `MemberCreate`, `MemberResponse` 모델과 201/409/422/500 Contract를 정의합니다.
+3. DB UNIQUE 여부를 확인하고 사전 중복 체크, 필요시 UNIQUE 충돌 처리 방법을 결정합니다.
+4. INSERT/RETURNING을 매개변수화하고 성공 시 commit, 실패 시 rollback과 연결 종료를 확인합니다.
+5. Swagger `POST /members` 성공 시 201과 생성 ID를 확인합니다.
+6. DBeaver SELECT로 같은 회원의 저장 여부를 확인합니다.
+7. 같은 이메일로 POST하여 409, DB Row 수 불변을 확인합니다.
+8. `not-email`, `age: "abc"`, 범위를 벗어난 나이로 422를 확인합니다.
+9. 개발용 SQL 컬럼명을 일부러 잘못 지정해 500 + rollback + DB 불변을 확인하고 **반드시 원복**합니다.
+10. `GET /members/{member_id}` 상세 조회도 구현해 생성된 회원을 확인합니다.
+11. 아래 Course API 과제의 실제 테이블을 검토한 뒤 구현합니다.
+12. README에 Swagger / DB / 오류 Evidence를 기록하고 .env 제외 확인 후 Git에 커밋합니다.
+
+## 6. Course Registration 과제
+
+`POST /courses` 요청 예시:
+
+```json
+{
+  "title": "FastAPI Basic",
+  "instructor": "Kim",
+  "capacity": 30
+}
+```
+
+- 요청 모델을 정의하고 PostgreSQL `INSERT` + `RETURNING`으로 저장합니다.
+- 정상 201, 필수 입력·타입 오류 422, 중복 강좌 규칙을 명시해 409를 구현합니다.
+- 예기치 못한 SQL 오류 시 rollback 및 500을 확인합니다.
+- **실제 courses 테이블 존재 여부/컬럼명은 아직 미확인**입니다. 과거 DBeaver에 다른 DB의 `course_project.courses` 등이 있었지만 현재 `postgres` DB에 동일한 테이블이 있다고 가정해서는 안 됩니다.
+- 실제 스키마를 확인한 다음 SQL/모델을 확정합니다.
+
+테이블 탐색용 SQL:
+
+```sql
+SELECT table_schema, table_name
+FROM information_schema.tables
+WHERE table_type = 'BASE TABLE'
+  AND table_name = 'courses'
+ORDER BY table_schema;
+```
+
+## 7. 제출 및 Definition of Done
+
+- [ ] POST /members에서 정상 201과 생성 ID 확인.
+- [ ] DBeaver SELECT가 Swagger 결과의 id/name/email/age와 일치.
+- [ ] `GET /members/{member_id}`로 실제 생성 회원 조회.
+- [ ] 동일 이메일 POST 시 409 및 DB 행 개수 불변 확인.
+- [ ] Pydantic 잘못된 입력에서 422 확인.
+- [ ] 의도적 DB 오류에서 500과 rollback, DB 불변 확인 후 원복.
+- [ ] Connection/Cursor 종료 및 parameterized query 사용 확인.
+- [ ] POST /courses 요구사항/테이블 구조 확인 및 201/409/422/rollback 검증.
+- [ ] `.env`가 Git에 포함되지 않는지 검사.
+- [ ] 실습/검증 Evidence를 README에 반영하고 Git Commit / Push.
+
+### 검증 SQL (실제 응답값으로 바꿔 실행)
+
+```sql
+SELECT id, name, email, age
+FROM public.members
+WHERE id = 123; -- 실제 Swagger 응답의 ID로 교체
+```
+
+### GitHub 제출 준비
+
+```powershell
+cd C:\dev\fullstack-web-course
+git check-ignore -v practice/phase02/chapter07/.env
+git status --short
+git add practice/phase02/chapter07
+git diff --cached --name-only
+git commit -m "Complete phase02 chapter07 POST insert transaction"
+git push origin main
+```
+
+> **상태 구분:** 위는 7강 실습 계획/학습 문서입니다. 사용자 로컬 PostgreSQL에서 중복 처리 및 트랜잭션을 직접 실행했다는 증거는 아직 없으므로 완료로 표시하지 않습니다. 강의 원문 자체는 6강에서 일부 실행한 POST 흐름과 별개의 7강입니다.
 
 ---
 
-출처: 아토믹데브, 「Backend Overview — 전체 Fullstack 인프라와 FastAPI의 역할」 (사용자가 제공한 강의 자료).
+출처: 아토믹데브, 「7강. POST /members + INSERT + Transaction」 (사용자가 제공한 강의 전문).

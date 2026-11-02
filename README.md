@@ -158,12 +158,12 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사 원본 Starter Kit ZIP을 찾아 다운로드·설치용 PowerShell 스크립트를 추가했습니다.** 실제 ZIP은 사용자 로컬에서 내려받아 압축 해제합니다. 개인 API Key는 포함하지 않습니다. 기존 수업 파일은 수정하지 않았습니다.
 
 
-## Phase 02 — Backend 7강 Overview (2026-11-02)
+## Phase 02 — Backend Overview 및 7강 (2026-11-02)
 
-- [7강: Backend Overview — 전체 Fullstack 인프라, 핵심 용어 및 15강 로드맵](practice/phase02/chapter07/README.md)
-- [2차 Backend 강의별 기록과 진행 순서](practice/phase02/README.md)
-- 1차 Frontend → 2차 Backend → 3차 React/Next.js 연결, API Contract 기반 검증을 정리했습니다.
-- 실제 진행 순서상 이 자료가 **7강**입니다. 원문에 포함된 로드맵의 '07 POST + INSERT/Transaction'과는 구분합니다.
+- [Backend Overview — 전체 Fullstack 인프라 및 15강 로드맵](practice/phase02/README.md)
+- [7강: POST /members + INSERT + Transaction](practice/phase02/chapter07/README.md)
+- 1~6강 기존 파일은 유지하며, 7강은 중복 이메일 409·Validation 422·트랜잭션 commit/rollback과 Course POST 과제의 계획/검증 항목을 정리했습니다.
+- 7강 DB 실습의 완료 Evidence는 아직 확인되지 않았습니다.
 
 ## Phase 02 — Backend / Chapter 01 (2026-10-29)
 
