@@ -158,6 +158,12 @@ Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상�
 서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사 원본 Starter Kit ZIP을 찾아 다운로드·설치용 PowerShell 스크립트를 추가했습니다.** 실제 ZIP은 사용자 로컬에서 내려받아 압축 해제합니다. 개인 API Key는 포함하지 않습니다. 기존 수업 파일은 수정하지 않았습니다.
 
 
+## Phase 02 — Backend Overview (2026-11-02)
+
+- [Backend Overview — 전체 Fullstack 인프라, 핵심 용어 및 15강 로드맵](practice/phase02/README.md)
+- 1차 Frontend → 2차 Backend → 3차 React/Next.js 연결 관계와 API Contract 기반 검증 과정을 정리했습니다.
+- 1~6강 기존 실습은 그대로 유지하며 7강 이후는 학습 예정으로 표시했습니다.
+
 ## Phase 02 — Backend / Chapter 01 (2026-10-29)
 
 프론트엔드 실습은 `practice/phase01/`에 유지하고, 백엔드는 `practice/phase02/`에 분리합니다.
