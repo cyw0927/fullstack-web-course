@@ -255,3 +255,13 @@ TestClient 기반 자동 테스트 24개를 통과했습니다. `http://127.0.0.
 cd C:\dev\fullstack-web-course\practice\phase02\chapter06
 python -m uvicorn main:app --reload
 ```
+
+## Phase 02 — Backend / Chapter 08 (2026-11-02)
+
+- [8강 README — PUT/PATCH + UPDATE 계약·검증 절차](practice/phase02/chapter08/README.md)
+- [8강 FastAPI main.py](practice/phase02/chapter08/main.py)
+- [8강 PostgreSQL db.py](practice/phase02/chapter08/db.py)
+- [8강 Mock 단위 테스트](practice/phase02/chapter08/test_api.py)
+- [8강 SQL 사전 점검 및 저장 검증](practice/phase02/chapter08/sql/)
+
+이 장에서는 이전 GET/POST 기능을 보존하고 회원/강좌 전체 수정 PUT과 부분 수정 PATCH를 추가했습니다. 명시적 null은 422, 빈 PATCH는 400으로 구분하며, 실제 로컬 DB의 UPDATE 성공과 재조회 결과는 별도 수동 검증이 필요합니다.

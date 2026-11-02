@@ -13,10 +13,15 @@
 | 5강 | PostgreSQL 연결과 SQL 직접 실행 | [Chapter 05](chapter05/README.md) |
 | 6강 | FastAPI·PostgreSQL 통합과 POST 추가 과제 | [Chapter 06](chapter06/README.md) |
 | **7강** | **POST /members + INSERT + Transaction** | **[Chapter 07](chapter07/README.md)** |
+| **8강** | **PUT/PATCH + UPDATE — 전체·부분 수정** | **[Chapter 08](chapter08/README.md)** |
 
 ## 7강 실습 안내
 
 7강은 **POST /members + INSERT + Transaction**입니다. 6강에서 먼저 수행한 회원 INSERT를 확장하여 이메일 중복 409, Pydantic 422, SQL 오류 500, 트랜잭션 commit/rollback과 Course POST 과제를 연습합니다. [7강 main.py](chapter07/main.py), [db.py](chapter07/db.py), [자동 테스트](chapter07/test_api.py), [README](chapter07/README.md)와 SQL 준비 파일을 추가했습니다. 실제 DB/Swagger 수동 검증은 남아 있습니다.
+
+## 8강 실습 안내
+
+8강은 기존 7강의 CRUD API에서 회원·강좌 PUT/PATCH 수정으로 확장합니다. **PUT 전체 필수값, PATCH 선택 필드, 생략/명시적 null 구분, 빈 PATCH 400, 대상 없음 404, 이메일 충돌 409, 검증 오류 422**를 계약으로 구현했습니다. [8강 실행 코드](chapter08/main.py), [DB SQL 로직](chapter08/db.py), [단위 테스트](chapter08/test_api.py), [README](chapter08/README.md) 및 SQL 검증 파일을 준비했으며, 사용자 로컬 DB에 대한 최종 Evidence는 아직 확인되지 않았습니다.
 
 ## 실습 원칙
 
