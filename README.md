@@ -225,3 +225,26 @@ python -m unittest -v test_api.py
 ```
 
 TestClient 기반 자동 테스트 24개를 통과했습니다. `http://127.0.0.1:8000/docs`에서 200 / 201 / 404 / 422 및 Create/Response Schema를 수동으로 확인할 수 있습니다. 브라우저 수동 검증은 아직 사용자가 확인해야 합니다.
+
+## Phase 02 — Backend / Chapter 05~06 (2026-10-30)
+
+### Chapter 05 — PostgreSQL 연결 및 SELECT
+
+- [5강 Python DB 연결 코드](practice/phase02/chapter05/db.py)
+- [5강 main.py — 연결/SQL 출력](practice/phase02/chapter05/main.py)
+- [5강 실습 README](practice/phase02/chapter05/README.md)
+- [members 테이블 생성 및 SELECT SQL](practice/phase02/chapter05/sql/01_members_setup.sql)
+
+### Chapter 06 — PostgreSQL 연동 GET/POST
+
+- [6강 FastAPI main.py](practice/phase02/chapter06/main.py)
+- [6강 PostgreSQL db.py](practice/phase02/chapter06/db.py)
+- [6강 실습/과제 README](practice/phase02/chapter06/README.md)
+- [6강 DB Mock 기반 자동 테스트](practice/phase02/chapter06/test_api.py)
+
+두 장 모두 실제 접속 설정은 Git에서 제외되는 .env로 관리하며 .env.example만 공개합니다. 6강에서는 사용자의 Swagger POST 201 화면이 확인됐으며, DBeaver SELECT 일치 결과와 422 수동 검증 화면은 아직 미확인입니다.
+
+```powershell
+cd C:\dev\fullstack-web-course\practice\phase02\chapter06
+python -m uvicorn main:app --reload
+```

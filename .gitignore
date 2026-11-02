@@ -1,0 +1,13 @@
+# PostgreSQL connection credentials and other local secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environments
+.venv/
+venv/
+
+# Python temporary files
+__pycache__/
+*.py[cod]
+.pytest_cache/
