@@ -265,3 +265,13 @@ python -m uvicorn main:app --reload
 - [8강 SQL 사전 점검 및 저장 검증](practice/phase02/chapter08/sql/)
 
 이 장에서는 이전 GET/POST 기능을 보존하고 회원/강좌 전체 수정 PUT과 부분 수정 PATCH를 추가했습니다. 명시적 null은 422, 빈 PATCH는 400으로 구분하며, 실제 로컬 DB의 UPDATE 성공과 재조회 결과는 별도 수동 검증이 필요합니다.
+
+## Phase 02 — Backend / Chapter 09 (2026-11-03)
+
+- [9강 README — 회원 DELETE + PostgreSQL](practice/phase02/chapter09/README.md)
+- [9강 FastAPI 코드](practice/phase02/chapter09/main.py)
+- [9강 DB DELETE/트랜잭션 코드](practice/phase02/chapter09/db.py)
+- [9강 단위 테스트](practice/phase02/chapter09/test_api.py)
+- [DBeaver 검증 SQL](practice/phase02/chapter09/sql/verify_delete.sql)
+
+9강에서는 강의 핵심인 회원 GET 상세 조회와 DELETE 두 엔드포인트를 구현했습니다. 204 빈 Body, 삭제 후 DB 0행과 GET 404를 실습해야 하며, 로컬 실제 DB 검증은 미완료입니다.

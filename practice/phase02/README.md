@@ -14,6 +14,7 @@
 | 6강 | FastAPI·PostgreSQL 통합과 POST 추가 과제 | [Chapter 06](chapter06/README.md) |
 | **7강** | **POST /members + INSERT + Transaction** | **[Chapter 07](chapter07/README.md)** |
 | **8강** | **PUT/PATCH + UPDATE — 전체·부분 수정** | **[Chapter 08](chapter08/README.md)** |
+| **9강** | **회원 삭제 DELETE + PostgreSQL** | **[Chapter 09](chapter09/README.md)** |
 
 ## 7강 실습 안내
 
@@ -22,6 +23,10 @@
 ## 8강 실습 안내
 
 8강은 기존 7강의 CRUD API에서 회원·강좌 PUT/PATCH 수정으로 확장합니다. **PUT 전체 필수값, PATCH 선택 필드, 생략/명시적 null 구분, 빈 PATCH 400, 대상 없음 404, 이메일 충돌 409, 검증 오류 422**를 계약으로 구현했습니다. [8강 실행 코드](chapter08/main.py), [DB SQL 로직](chapter08/db.py), [단위 테스트](chapter08/test_api.py), [README](chapter08/README.md) 및 SQL 검증 파일을 준비했으며, 사용자 로컬 DB에 대한 최종 Evidence는 아직 확인되지 않았습니다.
+
+## 9강 실습 안내
+
+9강은 회원 상세 GET과 DELETE 두 엔드포인트에 집중해, **204 빈 응답 → DB SELECT 0행 → GET 404**를 직접 검증합니다. [9강 코드](chapter09/main.py), [DB 접근 코드](chapter09/db.py), [테스트](chapter09/test_api.py), [README](chapter09/README.md)가 준비되어 있으며, 실제 PostgreSQL 삭제 검증은 별도로 수행해야 합니다.
 
 ## 실습 원칙
 
