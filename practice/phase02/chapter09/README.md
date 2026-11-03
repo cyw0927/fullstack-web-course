@@ -1,3 +1,6 @@
+> **공통 실행 안내 (최신):** 모든 명령은 `practice/phase02`에서 실행합니다.
+> Python 환경을 활성화한 뒤 `python -m uvicorn chapter08.main:app --reload`처럼 강의 번호를 바꾸어 실행하세요. 5강은 `python -m chapter05.main`입니다. DB 설정은 `common/.env` 하나를 사용합니다. 기존 강의별 `.env`는 자동으로 읽지 않습니다. 아래 이전 안내의 개별 `db.py`, `.env`, 실행 경로는 이 안내로 대체합니다.
+
 # 9강. 회원 삭제 DELETE API + PostgreSQL DELETE
 
 **강의:** 아토믹데브, 「9강. 회원 삭제 DELETE API + PostgreSQL DELETE」 (2026-10-29)  

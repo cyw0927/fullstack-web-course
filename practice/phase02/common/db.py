@@ -264,3 +264,30 @@ def update_course_fields(course_id: int, changes: dict):
         raise
     finally:
         conn.close()
+
+
+def check_connection():
+    """현재 연결된 데이터베이스와 스키마를 확인합니다."""
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT current_database(), current_schema();")
+            return cur.fetchone()
+
+
+def delete_member_by_id(member_id: int):
+    """삭제 결과를 확인하고 성공 시 commit, 실패 시 rollback합니다."""
+    conn = get_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM public.members WHERE id = %s RETURNING id;", (member_id,))
+            row = cur.fetchone()
+        if row is None:
+            conn.rollback()
+            return None
+        conn.commit()
+        return row[0]
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()

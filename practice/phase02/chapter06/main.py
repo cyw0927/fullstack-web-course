@@ -3,7 +3,7 @@
 from fastapi import FastAPI, status
 from pydantic import BaseModel
 
-from db import fetch_members, insert_member
+from common.db import fetch_members, insert_member
 
 app = FastAPI(title="Backend Chapter 06 — PostgreSQL Members API")
 

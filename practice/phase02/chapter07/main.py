@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 
-from db import (
+from common.db import (
     DuplicateCourseError,
     DuplicateEmailError,
     fetch_courses,

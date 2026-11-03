@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, patch
 
 from fastapi.testclient import TestClient
 
-import db
-from main import app
+import common.db as db
+from chapter07.main import app
 
 
 class Chapter07ApiTests(unittest.TestCase):
@@ -25,7 +25,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"message": "라면먹고갈래"})
 
-    @patch("main.fetch_members", return_value=[
+    @patch("chapter07.main.fetch_members", return_value=[
         (1, "Kim", "kim@example.com", 25),
         (2, "Lee", "lee@example.com", 31),
     ])
@@ -37,23 +37,23 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(set(response.json()[0]), {"id", "name", "email", "age"})
         fetch.assert_called_once()
 
-    @patch("main.find_member", return_value=(3, "Park", "park@example.com", 28))
+    @patch("chapter07.main.find_member", return_value=(3, "Park", "park@example.com", 28))
     def test_get_member_by_id(self, find):
         response = self.client.get("/members/3")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["email"], "park@example.com")
         find.assert_called_once_with(3)
 
-    @patch("main.find_member", return_value=None)
+    @patch("chapter07.main.find_member", return_value=None)
     def test_get_member_unknown_404(self, find):
         self.assertEqual(self.client.get("/members/999").status_code, 404)
 
-    @patch("main.find_member")
+    @patch("chapter07.main.find_member")
     def test_get_member_invalid_id_422(self, find):
         self.assertEqual(self.client.get("/members/abc").status_code, 422)
         find.assert_not_called()
 
-    @patch("main.insert_member", return_value=(3, "홍길동", "hong@example.com", 27))
+    @patch("chapter07.main.insert_member", return_value=(3, "홍길동", "hong@example.com", 27))
     def test_post_member_201(self, insert):
         data = {"name": "홍길동", "email": "hong@example.com", "age": 27}
         response = self.client.post("/members", json=data)
@@ -61,7 +61,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.json(), {"id": 3, **data})
         insert.assert_called_once_with("홍길동", "hong@example.com", 27)
 
-    @patch("main.insert_member", side_effect=db.DuplicateEmailError("duplicate"))
+    @patch("chapter07.main.insert_member", side_effect=db.DuplicateEmailError("duplicate"))
     def test_post_duplicate_email_409(self, insert):
         response = self.client.post("/members", json={
             "name": "Kim", "email": "kim@example.com", "age": 25
@@ -69,7 +69,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 409)
         self.assertEqual(response.json()["detail"], "이미 등록된 이메일입니다.")
 
-    @patch("main.insert_member")
+    @patch("chapter07.main.insert_member")
     def test_post_member_invalid_email_422_before_insert(self, insert):
         response = self.client.post("/members", json={
             "name": "Kim", "email": "not-email", "age": 25
@@ -77,7 +77,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         insert.assert_not_called()
 
-    @patch("main.insert_member")
+    @patch("chapter07.main.insert_member")
     def test_post_member_out_of_range_age_422(self, insert):
         response = self.client.post("/members", json={
             "name": "Kim", "email": "kim@example.com", "age": 151
@@ -85,7 +85,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         insert.assert_not_called()
 
-    @patch("main.insert_member")
+    @patch("chapter07.main.insert_member")
     def test_post_member_empty_name_422(self, insert):
         response = self.client.post("/members", json={
             "name": "", "email": "kim@example.com", "age": 25
@@ -93,7 +93,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         insert.assert_not_called()
 
-    @patch("main.insert_member", side_effect=RuntimeError("forced SQL error"))
+    @patch("chapter07.main.insert_member", side_effect=RuntimeError("forced SQL error"))
     def test_post_member_db_failure_500(self, insert):
         response = self.client.post("/members", json={
             "name": "Park", "email": "park@example.com", "age": 30
@@ -102,7 +102,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.json()["detail"], "회원 등록 중 오류가 발생했습니다.")
         self.assertNotIn("forced SQL error", response.text)
 
-    @patch("main.fetch_courses", return_value=[
+    @patch("chapter07.main.fetch_courses", return_value=[
         (1, "Database", "Kim", 30)
     ])
     def test_get_courses(self, fetch):
@@ -110,11 +110,11 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0]["title"], "Database")
 
-    @patch("main.find_course", return_value=None)
+    @patch("chapter07.main.find_course", return_value=None)
     def test_missing_course_404(self, find):
         self.assertEqual(self.client.get("/courses/99").status_code, 404)
 
-    @patch("main.insert_course", return_value=(3, "FastAPI Basic", "Kim", 30))
+    @patch("chapter07.main.insert_course", return_value=(3, "FastAPI Basic", "Kim", 30))
     def test_post_course_201(self, insert):
         body = {"title": "FastAPI Basic", "instructor": "Kim", "capacity": 30}
         response = self.client.post("/courses", json=body)
@@ -122,14 +122,14 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.json(), {"id": 3, **body})
         insert.assert_called_once_with("FastAPI Basic", "Kim", 30)
 
-    @patch("main.insert_course", side_effect=db.DuplicateCourseError("duplicate"))
+    @patch("chapter07.main.insert_course", side_effect=db.DuplicateCourseError("duplicate"))
     def test_post_course_duplicate_409(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": 30
         })
         self.assertEqual(response.status_code, 409)
 
-    @patch("main.insert_course")
+    @patch("chapter07.main.insert_course")
     def test_post_course_bad_capacity_422(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": "oops"
@@ -137,7 +137,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         insert.assert_not_called()
 
-    @patch("main.insert_course", side_effect=RuntimeError("forced SQL error"))
+    @patch("chapter07.main.insert_course", side_effect=RuntimeError("forced SQL error"))
     def test_post_course_db_failure_500(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": 30
@@ -160,7 +160,7 @@ class DatabaseTransactionTests(unittest.TestCase):
         conn.cursor.return_value.__enter__.return_value = cur
         return conn, cur
 
-    @patch("db.get_connection")
+    @patch("common.db.get_connection")
     def test_member_insert_commits_and_closes(self, connect):
         conn, cur = self.fake_connection()
         connect.return_value = conn
@@ -179,7 +179,7 @@ class DatabaseTransactionTests(unittest.TestCase):
         conn.rollback.assert_not_called()
         conn.close.assert_called_once()
 
-    @patch("db.get_connection")
+    @patch("common.db.get_connection")
     def test_member_duplicate_rolls_back(self, connect):
         conn, cur = self.fake_connection()
         connect.return_value = conn
@@ -191,7 +191,7 @@ class DatabaseTransactionTests(unittest.TestCase):
         conn.commit.assert_not_called()
         conn.close.assert_called_once()
 
-    @patch("db.get_connection")
+    @patch("common.db.get_connection")
     def test_member_sql_error_rolls_back(self, connect):
         conn, cur = self.fake_connection()
         connect.return_value = conn
@@ -202,7 +202,7 @@ class DatabaseTransactionTests(unittest.TestCase):
         conn.commit.assert_not_called()
         conn.close.assert_called_once()
 
-    @patch("db.get_connection")
+    @patch("common.db.get_connection")
     def test_course_insert_commits(self, connect):
         conn, cur = self.fake_connection()
         connect.return_value = conn
@@ -214,7 +214,7 @@ class DatabaseTransactionTests(unittest.TestCase):
         conn.rollback.assert_not_called()
         conn.close.assert_called_once()
 
-    @patch("db.get_connection")
+    @patch("common.db.get_connection")
     def test_course_duplicate_rolls_back(self, connect):
         conn, cur = self.fake_connection()
         connect.return_value = conn

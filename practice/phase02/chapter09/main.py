@@ -9,7 +9,7 @@ import logging
 from fastapi import FastAPI, HTTPException, Response, status
 from pydantic import BaseModel, EmailStr
 
-import db as storage
+import common.db as storage
 
 app = FastAPI(title="Chapter 09 — Member DELETE")
 logger = logging.getLogger(__name__)

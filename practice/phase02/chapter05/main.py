@@ -1,6 +1,6 @@
 """Run database connection and SELECT checks without starting FastAPI."""
 
-from db import check_connection, fetch_members
+from common.db import check_connection, fetch_members
 
 
 def main():

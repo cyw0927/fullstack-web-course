@@ -1,3 +1,6 @@
+> **공통 실행 안내 (최신):** 모든 명령은 `practice/phase02`에서 실행합니다.
+> Python 환경을 활성화한 뒤 `python -m uvicorn chapter08.main:app --reload`처럼 강의 번호를 바꾸어 실행하세요. 5강은 `python -m chapter05.main`입니다. DB 설정은 `common/.env` 하나를 사용합니다. 기존 강의별 `.env`는 자동으로 읽지 않습니다. 아래 이전 안내의 개별 `db.py`, `.env`, 실행 경로는 이 안내로 대체합니다.
+
 # Phase 02 — Backend 학습 안내
 
 이 디렉터리는 2차 FastAPI·PostgreSQL 실습을 순서대로 정리한 곳입니다. 프론트엔드 1차 과정은 `../phase01/`에 남겨 두었습니다.
@@ -214,3 +217,19 @@ Client JSON → Pydantic Request Model → FastAPI / Service
 ---
 
 출처: 아토믹데브, 「Backend Overview — 전체 Fullstack 인프라와 FastAPI의 역할」 (사용자가 제공한 강의 자료).
+
+## 공통 DB 모듈 및 검증
+
+`common/.env.example`을 복사하여 `common/.env`를 만들고 DB 접속 정보를 입력합니다. 이 파일은 Git에서 제외됩니다. 환경변수는 `.env`보다 우선합니다. 기존 강의별 설정은 자동으로 옮겨지지 않으므로 필요한 설정을 직접 확인하세요.
+
+```powershell
+cd practice/phase02
+# 기존 .venv가 있다면 활성화
+.venv/Scripts/Activate.ps1
+python -m chapter05.main
+python -m uvicorn chapter06.main:app --reload
+# 다른 강의는 chapter07, chapter08 또는 chapter09 사용
+python -m unittest chapter06.test_api chapter07.test_api chapter08.test_api chapter09.test_api
+```
+
+8강의 강좌 API는 기존 호환성을 위해 유지하지만 Swagger에서는 숨깁니다. 테스트의 DB 동작은 모의 객체이므로 실제 DB commit/rollback의 증거가 아닙니다. 이메일 중복을 동시 요청에서도 방지하려면 DB의 email UNIQUE 제약이 필요합니다.

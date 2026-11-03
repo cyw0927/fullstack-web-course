@@ -5,9 +5,9 @@ import logging
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, model_validator
 
-import db as storage
+import common.db as storage
 
-from db import (
+from common.db import (
     DuplicateCourseError,
     DuplicateEmailError,
     fetch_courses,
@@ -90,12 +90,12 @@ def create_member(member: MemberCreate):
         ) from exc
 
 
-@app.get("/courses", response_model=list[CourseResponse])
+@app.get("/courses", response_model=list[CourseResponse], include_in_schema=False)
 def get_courses():
     return [course_dict(row) for row in fetch_courses()]
 
 
-@app.get("/courses/{course_id}", response_model=CourseResponse)
+@app.get("/courses/{course_id}", response_model=CourseResponse, include_in_schema=False)
 def get_course(course_id: int):
     row = find_course(course_id)
     if row is None:
@@ -105,6 +105,7 @@ def get_course(course_id: int):
 
 @app.post(
     "/courses",
+    include_in_schema=False,
     response_model=CourseResponse,
     status_code=status.HTTP_201_CREATED,
 )
@@ -204,12 +205,12 @@ def patch_member(member_id: int, member: MemberPatch):
     return save_member_update(member_id, changes)
 
 
-@app.put("/courses/{course_id}", response_model=CourseResponse)
+@app.put("/courses/{course_id}", response_model=CourseResponse, include_in_schema=False)
 def put_course(course_id: int, course: CourseUpdate):
     return save_course_update(course_id, course.model_dump())
 
 
-@app.patch("/courses/{course_id}", response_model=CourseResponse)
+@app.patch("/courses/{course_id}", response_model=CourseResponse, include_in_schema=False)
 def patch_course(course_id: int, course: CoursePatch):
     changes = course.model_dump(exclude_unset=True)
     if not changes:

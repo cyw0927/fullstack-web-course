@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from main import app
+from chapter06.main import app
 
 client = TestClient(app)
 
@@ -19,14 +19,14 @@ class MemberApiContractTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"message": "라면먹고갈래"})
 
-    @patch("main.fetch_members", return_value=[])
+    @patch("chapter06.main.fetch_members", return_value=[])
     def test_get_empty_list(self, fake_fetch):
         response = client.get("/members")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
         fake_fetch.assert_called_once_with()
 
-    @patch("main.fetch_members", return_value=[
+    @patch("chapter06.main.fetch_members", return_value=[
         (1, "Kim", "kim@example.com", 25),
         (2, "Lee", "lee@example.com", 31),
     ])
@@ -39,7 +39,7 @@ class MemberApiContractTests(unittest.TestCase):
         ])
         fake_fetch.assert_called_once_with()
 
-    @patch("main.insert_member", return_value=(5, "홍길동", "hong2026@example.com", 30))
+    @patch("chapter06.main.insert_member", return_value=(5, "홍길동", "hong2026@example.com", 30))
     def test_post_members_returns_201(self, fake_insert):
         payload = {"name": "홍길동", "email": "hong2026@example.com", "age": 30}
         response = client.post("/members", json=payload)
@@ -47,13 +47,13 @@ class MemberApiContractTests(unittest.TestCase):
         self.assertEqual(response.json(), {"id": 5, **payload})
         fake_insert.assert_called_once_with("홍길동", "hong2026@example.com", 30)
 
-    @patch("main.insert_member")
+    @patch("chapter06.main.insert_member")
     def test_post_missing_age_returns_422(self, fake_insert):
         response = client.post("/members", json={"name": "A", "email": "a@example.com"})
         self.assertEqual(response.status_code, 422)
         fake_insert.assert_not_called()
 
-    @patch("main.insert_member")
+    @patch("chapter06.main.insert_member")
     def test_post_bad_age_returns_422(self, fake_insert):
         response = client.post("/members", json={
             "name": "A", "email": "a@example.com", "age": "not-a-number",
@@ -61,7 +61,7 @@ class MemberApiContractTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         fake_insert.assert_not_called()
 
-    @patch("main.insert_member")
+    @patch("chapter06.main.insert_member")
     def test_post_missing_email_returns_422(self, fake_insert):
         response = client.post("/members", json={"name": "A", "age": 20})
         self.assertEqual(response.status_code, 422)
