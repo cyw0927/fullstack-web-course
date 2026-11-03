@@ -22,8 +22,9 @@
 
 ## 2. 준비된 파일
 
-- [main.py](main.py): 기존 GET/POST 기능 + 회원 및 강좌 PUT/PATCH, Pydantic 모델과 오류 처리
-- [db.py](db.py): 기존 DB 접근 + UPDATE/RETURNING, SQL 매개변수 바인딩, 트랜잭션 commit/rollback
+- [main.py](main.py): 회원 GET/POST 및 PUT/PATCH 실습
+- [courses.py](courses.py): 별도 강좌 과제 API (기본 Swagger에서는 숨김)
+- [common/db.py](../common/db.py): 공통 DB 접근, SQL 매개변수 바인딩, 트랜잭션 commit/rollback
 - [test_api.py](test_api.py): 실제 DB를 호출하지 않는 Mock 기반 API/트랜잭션 검증 **51개 테스트 정의** (실행 결과는 별도 확인 필요)
 - [sql/01_preflight.sql](sql/01_preflight.sql): DB 테이블/컬럼/UNIQUE 상태 사전 확인
 - [sql/02_verify_update.sql](sql/02_verify_update.sql): 수정 전후 DB SELECT 검증용
@@ -127,3 +128,7 @@ python -m uvicorn main:app --reload
 원문 강의에서 강조하는 핵심은 `PUT=전체 수정`, `PATCH=부분 수정`, `생략=기존 값 유지`, `explicit null=422`입니다. 이 강의는 SQL을 작성하는 것보다 **계약과 Evidence의 일치**에 초점을 둡니다.
 
 출처: 아토믹데브, 「8강. PUT/PATCH + UPDATE — 전체 수정과 부분 수정」 (사용자가 제공한 강의 본문).
+
+## 검증 기록 (2026-11-03)
+
+8·9강 모의 테스트 64개 통과. 별도 포트의 Uvicorn에서 두 강의의 /docs 및 /openapi.json 응답을 확인했습니다. PostgreSQL 세션의 임시 회원 테이블에서 공통 함수의 INSERT/UPDATE/DELETE commit과 중복·SQL 오류 rollback을 확인했습니다. 실제 public.members 데이터는 변경하지 않았습니다.

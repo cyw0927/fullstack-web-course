@@ -102,7 +102,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.json()["detail"], "회원 등록 중 오류가 발생했습니다.")
         self.assertNotIn("forced SQL error", response.text)
 
-    @patch("chapter08.main.fetch_courses", return_value=[
+    @patch("chapter08.courses.fetch_courses", return_value=[
         (1, "Database", "Kim", 30)
     ])
     def test_get_courses(self, fetch):
@@ -110,11 +110,11 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[0]["title"], "Database")
 
-    @patch("chapter08.main.find_course", return_value=None)
+    @patch("chapter08.courses.find_course", return_value=None)
     def test_missing_course_404(self, find):
         self.assertEqual(self.client.get("/courses/99").status_code, 404)
 
-    @patch("chapter08.main.insert_course", return_value=(3, "FastAPI Basic", "Kim", 30))
+    @patch("chapter08.courses.insert_course", return_value=(3, "FastAPI Basic", "Kim", 30))
     def test_post_course_201(self, insert):
         body = {"title": "FastAPI Basic", "instructor": "Kim", "capacity": 30}
         response = self.client.post("/courses", json=body)
@@ -122,14 +122,14 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.json(), {"id": 3, **body})
         insert.assert_called_once_with("FastAPI Basic", "Kim", 30)
 
-    @patch("chapter08.main.insert_course", side_effect=db.DuplicateCourseError("duplicate"))
+    @patch("chapter08.courses.insert_course", side_effect=db.DuplicateCourseError("duplicate"))
     def test_post_course_duplicate_409(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": 30
         })
         self.assertEqual(response.status_code, 409)
 
-    @patch("chapter08.main.insert_course")
+    @patch("chapter08.courses.insert_course")
     def test_post_course_bad_capacity_422(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": "oops"
@@ -137,7 +137,7 @@ class Chapter07ApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 422)
         insert.assert_not_called()
 
-    @patch("chapter08.main.insert_course", side_effect=RuntimeError("forced SQL error"))
+    @patch("chapter08.courses.insert_course", side_effect=RuntimeError("forced SQL error"))
     def test_post_course_db_failure_500(self, insert):
         response = self.client.post("/courses", json={
             "title": "FastAPI Basic", "instructor": "Kim", "capacity": 30
