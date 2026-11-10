@@ -85,3 +85,29 @@ npm run build
 검증 결과: `npm run dev` 기동 및 첫 화면 확인, `npx tsc --noEmit`, `npm run lint`, `npm run build` 모두 통과했습니다. 설치 시 moderate 보안 감사 경고 7건이 표시됐으며, 의존성 변경을 막기 위해 자동 `npm audit fix`는 실행하지 않았습니다.
 
 Python 3.12.10 가상환경은 `practice/phase03/.venv`에 준비했습니다. `.venv`, `node_modules`, `.next`, TypeScript 빌드 정보는 Git에 올리지 않습니다.
+
+## 4강 — FastAPI 회원 목록 연결
+
+`Next.js → FastAPI GET /members → PostgreSQL public.members` 흐름으로 실제 회원 목록을 조회합니다. `app/page.tsx`는 화면 뼈대, `components/MemberWorkspace.tsx`는 상태·검색·미리보기, `lib/members-api.ts`는 API 호출 및 응답 검증을 담당합니다. `MemberList`와 `MemberCard`가 회원을 표시합니다.
+
+백엔드 복사본은 `backend/app`에 있으며 기존 Phase 02 코드는 그대로 사용합니다. `backend/.env.example`을 참고해 `backend/.env`에 각자 DB 설정을 입력합니다. 이 파일은 Git에 올리지 않습니다. 프론트엔드 `member-next-app/.env.local`에는 공개 가능한 주소 `NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000`을 설정하고 환경변수를 바꾼 뒤 개발 서버를 다시 시작합니다.
+
+```powershell
+# 터미널 1: Phase 03 backend
+cd C:\dev\fullstack-web-course\practice\phase03\backend
+..\.venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
+
+# 터미널 2: Next.js
+cd C:\dev\fullstack-web-course\practice\phase03\member-next-app
+npm run dev
+```
+
+브라우저에서 http://localhost:3000, API 문서는 http://127.0.0.1:8000/docs 를 엽니다. Python 패키지가 필요한 새 환경에서는 `backend/requirements.txt`를 참고하세요.
+
+`useEffect`는 화면이 열릴 때 `fetch`로 회원을 요청하고, `AbortController`는 화면이 닫히거나 요청이 다시 시작될 때 이전 요청을 취소합니다. 로딩·빈 목록·오류를 구분하고 다시 조회 및 대소문자를 구분하지 않는 검색을 제공합니다. 회원 입력 폼은 미리보기만 합니다.
+
+실제 확인된 API 계약은 `GET /members`의 배열이며 각 항목은 `member_id`, `name`, `email`, `age`입니다. 현재 DB의 실제 컬럼도 `member_id`입니다. API 클라이언트는 `id`로 오는 경우에도 화면의 `member_id`로 변환합니다.
+
+2026-11-10 검증: 환경설정 경로 오류를 수정한 뒤 실제 DB 조회 HTTP 200, 회원 5명 표시, 이메일 대문자 검색 및 초기화, 다시 조회와 서버 중단 후 오류·복구를 확인했습니다. TypeScript, ESLint, 빌드도 통과했습니다. 빈 DB 모의 응답과 로딩 화면은 별도로 확인하지 않았습니다. 과거 `172.26.0.1`에서 새 코드가 나타나지 않은 원인은 당시 상태를 재현하지 못해 확정하지 못했습니다. 현재 검증 주소는 `localhost:3000`입니다.
+
+다음 5강에서는 회원 입력을 실제 저장과 연결하는 실습을 진행합니다.
