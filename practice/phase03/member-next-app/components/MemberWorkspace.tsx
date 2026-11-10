@@ -1,24 +1,41 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import MemberList from "./MemberList";
 import type { Member } from "../types/member";
+import { getMembers } from "../lib/members-api";
 
-type MemberWorkspaceProps = {
-  initialMembers: Member[];
-};
+export default function MemberWorkspace() {
+  const [members, setMembers] = useState<Member[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [requestNumber, setRequestNumber] = useState(0);
 
-export default function MemberWorkspace({
-  initialMembers,
-}: MemberWorkspaceProps) {
+  useEffect(() => {
+    const controller = new AbortController();
+    getMembers(controller.signal)
+      .then((data) => { if (!controller.signal.aborted) setMembers(data); })
+      .catch((reason: unknown) => {
+        if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "회원 목록 조회 오류");
+      })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [requestNumber]);
+
+  function reloadMembers() {
+    setLoading(true);
+    setError("");
+    setRequestNumber((number) => number + 1);
+  }
+
   const [search, setSearch] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [age, setAge] = useState("");
 
-  const filteredMembers = initialMembers.filter((member) => {
+  const filteredMembers = members.filter((member) => {
     const keyword = search.trim().toLowerCase();
 
     return (
@@ -80,7 +97,14 @@ export default function MemberWorkspace({
         </button>
       </section>
 
-      <MemberList members={filteredMembers} />
+      <p><button type="button" onClick={reloadMembers} disabled={loading}>다시 조회</button></p>
+      {loading ? <p role="status">회원 목록을 불러오는 중입니다.</p> : error ? (
+        <p role="alert">회원 목록 조회 오류: {error}</p>
+      ) : members.length === 0 ? (
+        <p>등록된 회원이 없습니다.</p>
+      ) : filteredMembers.length === 0 ? (
+        <p>검색 결과가 없습니다.</p>
+      ) : <MemberList members={filteredMembers} />}
 
       <section
         style={{

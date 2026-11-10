@@ -1,13 +1,5 @@
 
 import MemberWorkspace from "../components/MemberWorkspace";
-import type { Member } from "../types/member";
-
-const sampleMembers: Member[] = [
-  { member_id: 1, name: "Kim", email: "kim@example.com", age: 30 },
-  { member_id: 2, name: "Lee", email: "lee@example.com", age: 27 },
-  { member_id: 3, name: "Park", email: "park@example.com", age: 35 },
-];
-
 export default function HomePage() {
   return (
     <main
@@ -19,7 +11,7 @@ export default function HomePage() {
       }}
     >
       <p style={{ color: "#2563eb", fontWeight: 700 }}>
-        Phase 03 · 03강 Props · State · Event
+        Phase 03 · 04강 FastAPI 회원 목록 연동
       </p>
 
       <h1 style={{ fontSize: 36, color: "#0f172a" }}>
@@ -27,11 +19,10 @@ export default function HomePage() {
       </h1>
 
       <p style={{ color: "#475569" }}>
-        React State로 회원 검색과 입력 폼을 실습합니다.
-        실제 API 조회는 4강, DB 저장은 5강에서 진행합니다.
+        이제 샘플 배열 대신 FastAPI의 회원 데이터를 조회합니다.
       </p>
 
-      <MemberWorkspace initialMembers={sampleMembers} />
+      <MemberWorkspace />
     </main>
   );
 }
