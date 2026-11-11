@@ -11,7 +11,7 @@ HTML부터 데이터베이스까지, **직접 실행하고 검증하면서 배�
 | 과정 | 핵심 내용 | 자료 |
 | --- | --- | --- |
 | **Phase 01 · Frontend Basic** | HTML·시멘틱 태그·CSS 레이아웃·반응형·JavaScript·DOM·API 통신 기초 | [실습 폴더](practice/phase01/) |
-| **Phase 02 · Backend** | FastAPI, Pydantic, HTTP, PostgreSQL, SQL, 트랜잭션, 회원 CRUD | [학습 기록](practice/phase02/README.md) |
+| **Phase 02 · Backend** | FastAPI·Pydantic·PostgreSQL 실습. 1~9강 코드와 10강 계층 분리 실습(진행 중) | [학습 기록](practice/phase02/README.md) |
 | **Phase 03 · Fullstack** | Next.js App Router, React, TypeScript, FastAPI 연동, 회원 CRUD, 동적 상세 페이지 | **[최신 진행 기록](practice/phase03/README.md)** |
 | **Special · RAG** | Upstage Solar 기반 RAG 특강 준비 | [특강 자료](practice/special/rag-solar/README.md) |
 

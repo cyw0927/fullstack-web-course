@@ -18,6 +18,7 @@
 | **7강** | **POST /members + INSERT + Transaction** | **[Chapter 07](chapter07/README.md)** |
 | **8강** | **PUT/PATCH + UPDATE — 전체·부분 수정** | **[Chapter 08](chapter08/README.md)** |
 | **9강** | **회원 삭제 DELETE + PostgreSQL** | **[Chapter 09](chapter09/README.md)** |
+| **10강** | **Router / Service / Repository 계층 구조화** | **[Chapter 10](chapter10/README.md) — CRUD 구현 진행 중** |
 
 ## 7강 실습 안내
 
@@ -30,6 +31,26 @@
 ## 9강 실습 안내
 
 9강은 회원 상세 GET과 DELETE 두 엔드포인트에 집중해, **204 빈 응답 → DB SELECT 0행 → GET 404**를 직접 검증합니다. [9강 코드](chapter09/main.py), [DB 접근 코드](chapter09/db.py), [테스트](chapter09/test_api.py), [README](chapter09/README.md)가 준비되어 있으며, 실제 PostgreSQL 삭제 검증은 별도로 수행해야 합니다.
+
+## 10강 실습 안내
+
+10강은 회원 API를 **Router → Service → Repository → DB** 계층으로 분리하는 실습입니다. 현재 저장소의 Chapter 10은 완성된 CRUD가 아니라 직접 구현을 이어가는 출발점입니다.
+
+- `app/main.py`: FastAPI 앱과 회원 라우터 연결
+- `app/routers/members.py`: 라우터 골격이 있으며 CRUD 엔드포인트는 TODO 상태
+- `app/services/member_service.py`: 업무 규칙 및 CRUD 흐름을 작성할 TODO 상태
+- `app/repositories/member_repository.py`: `find_all()` 목록 조회가 준비되어 있고 나머지 DB 작업은 TODO
+- `app/schemas.py`: 회원 Create / Update / Patch / Response 스키마
+- `app/db.py`: `common.db`의 공통 DB 연결 재사용
+
+실제 테이블은 기존 Phase 02 DB의 `public.members(id, name, email, age)`를 기준으로 하므로, 이 강의의 응답 식별자는 `member_id`가 아니라 `id`입니다. 자세한 주의사항은 [Chapter 10 README](chapter10/README.md)를 따릅니다.
+
+```powershell
+cd C:\\dev\\fullstack-web-course\\practice\\phase02
+python -m uvicorn chapter10.app.main:app --reload --port 8000
+```
+
+현재 상태에서는 CRUD 라우터를 구현하기 전이므로 Swagger에 회원 엔드포인트가 보이지 않는 것이 정상입니다. **10강을 완료된 것으로 표시하지 않습니다.**
 
 ## 실습 원칙
 
@@ -183,10 +204,10 @@ Client JSON → Pydantic Request Model → FastAPI / Service
 | 04 | Response Model/Status Code | Request/Response 모델 구분, 응답 계약 | [Chapter 04](chapter04/) |
 | 05 | PostgreSQL/환경설정 | psycopg, .env, 연결/Secret | [Chapter 05](chapter05/) |
 | 06 | GET + SELECT | 실제 DB 조회와 Swagger 응답 비교 | [Chapter 06](chapter06/) |
-| 07 | POST + INSERT/Transaction | 저장, commit / rollback | 미착수 |
-| 08 | PUT/PATCH + UPDATE | 전체·부분 수정, null 정책 | 미착수 |
-| 09 | DELETE + DELETE SQL | 삭제, 204/404 | 미착수 |
-| 10 | Backend 계층 구조화 | Router / Service / Repository | 미착수 |
+| 07 | POST + INSERT/Transaction | 저장, commit / rollback | 코드·테스트 준비, 실제 DB 검증은 별도 |
+| 08 | PUT/PATCH + UPDATE | 전체·부분 수정, null 정책 | 코드·테스트 준비, 실제 DB 검증은 별도 |
+| 09 | DELETE + DELETE SQL | 삭제, 204/404 | 코드·테스트 준비, 실제 DB 검증은 별도 |
+| 10 | Backend 계층 구조화 | Router / Service / Repository | 출발점 준비, CRUD 구현 진행 중 |
 | 11 | SQLAlchemy ORM 기초 | Model, Session, SQL 관계 | 미착수 |
 | 12 | ORM 기반 CRUD | ORM 작업 및 Transaction | 미착수 |
 | 13 | 예외·로그·테스트 | HTTPException, TestClient | 미착수 |
