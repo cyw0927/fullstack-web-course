@@ -46,7 +46,7 @@
 실제 테이블은 기존 Phase 02 DB의 `public.members(id, name, email, age)`를 기준으로 하므로, 이 강의의 응답 식별자는 `member_id`가 아니라 `id`입니다. 자세한 주의사항은 [Chapter 10 README](chapter10/README.md)를 따릅니다.
 
 ```powershell
-cd C:\\dev\\fullstack-web-course\\practice\\phase02
+cd C:\dev\fullstack-web-course\practice\phase02
 python -m uvicorn chapter10.app.main:app --reload --port 8000
 ```
 
