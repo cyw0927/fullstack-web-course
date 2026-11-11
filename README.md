@@ -1,277 +1,138 @@
 # Fullstack Web Course
 
-프론트엔드 기초부터 백엔드와 풀스택 흐름까지 단계적으로 학습하기 위한 실습 저장소입니다.
+HTML부터 데이터베이스까지, **직접 실행하고 검증하면서 배우는 풀스택 웹 개발 실습 저장소**입니다.
 
-## 학습 흐름
+**현재 학습 범위 (2026-11-11):** HTML·CSS·JavaScript 기초 → Python/FastAPI·PostgreSQL → React·TypeScript·Next.js. **Phase 03 6강(회원 목록·상세 페이지) 및 성별 필드 확장 실습**까지 구현했습니다.
 
-1. Frontend Basic
-   - Browser / Web Server / API Server / Database의 역할
-   - HTML / CSS / JavaScript 기초
-   - DOM / Event / Form
-   - HTTP / JSON
-   - `fetch()`를 이용한 API 통신
-2. Backend
-   - Python / FastAPI 기반 API 서버
-3. Fullstack
-   - React / Next.js와 Backend 연결
+> 이 저장소는 강의별 실습 기록입니다. 각 장의 코드·테스트 상태는 해당 README를 기준으로 확인하세요. 일부 초기 과제는 정적 페이지이며, 현재의 DB 연동 회원관리 앱과 별개입니다.
 
-## 현재 진행
+## 학습 현황
 
-### Phase 01 — Frontend Basic
+| 과정 | 핵심 내용 | 자료 |
+| --- | --- | --- |
+| **Phase 01 · Frontend Basic** | HTML·시멘틱 태그·CSS 레이아웃·반응형·JavaScript·DOM·API 통신 기초 | [실습 폴더](practice/phase01/) |
+| **Phase 02 · Backend** | FastAPI, Pydantic, HTTP, PostgreSQL, SQL, 트랜잭션, 회원 CRUD | [학습 기록](practice/phase02/README.md) |
+| **Phase 03 · Fullstack** | Next.js App Router, React, TypeScript, FastAPI 연동, 회원 CRUD, 동적 상세 페이지 | **[최신 진행 기록](practice/phase03/README.md)** |
+| **Special · RAG** | Upstage Solar 기반 RAG 특강 준비 | [특강 자료](practice/special/rag-solar/README.md) |
 
-#### Chapter 01
-- [x] 첫 HTML 페이지 작성
-- [x] 자기소개 페이지 작성
-- [x] 학습 기록 작성
-- [ ] Live Server로 로컬 실행 확인
-- [ ] DevTools Network 탭에서 HTML GET 요청 확인
+### Phase 03 최근 작업
 
-#### Chapter 02
-- [x] 시멘틱 HTML 실습 페이지 작성
-- [x] Member Learning Page 작성
-- [x] 과제 `assignment.html` 작성
-- [x] LLM 학습 기록 작성
-- [ ] DevTools Elements 탭에서 HTML 트리 직접 확인
+- **1~3강:** 개발 환경, 컴포넌트·Props·TypeScript, React State·이벤트·입력 폼
+- **4강:** `GET /members`로 PostgreSQL의 실제 회원 목록 조회, 검색·로딩·오류 처리
+- **5강:** `POST` 등록, `PUT` 수정, `DELETE` 삭제와 등록/수정 폼 연결
+- **6강:** `/members` 목록 및 `/members/[memberId]` 상세 페이지, `GET /members/{member_id}`, Next.js `Link`·`useParams`
+- **추가 실습:** `gender` 필드(`M`/`F`/`null`)를 DB → FastAPI → Next.js까지 연결하여 등록·수정·목록·상세에서 처리
+- **UI:** 검색 패널, 회원 목록, 등록/수정 패널을 갖춘 관리자형 화면으로 정리
+- **검증:** 사용자가 로컬에서 CRUD·회원 상세·성별 입출력을 확인했고, 최종 TypeScript 검사 및 Next.js 프로덕션 빌드가 성공했습니다. 실제 운영 배포는 별도입니다.
 
-#### Chapter 03
-- [x] Member Management 실습 페이지 작성
-- [x] Course Registration Page 과제 작성
-- [x] 링크, 웹 이미지, 표, 입력 폼 구현
-- [x] LLM 학습 기록 작성
-- [x] HTML 구조와 과제 조건 점검
-- [x] 브라우저에서 웹 이미지 표시 확인
-
-## 실습 구조
+## 프로젝트 구조
 
 ```text
 practice/
-└─ phase01/
-   ├─ chapter01/
-   │  ├─ index.html
-   │  ├─ profile.html
-   │  └─ README.md
-   ├─ chapter02/
-   │  ├─ index.html
-   │  ├─ assignment.html
-   │  └─ README.md
-   └─ chapter03/
-      ├─ index.html
-      ├─ assignment.html
-      ├─ README.md
-      └─ images/
-         └─ profile.png
+├── phase01/                     # HTML / CSS / JavaScript 기초
+│   ├── chapter01/, chapter02/, chapter03/
+│   ├── chapter06/, chapter07/, chapter08/
+│   └── chapter15-prepractice/, chapter15/
+├── phase02/                     # FastAPI·PostgreSQL 단계별 실습
+│   ├── README.md
+│   ├── common/
+│   └── chapter01/ ... chapter10/
+├── phase03/
+│   ├── README.md                 # Phase 03 상세 강의 기록
+│   ├── backend/                  # FastAPI + SQLAlchemy
+│   │   ├── app/
+│   │   ├── .env.example
+│   │   └── requirements.txt
+│   └── member-next-app/          # Next.js 16 + TypeScript
+│       ├── app/
+│       ├── components/
+│       ├── lib/
+│       ├── types/
+│       └── README.md
+└── special/
+    └── rag-solar/
 ```
 
-## 로컬 실행
+**참고:** Phase 01의 일부 강의 번호는 원본 실습 파일이 없는 상태라 건너뛰어져 있습니다. 폴더가 존재한다는 사실과 모든 강의를 검증했다는 의미는 다릅니다.
 
-권장 로컬 위치:
+## Phase 03 회원관리 앱 실행 (Windows / PowerShell)
 
-```text
-C:\dev\fullstack-web-course
-```
+**전제 조건:** Node.js·npm, Python, PostgreSQL과 기존 `public.members` 테이블이 필요합니다. DB 생성·초기 데이터 준비는 이 프로젝트의 실행 명령만으로 자동 처리되지 않습니다.
 
-저장소를 받은 뒤 VS Code에서 원하는 Chapter의 `index.html` 또는 `assignment.html`을 열고 Live Server로 실행합니다.
-
-Chapter 01에서는 Network 탭에서 HTML GET 요청을, Chapter 02에서는 Elements 탭에서 다음 시멘틱 계층 구조를 확인합니다.
-
-```text
-body
-├─ header
-├─ main
-│  ├─ section
-│  └─ section
-└─ footer
-```
-
-- [Chapter 01 학습 기록](practice/phase01/chapter01/README.md)
-- [Chapter 02 학습 기록](practice/phase01/chapter02/README.md)
-
-- [Chapter 03 학습 기록](practice/phase01/chapter03/README.md)
-- [Chapter 03 실습](practice/phase01/chapter03/index.html)
-- [Chapter 03 과제](practice/phase01/chapter03/assignment.html)
-
-Chapter 03에서는 브라우저에서 로드맵 이미지가 표시되는지, 표의 제목과 데이터 행이 구분되는지, 각 입력란의 `label for`와 `input id`가 연결되는지 확인합니다. CSS, JavaScript, API, DB 연결 없이 HTML만 사용합니다.
-
-## 웹페이지 바로가기
-
-- [Chapter 03 수강 신청 과제](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/assignment.html)
-- [Chapter 03 회원 관리 실습](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/index.html)
-
-GitHub Pages에서 HTML 페이지를 바로 볼 수 있습니다. 사용자가 제공한 프로필 이미지는 두 페이지의 학습자 프로필 영역에 표시됩니다.
-
-## Chapter 06 — Flexbox와 Grid
-
-6강 자료를 기준으로 독립 실행 가능한 실습과 과제를 추가했습니다. **4·5강은 현재 저장소에 없는 상태**라 임의로 작성하지 않았습니다.
-
-- [6강 회원관리 레이아웃 실습](practice/phase01/chapter06/index.html)
-- [6강 대시보드 과제 (6개 카드)](practice/phase01/chapter06/dashboard.html)
-- [6강 학습 기록과 검증 항목](practice/phase01/chapter06/README.md)
-
-실행: `practice/phase01/chapter06/index.html` 또는 `dashboard.html`을 Live Server로 엽니다.
-검색·등록·상세 버튼은 정적 배치 실습용 UI이며 DB/이벤트는 연결되지 않았습니다.
-
-## Chapter 07 — 반응형 웹
-
-7강 Mobile First 실습 및 독립 대시보드 과제를 추가했습니다.
-
-- [7강 반응형 회원관리 실습](practice/phase01/chapter07/index.html)
-- [7강 Responsive Course Dashboard (6개 강의 카드)](practice/phase01/chapter07/dashboard.html)
-- [7강 README 및 화면 크기별 검증 방법](practice/phase01/chapter07/README.md)
-
-기본 1열, 768px 이상 2열, 1024px 이상 3열로 바뀝니다. Chrome DevTools Device Toolbar에서 375/768/1024px를 직접 시험하세요.
-
-**로컬에서 별도 작성 중인 6강 하위 폴더** (`CSSGrid/`, `flexbox/`, `member/`)의 미추적 파일은 이번 커밋에서 건드리지 않았습니다.
-
-## Chapter 08 — JavaScript 기초
-
-강의 8강의 **변수, 자료형, 연산자, 조건문, 반복문**을 회원관리 Console 예제로 학습합니다. 이 장에서는 DOM 이벤트나 실제 화면 업데이트를 구현하지 않습니다.
-
-- [8강 기본 실습](practice/phase01/chapter08/index.html) · [app.js](practice/phase01/chapter08/app.js)
-- [8강 독립 과제 실행 페이지](practice/phase01/chapter08/assignment.html)
-- [8강 제출 파일 assignment.js](practice/phase01/chapter08/assignment.js)
-- [8강 학습 기록](practice/phase01/chapter08/README.md)
-
-Live Server에서 각 HTML 파일을 열고 **F12 → Console** 탭을 확인하세요. 다른 강의 폴더는 수정하지 않았습니다.
-
-
-## Chapter 15 — 통합 실습 및 개인 프로젝트 준비
-
-- [Book Explorer 사전 통합 실습](practice/phase01/chapter15-prepractice/index.html) · [단계별 검증 기록](practice/phase01/chapter15-prepractice/README.md)
-- [Member Management 개인 프로젝트 준비판](practice/phase01/chapter15/index.html) · [작업 기록과 명세 유의사항](practice/phase01/chapter15/README.md)
-
-Chapter 15 개인 프로젝트는 현재 제공된 사전 실습 자료에 상세 API 명세가 없어 **회원 GET/POST를 사용하는 임시 학습판**으로 시작했습니다. 공식 본 과제 자료를 받으면 이를 기준으로 보완합니다. 실제 Live Server·Network 검증은 별도로 필요합니다.
-
-
-### Chapter 15 재현 가능한 테스트 및 제출 체크
-
-- [오프라인 자동 검사 (Node.js, 외부 패키지 불필요)](practice/phase01/chapter15/tests/run-tests.cjs)
-- [브라우저 GET/POST 검증과 최종 제출 체크리스트](practice/phase01/chapter15/FINAL_CHECKLIST.md)
-
-두 실습의 DOM·API 로직을 가상 응답으로 실행하는 **53개 검사 통과**를 확인했습니다. 외부 API 실제 통신 및 DevTools 스크린샷은 사용자 브라우저에서 직접 확인해야 합니다. 회원관리 페이지는 강의 본 과제 명세가 제공되지 않은 **학습용 준비판**입니다.
-
-
-## RAG 특강 — Upstage Solar (2026-10-22)
-
-- [특강 준비 폴더](practice/special/rag-solar/)
-- [비전공자용 설치/실습 안내](practice/special/rag-solar/README.md)
-
-서울시 조례 근거 기반 Q&A 실습을 위한 기본 환경 파일과 Windows 설치 절차를 정리했습니다. **강사 원본 Starter Kit ZIP을 찾아 다운로드·설치용 PowerShell 스크립트를 추가했습니다.** 실제 ZIP은 사용자 로컬에서 내려받아 압축 해제합니다. 개인 API Key는 포함하지 않습니다. 기존 수업 파일은 수정하지 않았습니다.
-
-
-## Phase 02 — Backend Overview 및 7강 (2026-11-02)
-
-- [Backend Overview — 전체 Fullstack 인프라 및 15강 로드맵](practice/phase02/README.md)
-- [7강: POST /members + INSERT + Transaction](practice/phase02/chapter07/README.md)
-- 1~6강 기존 파일은 유지하며, 7강은 중복 이메일 409·Validation 422·commit/rollback·Course POST 과제의 [실습 코드](practice/phase02/chapter07/main.py), [DB 연결 코드](practice/phase02/chapter07/db.py), [테스트](practice/phase02/chapter07/test_api.py), SQL 및 README까지 준비했습니다.
-- 7강 DB 실습의 완료 Evidence는 아직 확인되지 않았습니다.
-
-## Phase 02 — Backend / Chapter 01 (2026-10-29)
-
-프론트엔드 실습은 `practice/phase01/`에 유지하고, 백엔드는 `practice/phase02/`에 분리합니다.
-
-- [1강: 첫 FastAPI /members · /courses API](practice/phase02/chapter01/main.py)
-- [1강 학습 기록 및 API Contract](practice/phase02/chapter01/README.md)
-- [자동 검증 4개](practice/phase02/chapter01/test_api.py)
+### 1. 백엔드 — FastAPI
 
 ```powershell
-cd C:\dev\fullstack-web-course\practice\phase02\chapter01
-python -m uvicorn main:app --reload
-# 다른 터미널에서 실행하거나 서버를 종료한 다음:
-python -m unittest -v test_api.py
+cd C:\dev\fullstack-web-course\practice\phase03\backend
+
+# 최초 환경 구성 시에만 사용
+py -3 -m venv ..\.venv
+& "..\.venv\Scripts\python.exe" -m pip install -r requirements.txt
+
+# .env.example을 참고해 backend\.env에 실제 DB 접속값 설정
+# 기존 .env 파일은 덮어쓰지 마세요.
+& "..\.venv\Scripts\python.exe" -m uvicorn app.main:app --reload --port 8000
 ```
 
-서버 실행 후 `http://127.0.0.1:8000/docs`에서 GET /, GET /members, GET /courses를 시험할 수 있습니다. 자동 검증은 통과했으며, Swagger Execute 및 브라우저 Network 수동 증거는 사용자 PC에서 확인해야 합니다.
+- Swagger: <http://127.0.0.1:8000/docs>
+- DB 환경변수: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`
+- 비밀번호는 `.env`에만 보관하고 커밋하지 않습니다.
 
-## Phase 02 — Backend / Chapter 02 (2026-10-29)
+### 2. 프론트엔드 — Next.js
 
-Path Parameter와 Query Parameter를 사용한 회원 및 강좌 조회 실습입니다.
-
-- [2강 FastAPI 실습 코드](practice/phase02/chapter02/main.py)
-- [2강 학습 기록과 API Contract](practice/phase02/chapter02/README.md)
-- [2강 자동 검증 (19개)](practice/phase02/chapter02/test_api.py)
+**별도 터미널**에서 실행합니다.
 
 ```powershell
-cd C:\dev\fullstack-web-course\practice\phase02\chapter02
-python -m uvicorn main:app --reload
-# 다른 터미널에서:
-python -m unittest -v test_api.py
+cd C:\dev\fullstack-web-course\practice\phase03\member-next-app
+npm ci
+
+# member-next-app\.env.local에 다음 값 설정
+# NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+
+npm run dev
 ```
 
-Swagger UI `http://127.0.0.1:8000/docs`에서 `/members/{member_id}`, `/members/search/`, `/members/filter/`, `/courses/{course_id}`, `/courses/filter/`를 검증합니다. 별도 TestClient 자동 검사는 통과했으며, 사용자 PC에서의 Swagger Execute와 DevTools Network 확인은 남아 있습니다.
+- 메인: <http://localhost:3000/>
+- 회원 목록·관리: <http://localhost:3000/members>
+- 회원 상세 예시: <http://localhost:3000/members/1> (실제 존재하는 ID 기준)
 
-## Phase 02 — Backend / Chapter 03 (2026-10-29)
+`NEXT_PUBLIC_API_BASE_URL`이 없거나 백엔드가 실행되지 않으면 회원 조회가 실패합니다. 환경변수를 변경했다면 Next.js 개발 서버를 다시 시작하세요.
 
-회원·강좌 POST Request Body와 Pydantic Validation 학습 및 과제입니다. 이전 2강 GET 기능을 유지합니다.
-
-- [3강 main.py — POST /members · POST /courses](practice/phase02/chapter03/main.py)
-- [3강 README — Contract / Evidence / 실행법](practice/phase02/chapter03/README.md)
-- [3강 test_api.py — 23개 자동 검사](practice/phase02/chapter03/test_api.py)
+### 3. 타입·정적 분석·빌드 검사
 
 ```powershell
-cd C:\dev\fullstack-web-course\practice\phase02\chapter03
-python -m uvicorn main:app --reload
-# 다른 터미널에서:
-python -m unittest -v test_api.py
+cd C:\dev\fullstack-web-course\practice\phase03\member-next-app
+
+npx tsc --noEmit
+npm run lint
+npm run build
 ```
 
-자동 테스트는 23개 통과했습니다. /docs의 POST Endpoint에서 정상 Body 201, 누락/타입 오류 422를 직접 확인하세요. Swagger Execute와 사용자의 Chrome Network 확인은 별도입니다.
+Next.js 16의 동적 상세 페이지는 `useParams()`를 사용하는 클라이언트 컴포넌트를 `Suspense`로 감싸 프로덕션 빌드에 대응합니다. 로컬 브라우저 동작과 빌드 성공은 별도로 검증합니다.
 
-## Phase 02 — Backend / Chapter 04 (2026-10-30)
+## 현재 회원 API
 
-Request Model과 Response Model 분리, FastAPI `response_model`, 응답 상태 코드 및 회원/강좌 생성 과제입니다.
+| 메서드 | 경로 | 용도 |
+| --- | --- | --- |
+| GET | `/members` | 전체 회원 조회 |
+| GET | `/members/{member_id}` | 회원 상세 조회 |
+| POST | `/members` | 회원 등록 (`201`) |
+| PUT | `/members/{member_id}` | 회원 전체 기본 정보 수정 |
+| PATCH | `/members/{member_id}` | 전달한 필드만 수정 |
+| DELETE | `/members/{member_id}` | 회원 실제 삭제 (`204`) |
 
-- [4강 main.py — Member / Course GET·POST](practice/phase02/chapter04/main.py)
-- [4강 README — API Contract, Evidence, 실행 방법](practice/phase02/chapter04/README.md)
-- [4강 test_api.py — 24개 자동 테스트](practice/phase02/chapter04/test_api.py)
+회원 데이터: `member_id`, `name`, `email`, `age`, `gender`. 성별은 `M`(남성), `F`(여성), `null`(미지정)이며, 기존 API 호출과의 호환성을 위해 선택 항목입니다. 상세 내용은 [Phase 03 README](practice/phase03/README.md)를 참고하세요.
 
-```powershell
-cd C:\dev\fullstack-web-course\practice\phase02\chapter04
-python -m uvicorn main:app --reload
-# 다른 터미널에서 실행:
-python -m unittest -v test_api.py
-```
+**중요:** 현재 DELETE는 **소프트 삭제가 아니라 실제 행 삭제**입니다. 기존 데이터를 대상으로 테스트하지 말고 본인이 만든 테스트 회원만 사용하세요. 또한 DBeaver에서 직접 추가한 DB 컬럼은 Git에 자동 반영되지 않으므로 다른 환경에서 실행할 때 스키마를 별도로 맞춰야 합니다.
 
-TestClient 기반 자동 테스트 24개를 통과했습니다. `http://127.0.0.1:8000/docs`에서 200 / 201 / 404 / 422 및 Create/Response Schema를 수동으로 확인할 수 있습니다. 브라우저 수동 검증은 아직 사용자가 확인해야 합니다.
+## 상세 문서·빠른 링크
 
-## Phase 02 — Backend / Chapter 05~06 (2026-10-30)
+- [Phase 01 실습 파일](practice/phase01/)
+- [Phase 02 Backend 학습 기록](practice/phase02/README.md)
+- [Phase 03 Fullstack 강의별 정리](practice/phase03/README.md)
+- [Next.js 회원관리 앱 실행 안내](practice/phase03/member-next-app/README.md)
+- [회원 API Swagger (로컬 실행 시)](http://127.0.0.1:8000/docs)
+- [정적 HTML 수강 신청 과제 (GitHub Pages)](https://cyw0927.github.io/fullstack-web-course/practice/phase01/chapter03/assignment.html)
 
-### Chapter 05 — PostgreSQL 연결 및 SELECT
+---
 
-- [5강 Python DB 연결 코드](practice/phase02/chapter05/db.py)
-- [5강 main.py — 연결/SQL 출력](practice/phase02/chapter05/main.py)
-- [5강 실습 README](practice/phase02/chapter05/README.md)
-- [members 테이블 생성 및 SELECT SQL](practice/phase02/chapter05/sql/01_members_setup.sql)
-
-### Chapter 06 — PostgreSQL 연동 GET/POST
-
-- [6강 FastAPI main.py](practice/phase02/chapter06/main.py)
-- [6강 PostgreSQL db.py](practice/phase02/chapter06/db.py)
-- [6강 실습/과제 README](practice/phase02/chapter06/README.md)
-- [6강 DB Mock 기반 자동 테스트](practice/phase02/chapter06/test_api.py)
-
-두 장 모두 실제 접속 설정은 Git에서 제외되는 .env로 관리하며 .env.example만 공개합니다. 6강에서는 사용자의 Swagger POST 201 화면이 확인됐으며, DBeaver SELECT 일치 결과와 422 수동 검증 화면은 아직 미확인입니다.
-
-```powershell
-cd C:\dev\fullstack-web-course\practice\phase02\chapter06
-python -m uvicorn main:app --reload
-```
-
-## Phase 02 — Backend / Chapter 08 (2026-11-02)
-
-- [8강 README — PUT/PATCH + UPDATE 계약·검증 절차](practice/phase02/chapter08/README.md)
-- [8강 FastAPI main.py](practice/phase02/chapter08/main.py)
-- [8강 PostgreSQL db.py](practice/phase02/chapter08/db.py)
-- [8강 Mock 단위 테스트](practice/phase02/chapter08/test_api.py)
-- [8강 SQL 사전 점검 및 저장 검증](practice/phase02/chapter08/sql/)
-
-이 장에서는 이전 GET/POST 기능을 보존하고 회원/강좌 전체 수정 PUT과 부분 수정 PATCH를 추가했습니다. 명시적 null은 422, 빈 PATCH는 400으로 구분하며, 실제 로컬 DB의 UPDATE 성공과 재조회 결과는 별도 수동 검증이 필요합니다.
-
-## Phase 02 — Backend / Chapter 09 (2026-11-03)
-
-- [9강 README — 회원 DELETE + PostgreSQL](practice/phase02/chapter09/README.md)
-- [9강 FastAPI 코드](practice/phase02/chapter09/main.py)
-- [9강 DB DELETE/트랜잭션 코드](practice/phase02/chapter09/db.py)
-- [9강 단위 테스트](practice/phase02/chapter09/test_api.py)
-- [DBeaver 검증 SQL](practice/phase02/chapter09/sql/verify_delete.sql)
-
-9강에서는 강의 핵심인 회원 GET 상세 조회와 DELETE 두 엔드포인트를 구현했습니다. 204 빈 Body, 삭제 후 DB 0행과 GET 404를 실습해야 하며, 로컬 실제 DB 검증은 미완료입니다.
+학습용 저장소로, 비밀키·실제 고객 데이터·개인정보를 Git에 올리지 않습니다. 작성 시점의 코드와 실제 실행 환경이 다를 수 있으므로 최신 소스 및 Swagger 응답을 우선하세요.
