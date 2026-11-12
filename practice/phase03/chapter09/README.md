@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** STEP 01~03 PASS, STEP 04 HOLD, STEP 05~10 PASS (STEP 07은 CHECK 이름 차이를 아래에 기록). STEP 11~12 상품 Repository·Service 조회를 로컬에서 검증했으며, 다음 작업은 STEP 13 GET /products 연결이다.
+> **현재 상태 (2026-11-12):** **STEP 01~03 PASS, STEP 04 HOLD, STEP 05~12 PASS, STEP 13 코드 반영/HTTP 검증 HOLD, STEP 14 pytest 코드 준비/실행 HOLD, STEP 15~30 미진행.**
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -96,7 +96,7 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 - **검증:** Swagger, SQL SELECT, pytest, Playwright. 기존 회원관리와 Phase 02 작업물 보존.
 - **범위:** 위 항목이 최소기능제품(MVP)의 전체 범위이며 추가 결제/회원/배송 기능은 하지 않는다.
 
-**상태: STEP 02 기획·범위 확정 PASS.** 실제 Seed 데이터 입력·API 구현·DB 검증은 아직 하지 않았다.
+**상태: STEP 02 기획·범위 확정 PASS.** 이후 Seed 7종 DB 등록·스키마 분리 완료, 상품 GET API는 STEP 13 런타임 검증 대기.
 
 ---
 
@@ -272,7 +272,7 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. 다음 문단은 스키마 분리 이전의 진행 기록이며, 최신 결과는 표와 「스키마 분리 검증」을 따른다. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08은 DBeaver INSERT RETURNING 스크린샷에서 7종 상품·가격·카테고리·재고를 확인하여 PASS. STEP 09는 인계 전 사전 점검에서 Swagger 및 기존 회원 API를 정상 확인했다는 사용자 보고를 근거로 PASS 처리. STEP 10~30 미진행.
+**진도 원칙:** 개념 학습·코드 구현·실제 실행·Evidence를 구분한다. 아래 표와 최신 검증 기록이 현재 상태이며 과거 작업 일지의 HOLD 및 public 스키마 설명은 해당 시점의 이력이다. STEP 04 전체 점검은 HOLD, STEP 13~14는 GitHub 코드만 반영됐으므로 HOLD다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
@@ -288,8 +288,8 @@ CREATE TABLE public.order_items (
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **PASS** (DBeaver와 Backend가 localhost:5432/postgres에 연결; ORM 상품 7건 조회) |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | **PASS** (읽기 전용 DB 조회 7건, 직접 SQL과 비교) |
 | 12 | Product Service 조회 | Service → Repository → DB | **PASS** (Service 결과가 Repository·SQL 결과와 동일) |
-| 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | ☐ |
-| 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | ☐ |
+| 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | **HOLD** (ProductResponse/Router/main.py GitHub 반영, 실제 HTTP 200·7종 JSON·Swagger 미검증) |
+| 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | **HOLD** (SQLite 인메모리 DB 격리 테스트 5개 GitHub 반영, pytest 미실행) |
 | 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | ☐ |
 | 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | ☐ |
 | 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | ☐ |
@@ -317,7 +317,7 @@ CREATE TABLE public.order_items (
 
 ---
 
-## 6. MATCHA HOUSE 상품 Seed 계획 (STEP 02 확정, 미입력)
+## 6. MATCHA HOUSE 상품 Seed (당시 기획안; 현재 STEP 08 PASS)
 
 **2026-11-12 사용자 확정:** 말차 전문 팝업 카페 `MATCHA HOUSE`. 상품은 아래 7종으로 구성한다. 가격은 원 단위 정수이며 카테고리는 `음료`·`디저트` 두 종류다.
 
@@ -337,7 +337,9 @@ CREATE TABLE public.order_items (
 
 ---
 
-## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12, 스키마 이동 전 이력)
+## STEP 07 과거 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (스키마 이동 전, 현재 STEP 07 PASS)
+
+> **과거 이력:** 이 절의 public 관련 쿼리, HOLD, 실행 대기 문구는 스키마 이동 전 기록이며 다시 실행할 지침이 아니다. 지금은 matcha_store 스키마를 사용한다.
 
 - **사용자 확인:** DBeaver 제약조건 조회 결과 스크린샷에서 `public.products`의 `products_pkey` (PRIMARY KEY(id)), `id/name/category/price/stock` NOT NULL, `price >= 0`, `stock >= 0` CHECK를 확인했다. **products 제약조건은 스크린샷 증빙으로 확인 완료.** 이어 제공된 `information_schema.columns` 스크린샷에서 **`products.id`가 `bigint`, `is_identity=YES`**, `name/category`가 character varying, `price/stock`이 integer이며 다섯 컬럼 모두 `is_nullable=NO`임을 확인했다. 당시 첫 조회에서는 주문 테이블이 없었으나, 이후 사용자가 DBeaver에서 CREATE TABLE 구문 실행 후 `information_schema.tables` 조회 결과 **products, orders, order_items 3개가 모두 존재함을 확인**했다. `products`의 VARCHAR 길이/실제 로컬 ORM import는 아직 확인하지 않았다.
 - **GitHub 코드 작성:** `practice/phase03/backend/app/models.py`에 기존 `Member`를 보존하면서 `Product`, `Order`, `OrderItem` 모델 추가. 커밋 `693ea93`. `public.products`/`public.orders`/`public.order_items` 매핑, 고정 데이터 계약(정수 원화/주문 단가 스냅샷), PK/FK, 타입, 기본값, 제약의 *예상 메타데이터*를 정의했다.
@@ -371,7 +373,7 @@ ORDER BY c.relname, p.contype, p.conname;
 
 사용자가 DBeaver에서 세 테이블 존재를 확인했다. STEP 07의 남은 검증은 (1) orders/order_items PK·FK·CHECK 제약 조회, (2) products VARCHAR 길이 포함 실제 컬럼 정의와 ORM 일치 확인, (3) GitHub models.py를 로컬에 안전하게 반영한 뒤 읽기 전용 import/메타데이터 확인이다. 이 항목까지 끝나야 **STEP 07 PASS** 처리한다. 현재 테이블 존재 및 products 타입·주요 제약은 확인됐으나 전체 STEP은 HOLD.
 
-### STEP 07 남은 작업 — orders/order_items DDL (미실행)
+### STEP 07 당시 주문 테이블 SQL (실행 완료 이력; 다시 실행 금지)
 
 초기 조회에서는 `products`만 존재했으나, 이후 사용자가 아래 DDL을 DBeaver에서 실행했고 세 테이블 존재 조회 결과를 확인했다. **주문 테이블 CREATE 작업은 사용자 수행이며 AI는 DB에 직접 접속하거나 DDL을 실행하지 않았다.**
 
@@ -407,7 +409,9 @@ COMMIT;
 
 ---
 
-## STEP 08 — MATCHA HOUSE Seed 상품 입력 (진행 중)
+## STEP 08 과거 상품 Seed 등록 이력 (현재 PASS)
+
+> **과거 이력:** 최초 public.products에 상품 7개를 삽입한 기록이다. 데이터는 이후 matcha_store.products로 옮겨 보존했으므로 Seed INSERT를 다시 실행하지 않는다.
 
 사용자가 DBeaver에서 `products`, `orders`, `order_items` 세 테이블이 모두 존재한다고 확인했다. STEP 08에서는 **먼저 현재 products 행을 읽기 전용 SELECT로 확인**해 기존 데이터를 보존한다. 기존 상품이 있으면 중복 삽입하지 않고 누락 상품만 추가한다. 이름이 같지만 가격/카테고리가 다른 행이 있으면 자동 수정하지 말고 사용자에게 확인한다.
 
@@ -433,7 +437,7 @@ Seed 목표(원 단위 INTEGER, 총 7종):
 | 말차 쿠키 | 2500 | 디저트 | 25 |
 | 말차 아이스크림 | 4500 | 디저트 | 0 |
 
-**다음 DBeaver 실행용 Seed SQL (사용자 실행 대기; AI가 DB에 직접 실행하지 않음):**
+**당시 사용한 DBeaver Seed SQL (기록용이며 다시 실행하지 않음):**
 
 ```sql
 INSERT INTO public.products (name, price, category, stock)
@@ -464,7 +468,7 @@ FROM public.products
 ORDER BY id;
 ```
 
-현재 INSERT는 아직 실행하지 않았다. **STEP 08 PASS 조건은 최종 7종의 이름·가격·카테고리·재고를 SELECT로 확인하는 것**이다.
+이후 사용자가 DBeaver INSERT RETURNING 화면으로 **7종 등록을 확인했고 STEP 08 PASS** 처리했다. 당시의 미실행 안내는 더 이상 현재 상태가 아니다.
 
 ---
 
@@ -621,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~10 PASS; STEP 04 HOLD**다. STEP 07의 CHECK 제약 이름 차이는 아래 검증 기록을 참고한다. STEP 11~12의 조회 코드는 로컬에서 검증했다. 다음은 **STEP 13 GET /products API 연결**이며 주문 구현과 API 테스트는 아직 진행하지 않았다.
+> 현재 진도는 **STEP 01~03, 05~12 PASS; STEP 04 HOLD; STEP 13 GitHub 구현 완료/HTTP 증빙 대기; STEP 14 테스트 코드 작성 완료/pytest 실행 대기; STEP 15~30 미진행**이다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 검증 기록을 따른다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -642,16 +646,19 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 10: DBeaver와 Backend 연결 대상 확인, ORM 상품 7건 조회
 - [x] STEP 11: Product Repository에서 상품 목록 조회 및 실제 DB 결과 비교
 - [x] STEP 12: Product Service에서 Repository 호출 및 결과 비교
-- [ ] STEP 13: GET /products API 연결
+- [ ] STEP 13: 코드 구현은 완료; 로컬 HTTP 200·7종 응답·Swagger·members 회귀 검증 후 PASS
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
 - [ ] STEP 05 이후에는 Gate마다 사용자에게 실제 검증 결과를 설명
 
-### 진행 기록
+### 진행 기록 (시점별 이력; 최신 진행 상태는 상단 표 참고)
 
 | 일자 | 진행 내용 | 검증 상태 |
 | --- | --- | --- |
+| 2026-11-12 | Work의 스키마 분리·DB/ORM 비교 및 동일 DB 확인 결과를 최신 상태로 반영 | **STEP 07·10 PASS (Work 증빙 기록)** |
+| 2026-11-12 | Product Repository·Service GitHub 반영 및 Work의 상품 7건 조회 검증 확인 | **STEP 11·12 PASS** |
+| 2026-11-12 | GET /products Router·Pydantic 응답·main.py 등록 완료, pytest 격리 테스트 5개 및 테스트 의존성 문서 GitHub 반영 | **STEP 13·14 구현 완료 / HTTP·pytest 미실행(HOLD)** |
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
 | 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
 | 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
@@ -668,6 +675,55 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 
 **최종 완료의 기준:** products/orders/order_items 실재, Seed 상품 6개 이상, GET 200, POST 201, DB 재고 차감과 원자성, pytest PASS, Playwright PASS, Browser/Network 증거 및 SQL 결과가 모두 확인되어야 한다. AI 코드 작성이나 문서만으로는 완료가 아니다.
 
+
+## STEP 13 — GET /products API 연결 (GitHub 코드 반영, 실행 검증 대기)
+
+- `backend/app/schemas.py`: `ProductResponse` 추가 (id/name/price/category/stock, Pydantic ORM 응답 매핑).
+- `backend/app/routers/product_router.py`: GET `/products`가 Product Service를 호출하도록 연결.
+- `backend/app/main.py`: 기존 `member_router`는 그대로 보존하고 `product_router`를 추가 등록.
+- **현재 미검증:** 로컬 파일 동기화, FastAPI 실행, Swagger `/docs`, `GET /products` HTTP 200·상품 7개 JSON, 기존 `/members` 회귀 테스트. 실제 실행 결과 없이는 PASS로 기록하지 않는다.
+
+**실행 검증 (Windows PowerShell, 기존 미커밋 파일 보존 및 Git 상태 확인 후):**
+
+```powershell
+git -C C:\dev\fullstack-web-course status --short
+git -C C:\dev\fullstack-web-course log -1 --oneline
+# 기존 미커밋 변경을 보존한 뒤 안전하게 최신 main을 동기화한다.
+Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
+& '..\.venv\Scripts\python.exe' -m uvicorn app.main:app --reload
+```
+
+다른 PowerShell에서 실행:
+
+```powershell
+$items = Invoke-RestMethod http://127.0.0.1:8000/products
+"상품 건수: $(@($items).Count)"
+$items | Format-Table id, name, price, category, stock
+Invoke-WebRequest http://127.0.0.1:8000/docs -UseBasicParsing | Select-Object StatusCode
+Invoke-WebRequest http://127.0.0.1:8000/members -UseBasicParsing | Select-Object StatusCode
+```
+
+**STEP 13 PASS 조건:** GET `/products` 200·7종(필드 5개, 품절 stock=0), Swagger 표시, 기존 `/members` 200. **현재 HOLD.**
+
+---
+
+## STEP 14 — pytest 상품 조회 API (테스트 코드 반영, 실행 대기)
+
+- `backend/tests/test_products_api.py`: `get_db` 의존성을 SQLite 인메모리 DB로 오버라이드하여 기존 PostgreSQL 데이터를 절대 변경하지 않는 5개 테스트.
+- 확인 범위: 빈 목록 200/배열, 상품 필드·타입·정렬, 품절상품 재고 0, GET 이후 재고 불변, OpenAPI의 상품 및 회원 경로.
+- `backend/requirements-test.txt`: pytest/httpx 테스트용 의존성 별도 명시. **설치/실행은 아직 하지 않았다.**
+- SQLite 테스트는 FastAPI→SQLAlchemy 통합을 검증하지만 PostgreSQL 전용 동시성/트랜잭션까지 검증하지는 않는다. 주문 단계에는 별도 테스트용 PostgreSQL 환경이 필요하다.
+
+**실행 검증 (기존 테스트 패키지가 설치된 경우 재설치 불필요):**
+
+```powershell
+Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
+& '..\.venv\Scripts\python.exe' -m pytest tests/test_products_api.py -q
+```
+
+**STEP 14 PASS 조건:** 5개 테스트 실제 PASS 로그 확보 및 운영 DB 미변경. **현재 HOLD.**
+
+---
 
 ## STEP 11~12 상품 조회 구현 — 2026-11-12
 
