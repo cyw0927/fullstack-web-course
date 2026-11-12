@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** STEP 01~03 PASS, STEP 04 HOLD, STEP 05~10 PASS (STEP 07은 CHECK 이름 차이를 아래에 기록). 다음 작업은 STEP 11 Product Repository 조회다.
+> **현재 상태:** STEP 01~03 PASS, STEP 04 HOLD, STEP 05~10 PASS (STEP 07은 CHECK 이름 차이를 아래에 기록). STEP 11~12 상품 Repository·Service 조회를 로컬에서 검증했으며, 다음 작업은 STEP 13 GET /products 연결이다.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -286,8 +286,8 @@ CREATE TABLE public.order_items (
 | 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **PASS** (DBeaver INSERT RETURNING 스크린샷에서 7종 이름·가격·카테고리·재고 확인) |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | **PASS** (인계 전 사전 점검에서 Swagger 및 회원 API 정상 완료 사용자 보고) |
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **PASS** (DBeaver와 Backend가 localhost:5432/postgres에 연결; ORM 상품 7건 조회) |
-| 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | ☐ |
-| 12 | Product Service 조회 | Service → Repository → DB | ☐ |
+| 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | **PASS** (읽기 전용 DB 조회 7건, 직접 SQL과 비교) |
+| 12 | Product Service 조회 | Service → Repository → DB | **PASS** (Service 결과가 Repository·SQL 결과와 동일) |
 | 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | ☐ |
 | 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | ☐ |
 | 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | ☐ |
@@ -596,7 +596,7 @@ postgres
 - CHECK 조건의 **내용은 일치**하지만 이름은 다르다. DB는 예를 들어 `products_price_check`, 모델은 `ck_products_price_nonnegative`를 사용한다. 기존 제약을 유지했으며 이후 마이그레이션 도구를 쓸 때 이름 차이를 검토한다.
 - DBeaver의 연결 정보는 `localhost:5432/postgres`이며 새로고침한 트리에 `matcha_store`가 표시됐다. Backend SQLAlchemy Session도 같은 호스트·포트·DB에 연결해 상품 7건을 조회했다. DBeaver 화면에서 이동 후 상품별 행을 다시 조회하지는 않았으며, 행 보존은 DB 트랜잭션 내부 비교로 검증했다.
 - FastAPI `TestClient`에서 `GET /members`는 200·14건, `/openapi.json`은 200이었다. 별도 포트의 Uvicorn을 실제 실행해 HTTP `GET /members` 200·14건과 `GET /docs` 200도 확인했다. Swagger UI에서 별도 조작은 하지 않았다.
-- **STEP 07 PASS**, **STEP 10 PASS**. STEP 04의 전체 환경 검사는 별도 HOLD. 다음은 **STEP 11 Product Repository 조회 구현**이다.
+- **STEP 07 PASS**, **STEP 10 PASS**. STEP 04의 전체 환경 검사는 별도 HOLD. 당시 다음 단계는 **STEP 11 Product Repository 조회 구현**이었다. 이후 진행은 STEP 11~12 기록을 참고한다.
 
 ---
 
@@ -621,7 +621,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~10 PASS; STEP 04 HOLD**다. STEP 07의 CHECK 제약 이름 차이는 아래 검증 기록을 참고한다. 다음은 **STEP 11 Product Repository 조회**이며 이후 API/주문 구현과 테스트는 아직 진행하지 않았다.
+> 현재 진도는 **STEP 01~03, 05~10 PASS; STEP 04 HOLD**다. STEP 07의 CHECK 제약 이름 차이는 아래 검증 기록을 참고한다. STEP 11~12의 조회 코드는 로컬에서 검증했다. 다음은 **STEP 13 GET /products API 연결**이며 주문 구현과 API 테스트는 아직 진행하지 않았다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -640,7 +640,9 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 06: orders/order_items PK·FK·1:N·주문 가격 스냅샷 설계
 - [x] STEP 07: ORM import, DB 실제 타입/PK/FK/CHECK 확인 (CHECK 이름 차이 기록)
 - [x] STEP 10: DBeaver와 Backend 연결 대상 확인, ORM 상품 7건 조회
-- [ ] STEP 11: Product Repository의 상품 목록 조회 구현
+- [x] STEP 11: Product Repository에서 상품 목록 조회 및 실제 DB 결과 비교
+- [x] STEP 12: Product Service에서 Repository 호출 및 결과 비교
+- [ ] STEP 13: GET /products API 연결
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -665,3 +667,11 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ---
 
 **최종 완료의 기준:** products/orders/order_items 실재, Seed 상품 6개 이상, GET 200, POST 201, DB 재고 차감과 원자성, pytest PASS, Playwright PASS, Browser/Network 증거 및 SQL 결과가 모두 확인되어야 한다. AI 코드 작성이나 문서만으로는 완료가 아니다.
+
+
+## STEP 11~12 상품 조회 구현 — 2026-11-12
+
+- `backend/app/repositories/product_repository.py`: `find_all(db)`이 `matcha_store.products`를 SQLAlchemy `select(Product)`로 ID 순서대로 조회한다.
+- `backend/app/services/product_service.py`: `get_products(db)`가 Repository를 호출해 결과를 전달한다.
+- 실제 PostgreSQL 읽기 전용 트랜잭션에서 Repository, Service 및 직접 SQL의 ID·이름·가격·분류·재고를 비교했고 7건이 일치했다.
+- STEP 13의 `GET /products` Router는 아직 연결하지 않았다. 기존 회원 API와 DB 데이터는 변경하지 않았다.
