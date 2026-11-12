@@ -5,6 +5,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.member_router import router as member_router
+from app.routers.product_router import router as product_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,3 +31,4 @@ app.add_middleware(
     allow_headers=["Content-Type"],
 )
 app.include_router(member_router)
+app.include_router(product_router)
