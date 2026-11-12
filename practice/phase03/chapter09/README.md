@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~02 PASS, STEP 03 개념 설명 제공/HOLD(사용자 이해 확인 대기), STEP 04~30 미진행. 구현·테스트·DB 생성은 아직 하지 않음.**  
+> **현재 상태:** **STEP 01~03 PASS (개념 학습·MVP 확정), STEP 04 환경 점검 진행 중/HOLD(로컬 증빙 미확인), STEP 05~30 미진행. 구현·테스트·DB 생성은 아직 하지 않음.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -194,14 +194,14 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 역할을 설명했으며 이해 확인 대기(HOLD)다. STEP 04~30은 미진행이다.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 환경 점검 진행 중이며 로컬 실측 증빙이 없으므로 HOLD, STEP 05~30은 미진행이다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
 | 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | **PASS** (개념 설명 후 사용자 다음 단계 진행 승인) |
 | 02 | PRD 및 MVP 범위 고정 | 필수 API 2개, DB 3개, 제외 기능 구분 | **PASS** (MATCHA HOUSE 7종 및 범위 확정, 문서 기록) |
-| 03 | 데이터 흐름 이해 | Router/Service/Repository 역할 설명 | **HOLD** (실제 회원관리 코드 기반 설명 제공, 사용자 이해 확인 대기) |
-| 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | ☐ |
+| 03 | 데이터 흐름 이해 | Router/Service/Repository 역할 설명 | **PASS** (실제 회원관리 코드 확인, 사용자 이해 확인) |
+| 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (기존 설치 완료 보고, 로컬 실측 증빙 확인 전) |
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | ☐ |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | ☐ |
 | 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | ☐ |
@@ -358,11 +358,11 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01·02 PASS, STEP 03 개념 설명 제공 후 이해 확인 대기(HOLD)**이고 STEP 04~30은 미진행이다. 구현·실행·테스트는 전부 미실행이다.  
+> 현재 진도는 **STEP 01~03 PASS**, STEP 04는 환경 점검 진행 중 **HOLD**(로컬 명령 결과 및 연결 증빙 미확인), STEP 05~30은 미진행이다. 구현·실행·테스트는 전부 미실행이다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
-> 상품 테마는 MATCHA HOUSE로 확정했고, 실제 DB 연결/격리 여부는 STEP 04 이후 확인한다. STEP 03에서 Router/Service/Repository 설명을 제공했으며 사용자 이해 확인을 기다린다. 다음은 STEP 04 개발환경 점검이다. 구현 단계에서는 **코드 → 실행 → Swagger/Network/DB/pytest/Playwright Evidence → PASS** 순서를 지켜라.  
+> 상품 테마는 MATCHA HOUSE로 확정했고, 실제 DB 연결/격리 여부는 STEP 04 이후 확인한다. STEP 03은 사용자 이해 확인 후 PASS로 마쳤다. STEP 04에서 기존 환경의 실제 실행 상태와 미확인 항목을 점검한다. 구현 단계에서는 **코드 → 실행 → Swagger/Network/DB/pytest/Playwright Evidence → PASS** 순서를 지켜라.  
 > 사용자에게 긴 대화 내용을 다시 요구하지 말고 이 문서의 데이터 계약을 우선하되, 강의안과 실제 코드에 차이가 있으면 그 차이를 명시하고 검증하라.  
 > 이미 구현하지 않은 기능이나 실행하지 않은 테스트를 완료로 표시하지 마라.
 
@@ -370,7 +370,8 @@ FROM products ORDER BY id;
 
 - [x] STEP 01: 상품 조회 → 장바구니 → 주문 → DB 사용자 흐름 학습
 - [x] STEP 02: MATCHA HOUSE 테마 및 7종 상품·필수 API 2개·DB 3개·제외 기능 확정
-- [ ] STEP 03: 기존 회원관리 파일 3개 확인 및 계층 역할 설명 제공, 사용자 이해 확인 후 PASS 처리
+- [x] STEP 03: 기존 회원관리의 Router/Service/Repository 계층 확인, 사용자 이해 확인 후 PASS
+- [ ] STEP 04: 기존 설치 반복 없이 로컬 Git·도구 버전·DB/Swagger·Playwright 실제 확인
 - [ ] STEP 04: 현재 로컬 Git 상태와 Python·Node·DB·Swagger·pytest·Playwright 환경 **실측**
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
@@ -384,7 +385,8 @@ FROM products ORDER BY id;
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
 | 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
 | 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
-| 2026-11-12 | STEP 03: 기존 `backend/app/routers/member_router.py`, `services/member_service.py`, `repositories/member_repository.py`에서 요청→Service→DB 조회 흐름을 확인해 설명. 기존 회원 Repository는 commit 수행하나 신규 주문은 Service가 전체 commit/rollback을 관리하는 설계를 적용할 예정 | **개념 설명 제공/HOLD (사용자 이해 확인 대기; 코드·실행 없음)** |
+| 2026-11-12 | STEP 03: 기존 `backend/app/routers/member_router.py`, `services/member_service.py`, `repositories/member_repository.py`에서 요청→Service→DB 조회 흐름을 확인해 설명. 기존 회원 Repository는 commit 수행하나 신규 주문은 Service가 전체 commit/rollback을 관리하는 설계를 적용할 예정 | **개념 학습 PASS (사용자 확인, 코드·실행 없음)** |
+| 2026-11-12 | STEP 04: 기존 설치 완료 보고를 존중해 불필요한 재설치 생략. 저장소 설정 확인과 로컬 증빙을 구분하여 점검 진행 | **HOLD (로컬 실측 전)** |
 
 ---
 
