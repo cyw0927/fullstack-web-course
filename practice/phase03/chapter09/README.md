@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태 (2026-11-12):** STEP 01~03, 05~15 PASS (STEP 14는 사용자 테스트 결과). STEP 04 전체 점검 HOLD. 카페 화면과 실데이터 목록은 구현했으나 장바구니·주문 및 Playwright는 미완료다.
+> **현재 상태 (2026-11-12):** STEP 01~03, 05~19 PASS (STEP 14는 사용자 테스트 결과). STEP 04 전체 점검 HOLD. 다음은 Part 5 STEP 20 장바구니 State이며 아직 구현하지 않았다.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -291,10 +291,10 @@ CREATE TABLE public.order_items (
 | 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | **PASS** (실제 HTTP와 Swagger 실행 200, 7건) |
 | 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | **PASS** (사용자 로컬 pytest 결과 `5 passed, 1 warning in 0.75s`; SQLite 인메모리 격리 테스트) |
 | 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | **PASS** (실제 화면과 회원 페이지 확인, Console 오류 없음) |
-| 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | **부분 구현** (타입·상품 카드·품절 표시 완료, 별도 ProductCard 및 담기 기능 미구현) |
-| 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | ☐ |
-| 18 | 같은 카드에 서로 다른 Props | 서로 다른 상품 2개 표시 | ☐ |
-| 19 | map/key 상품 리스트 | 카드 6개 이상, key 경고 없음, Playwright Smoke ① | **부분 확인** (실제 상품 7개 표시·Console 오류 없음, Playwright 미실행) |
+| 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | **PASS** (별도 타입·카드 연결, 담기는 준비 중) |
+| 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | **PASS** (테스트 응답 1개, 이름·가격·분류·재고 확인) |
+| 18 | 같은 카드에 서로 다른 Props | 서로 다른 상품 2개 표시 | **PASS** (테스트 응답 2개, 음료·디저트 및 품절 확인) |
+| 19 | map/key 상품 리스트 | 카드 6개 이상, key 경고 없음, Playwright Smoke ① | **PASS** (실제 API 7개·품절·Console 검사, Playwright 통과) |
 | 20 | TypeScript cart State | `CartItem = Product & {quantity:number}` | ☐ |
 | 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | ☐ |
 | 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | ☐ |
@@ -625,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~15 PASS; STEP 04 HOLD**다. STEP 16·19·25·26은 일부 구현 또는 확인했으며 Playwright와 장바구니는 미완료다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 기록을 따른다.
+> 현재 진도는 **STEP 01~03, 05~19 PASS; STEP 04 HOLD**다. 다음은 **Part 5 STEP 20 장바구니 State**이며 아직 구현하지 않았다. STEP 25~26의 별도 전체 검증과 주문 기능도 남아 있다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -648,7 +648,8 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 12: Product Service에서 Repository 호출 및 결과 비교
 - [x] STEP 13: 실제 GET /products HTTP 200·7종, Swagger 실행 및 회원 페이지 조회 확인
 - [x] STEP 15: Next.js 실행, 브라우저 및 Console 확인
-- [ ] STEP 16 이후: 별도 ProductCard/장바구니와 Playwright 검증 진행
+- [x] STEP 16~19: ProductCard 분리, Props 예시 및 실제 API 목록 Playwright 검증
+- [ ] STEP 20: 장바구니 State 학습 및 구현 (아직 미진행)
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -753,3 +754,13 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 - 브라우저에서 회원 목록·검색·상세, 진단 페이지의 실제 GET 성공을 확인했다. 데스크톱과 모바일 폭을 확인했고 Console error는 없었다.
 - TypeScript `npx tsc --noEmit`, ESLint `npx eslint`, `npm run build` 통과. STEP 14의 `5 passed, 1 warning`은 사용자가 제공한 이전 결과이며 이번 작업에서 재실행하지 않았다.
 - 장바구니와 주문은 아직 구현하지 않아 모든 담기 버튼을 비활성화했다. API 오류·빈 응답·재시도 경로는 구현했으나 실제 장애 주입으로 검증하지 않았다. 브라우저 Network 패널과 Playwright도 미검증이다.
+
+
+## STEP 16~19 — ProductCard와 목록 검증 (2026-11-12)
+
+- 사용자가 만든 `components/ProductCard.tsx`와 `types/products.ts`를 재사용하고 타입 import 경로를 실제 파일명과 일치시켰다. `StoreFront`는 `state.products.map()`과 `key={product.id}`로 카드를 렌더링한다.
+- STEP 17: 테스트 응답으로 예시 상품 하나를 반환해 카드 한 개의 이름·가격·분류·재고를 확인했다. STEP 18: 서로 다른 예시 상품 두 개를 반환해 음료/디저트와 품절 버튼을 확인했다. 예시 데이터는 테스트에서만 사용한다.
+- STEP 19: 테스트 응답 대체 없이 실제 `GET /products` HTTP 200을 확인하고 반환된 7개 상품 각각의 이름·가격·재고와 아이스크림 품절 표시를 화면과 비교했다. 콘솔 오류와 React key 관련 경고가 없었다.
+- `tests/store-smoke.spec.ts`: 위 3개 및 기존 `/members`, `/diagnostics` 읽기 전용 회귀 확인을 실행해 **4 passed**. 기존 서버 사용, 회원 데이터 쓰기/삭제 없음.
+- `npx tsc --noEmit`, `npm run lint`, `npm run build` 통과. 테스트 실행 전 `localhost:3000` Next.js와 `127.0.0.1:8000` Backend를 실행해야 한다. 실행 명령: `npx playwright test tests/store-smoke.spec.ts --workers=1`.
+- 다음: **Part 5 STEP 20 장바구니 State**. 현재 `StoreFront`는 `onAdd`를 전달하지 않아 담기 버튼이 비활성화되며, 주문/재고 변경 기능은 구현하지 않았다.
