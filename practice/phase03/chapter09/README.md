@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태 (2026-11-12):** **STEP 01~03 PASS, STEP 04 HOLD, STEP 05~12 PASS, STEP 13 코드 반영/HTTP 검증 HOLD, STEP 14 pytest PASS(5 passed, 1 warning), STEP 15 로컬 실행 대기, STEP 15~30 미진행.**
+> **현재 상태 (2026-11-12):** STEP 01~03, 05~15 PASS (STEP 14는 사용자 테스트 결과). STEP 04 전체 점검 HOLD. 카페 화면과 실데이터 목록은 구현했으나 장바구니·주문 및 Playwright는 미완료다.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -272,7 +272,7 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**진도 원칙:** 개념 학습·코드 구현·실제 실행·Evidence를 구분한다. 아래 표와 최신 검증 기록이 현재 상태이며 과거 작업 일지의 HOLD 및 public 스키마 설명은 해당 시점의 이력이다. STEP 04 전체 점검은 HOLD, STEP 13은 HTTP 증빙 대기(HOLD)이고 STEP 14는 사용자 로컬 pytest 5 passed 결과로 PASS다.
+**진도 원칙:** 개념 학습·코드 구현·실제 실행·Evidence를 구분한다. 아래 표와 최신 검증 기록이 현재 상태이며 과거 작업 일지의 HOLD 및 public 스키마 설명은 해당 시점의 이력이다. STEP 04 전체 점검은 HOLD다. STEP 13과 15는 실제 실행으로 확인했고, STEP 14는 사용자가 제공한 로컬 pytest 5 passed 결과로 기록한다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
@@ -288,20 +288,20 @@ CREATE TABLE public.order_items (
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **PASS** (DBeaver와 Backend가 localhost:5432/postgres에 연결; ORM 상품 7건 조회) |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | **PASS** (읽기 전용 DB 조회 7건, 직접 SQL과 비교) |
 | 12 | Product Service 조회 | Service → Repository → DB | **PASS** (Service 결과가 Repository·SQL 결과와 동일) |
-| 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | **HOLD** (ProductResponse/Router/main.py GitHub 반영, 실제 HTTP 200·7종 JSON·Swagger 미검증) |
+| 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | **PASS** (실제 HTTP와 Swagger 실행 200, 7건) |
 | 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | **PASS** (사용자 로컬 pytest 결과 `5 passed, 1 warning in 0.75s`; SQLite 인메모리 격리 테스트) |
-| 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | **HOLD** (기존 member-next-app 설치 확인 전·로컬 서버 및 브라우저 콘솔 증빙 대기) |
-| 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | ☐ |
+| 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | **PASS** (실제 화면과 회원 페이지 확인, Console 오류 없음) |
+| 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | **부분 구현** (타입·상품 카드·품절 표시 완료, 별도 ProductCard 및 담기 기능 미구현) |
 | 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | ☐ |
 | 18 | 같은 카드에 서로 다른 Props | 서로 다른 상품 2개 표시 | ☐ |
-| 19 | map/key 상품 리스트 | 카드 6개 이상, key 경고 없음, Playwright Smoke ① | ☐ |
+| 19 | map/key 상품 리스트 | 카드 6개 이상, key 경고 없음, Playwright Smoke ① | **부분 확인** (실제 상품 7개 표시·Console 오류 없음, Playwright 미실행) |
 | 20 | TypeScript cart State | `CartItem = Product & {quantity:number}` | ☐ |
 | 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | ☐ |
 | 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | ☐ |
 | 23 | Derived State 합계 | `reduce`, 5500×2 + 3000×1 = 14000원 / 3개 | ☐ |
 | 24 | useEffect 이해 | GET은 초기 로드, POST는 버튼 클릭 | ☐ |
-| 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | ☐ |
-| 26 | Loading/Error/Empty/재시도 | 실패 후 API 복구, 재조회 확인 | ☐ |
+| 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | **부분 확인** (API 200 및 7개 카드 확인, Playwright와 Network 패널은 미검증) |
+| 26 | Loading/Error/Empty/재시도 | 실패 후 API 복구, 재조회 확인 | **부분 구현** (상태·재시도 UI 구현, 장애·빈 목록·복구는 미검증) |
 | 27 | POST /orders 구현 | Swagger 201, DB 가격·재고, 원자적 주문 저장 | ☐ |
 | 28 | 주문 pytest·rollback | 201/404/409/422, 재고, 실패 시 전부 rollback | ☐ |
 | 29 | React 주문 + Playwright E2E | 주문 흐름 + Network 201 + 격리 DB 저장 | ☐ |
@@ -625,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~12 PASS; STEP 04 HOLD; STEP 13 GitHub 구현 완료/HTTP 증빙 대기; STEP 14 로컬 pytest PASS(5 passed), STEP 15 기존 Next.js 실행 확인 대기; STEP 15~30 미진행**이다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 검증 기록을 따른다.
+> 현재 진도는 **STEP 01~03, 05~15 PASS; STEP 04 HOLD**다. STEP 16·19·25·26은 일부 구현 또는 확인했으며 Playwright와 장바구니는 미완료다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 기록을 따른다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -646,7 +646,9 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 10: DBeaver와 Backend 연결 대상 확인, ORM 상품 7건 조회
 - [x] STEP 11: Product Repository에서 상품 목록 조회 및 실제 DB 결과 비교
 - [x] STEP 12: Product Service에서 Repository 호출 및 결과 비교
-- [ ] STEP 13: 코드 구현은 완료; 로컬 HTTP 200·7종 응답·Swagger·members 회귀 검증 후 PASS
+- [x] STEP 13: 실제 GET /products HTTP 200·7종, Swagger 실행 및 회원 페이지 조회 확인
+- [x] STEP 15: Next.js 실행, 브라우저 및 Console 확인
+- [ ] STEP 16 이후: 별도 ProductCard/장바구니와 Playwright 검증 진행
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -705,7 +707,7 @@ Invoke-WebRequest http://127.0.0.1:8000/docs -UseBasicParsing | Select-Object St
 Invoke-WebRequest http://127.0.0.1:8000/members -UseBasicParsing | Select-Object StatusCode
 ```
 
-**STEP 13 PASS 조건:** GET `/products` 200·7종(필드 5개, 품절 stock=0), Swagger 표시, 기존 `/members` 200. **현재 HOLD.**
+**STEP 13 PASS:** GET `/products` 200·7종(품절 stock=0), Swagger 실행 200, 기존 회원 화면 및 API 정상 조회를 확인했다.
 
 ---
 
@@ -727,7 +729,7 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 
 ---
 
-## STEP 15 — 기존 Next.js 개발 서버 확인 (HOLD)
+## STEP 15 — 기존 Next.js 개발 서버 확인 (PASS)
 
 - 기존 `practice/phase03/member-next-app`을 유지하고 새 프로젝트나 패키지 설치를 반복하지 않는다.
 - 로컬 Git 미커밋 변경은 보존한다. Next.js가 설치된 기존 로컬 경로에서 `npm run dev`로 구동한다.
@@ -741,4 +743,13 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 - `backend/app/repositories/product_repository.py`: `find_all(db)`이 `matcha_store.products`를 SQLAlchemy `select(Product)`로 ID 순서대로 조회한다.
 - `backend/app/services/product_service.py`: `get_products(db)`가 Repository를 호출해 결과를 전달한다.
 - 실제 PostgreSQL 읽기 전용 트랜잭션에서 Repository, Service 및 직접 SQL의 ID·이름·가격·분류·재고를 비교했고 7건이 일치했다.
-- STEP 13의 `GET /products` Router는 아직 연결하지 않았다. 기존 회원 API와 DB 데이터는 변경하지 않았다.
+- 당시 STEP 13의 `GET /products` Router는 아직 연결하지 않았다. 이후 STEP 13 구현과 검증은 최신 진행 상태를 참고한다.
+
+
+## MATCHA HOUSE 메인 화면 및 실데이터 검증 — 2026-11-12
+
+- `/`에서 `/store`로 이동하며, 독립 CSS 모듈을 사용하는 MATCHA HOUSE 화면에서 실제 상품 API를 호출한다. `/members`, `/members/[memberId]`, `/diagnostics`를 유지한다.
+- 실제 `GET /products` HTTP 200 및 Swagger Execute 200, 7개 상품과 `stock=0` 아이스크림을 확인했다. 브라우저에도 같은 7개 상품과 품절·비활성화 표시가 나온다.
+- 브라우저에서 회원 목록·검색·상세, 진단 페이지의 실제 GET 성공을 확인했다. 데스크톱과 모바일 폭을 확인했고 Console error는 없었다.
+- TypeScript `npx tsc --noEmit`, ESLint `npx eslint`, `npm run build` 통과. STEP 14의 `5 passed, 1 warning`은 사용자가 제공한 이전 결과이며 이번 작업에서 재실행하지 않았다.
+- 장바구니와 주문은 아직 구현하지 않아 모든 담기 버튼을 비활성화했다. API 오류·빈 응답·재시도 경로는 구현했으나 실제 장애 주입으로 검증하지 않았다. 브라우저 Network 패널과 Playwright도 미검증이다.
