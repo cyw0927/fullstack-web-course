@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(세 테이블 존재 사용자 확인; products 타입·주요 제약 스크린샷 확인; 주문 테이블 제약·ORM 로컬 import 미검증), STEP 08 진행 중/HOLD(기존 상품 행 조회 전), STEP 09~30 미진행.**  
+> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(3개 테이블 존재·products 스키마 확인, 주문 제약·ORM 로컬 import 미검증), STEP 08 진행 중/HOLD(products SELECT 결과 0행 확인; Seed INSERT/후속 SELECT 대기), STEP 09~30 미진행.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -281,7 +281,7 @@ CREATE TABLE public.order_items (
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
 | 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 테이블 존재 확인; products 주요 타입·제약 확인; orders/order_items 제약 및 ORM 로컬 미검증) |
-| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **HOLD** (기존 상품 데이터 SELECT 확인 후 Seed 입력 예정) |
+| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **HOLD** (products SELECT 0행 확인; 안전한 Seed SQL 작성, 실행·7행 확인 대기) |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | ☐ |
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | ☐ |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | ☐ |
@@ -409,6 +409,8 @@ COMMIT;
 
 사용자가 DBeaver에서 `products`, `orders`, `order_items` 세 테이블이 모두 존재한다고 확인했다. STEP 08에서는 **먼저 현재 products 행을 읽기 전용 SELECT로 확인**해 기존 데이터를 보존한다. 기존 상품이 있으면 중복 삽입하지 않고 누락 상품만 추가한다. 이름이 같지만 가격/카테고리가 다른 행이 있으면 자동 수정하지 말고 사용자에게 확인한다.
 
+**사용자 결과 (2026-11-12):** `SELECT id, name, price, category, stock FROM public.products ORDER BY id;` 실행 결과 **0행**. 기존 상품 데이터가 없으므로 7종을 등록할 수 있다.
+
 현재 상품 목록 확인 SQL:
 
 ```sql
@@ -429,7 +431,38 @@ Seed 목표(원 단위 INTEGER, 총 7종):
 | 말차 쿠키 | 2500 | 디저트 | 25 |
 | 말차 아이스크림 | 4500 | 디저트 | 0 |
 
-현재 행 조회 전이므로 INSERT SQL은 아직 실행하지 않는다. INSERT는 `WHERE NOT EXISTS` 방식으로 기존 상품명을 기준으로 누락된 행만 넣으며 기존 행의 가격/재고를 덮어쓰지 않는다. 이후 7개 상품을 SELECT해 이름·가격·카테고리·재고를 확인한다.
+**다음 DBeaver 실행용 Seed SQL (사용자 실행 대기; AI가 DB에 직접 실행하지 않음):**
+
+```sql
+INSERT INTO public.products (name, price, category, stock)
+SELECT seed.name, seed.price, seed.category, seed.stock
+FROM (VALUES
+    ('아이스 말차 라떼', 5500, '음료', 20),
+    ('말차 크림 라떼', 6500, '음료', 15),
+    ('말차 아포가토', 6000, '음료', 12),
+    ('말차 티라미수', 7000, '디저트', 8),
+    ('말차 휘낭시에', 3000, '디저트', 20),
+    ('말차 쿠키', 2500, '디저트', 25),
+    ('말차 아이스크림', 4500, '디저트', 0)
+) AS seed(name, price, category, stock)
+WHERE NOT EXISTS (
+    SELECT 1 FROM public.products AS existing
+    WHERE existing.name = seed.name
+)
+RETURNING id, name, price, category, stock;
+```
+
+- `WHERE NOT EXISTS`는 같은 상품명이 이미 있으면 해당 상품을 추가하지 않는다. 기존 상품의 가격·재고를 덮어쓰지 않는다.
+- DBeaver 상단이 Auto 모드이면 별도 `BEGIN`/`COMMIT`을 붙이지 말고 이 INSERT 문장만 실행한다.
+- 실행 후 아래 SELECT로 총 7행과 아이스크림 재고 0을 확인한다. 동명 상품의 기존 정보가 목표값과 다르면 자동 수정하지 말고 확인한다.
+
+```sql
+SELECT id, name, price, category, stock
+FROM public.products
+ORDER BY id;
+```
+
+현재 INSERT는 아직 실행하지 않았다. **STEP 08 PASS 조건은 최종 7종의 이름·가격·카테고리·재고를 SELECT로 확인하는 것**이다.
 
 ---
 
@@ -579,7 +612,7 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(DBeaver 스크린샷으로 products 주요 타입·제약 확인, 주문 2테이블 미생성/ORM 로컬 미검증), STEP 08~30 미진행이다. API 구현/실행/테스트는 미실시다.  
+> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(3개 테이블 존재 및 products 주요 타입·제약 확인, 주문 제약·ORM 로컬 미검증), **STEP 08 HOLD**(상품 SELECT 0행, Seed SQL 실행 및 최종 SELECT 대기), STEP 09~30 미진행이다. API 구현/실행/테스트는 미실시다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -614,7 +647,7 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 05: MATCHA HOUSE products 5필드 및 PK/CHECK 설계. 사용자가 이후 DBeaver에서 기존 회원 DB에 products를 생성했다고 보고했으나 실제 SQL과 제약은 미확인 | **설계 PASS / DB 실재·제약 확인 HOLD** |
 | 2026-11-12 | STEP 06: 주문 1:N 상세 및 상품 FK, 주문 당시 단가 스냅샷, orders/order_items 2개 테이블의 PK·CHECK·기본값·DDL 설계 | **설계 PASS / DB 생성 미실행** |
 | 2026-11-12 | STEP 07: DBeaver 스크린샷으로 products의 PK/NOT NULL/CHECK와 BIGINT IDENTITY, VARCHAR/INTEGER 타입 확인. 이후 사용자가 DDL 실행 후 products/orders/order_items 3개 테이블 존재 확인 | **테이블 존재 및 products 기본 스키마 확인 / 주문 테이블 제약·ORM 로컬 검증 대기 (HOLD)** |
-| 2026-11-12 | STEP 08: 기존 products 행을 먼저 읽고 중복 없이 7종 Seed를 넣는 계획과 SELECT 검증 절차 기록 | **HOLD (현재 데이터 확인 전, INSERT 미실행)** |
+| 2026-11-12 | STEP 08: DBeaver에서 products SELECT 결과 0행 사용자 확인. 7종 MATCHA HOUSE Seed를 기존 이름을 덮어쓰지 않는 `WHERE NOT EXISTS` INSERT와 후속 SELECT로 문서화 | **HOLD (INSERT 실행 및 7행 확인 대기)** |
 
 ---
 
