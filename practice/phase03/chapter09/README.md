@@ -280,7 +280,7 @@ CREATE TABLE public.order_items (
 | 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (사용자: 파일/설치 경로 모두 True; Git·HTTP 상태 미확인) |
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
-| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 ORM 모델 GitHub 반영; DBeaver 사용자 조회 보고, 실제 스키마·제약·로컬 실행 미검증) |
+| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD / products 검증 일부 PASS** (스크린샷에서 products PK·NOT NULL·price/stock CHECK 확인; orders/order_items 및 실제 컬럼 타입·ORM 일치·로컬 실행은 미확인) |
 | 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | ☐ |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | ☐ |
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | ☐ |
@@ -337,7 +337,7 @@ CREATE TABLE public.order_items (
 
 ## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12)
 
-- **사용자 확인:** DBeaver에서 이전에 안내한 `information_schema.columns` 조회를 실행한 후 "잘있네"라고 답했다. 테이블/컬럼을 볼 수 있었다는 **사용자 보고**로만 해석하며 실제 출력, 제약조건 세부 사항은 전달되지 않았다.
+- **사용자 확인:** DBeaver 제약조건 조회 결과 스크린샷에서 `public.products`의 `products_pkey` (PRIMARY KEY(id)), `id/name/category/price/stock` NOT NULL, `price >= 0`, `stock >= 0` CHECK를 확인했다. **products 제약조건은 스크린샷 증빙으로 확인 완료.** 해당 결과에는 `orders`와 `order_items` 행이 보이지 않으므로 두 테이블은 아직 DB 제약조건 확인 전이다. 컬럼 데이터 타입과 SQLAlchemy 모델 일치도 아직 확인 전.
 - **GitHub 코드 작성:** `practice/phase03/backend/app/models.py`에 기존 `Member`를 보존하면서 `Product`, `Order`, `OrderItem` 모델 추가. 커밋 `693ea93`. `public.products`/`public.orders`/`public.order_items` 매핑, 고정 데이터 계약(정수 원화/주문 단가 스냅샷), PK/FK, 타입, 기본값, 제약의 *예상 메타데이터*를 정의했다.
 - **실행 범위:** GitHub 소스만 변경. 사용자 로컬 `C:\dev\fullstack-web-course` 동기화, 코드 import, DB 조회, `pytest` 실행 **하지 않음**. `CREATE TABLE`/`create_all`/`drop_all` 실행하지 않음.
 - **주의:** SQLAlchemy에 적은 `CheckConstraint`는 **이미 생성된 DB 테이블에 자동 추가되지 않는다.** 또 DB 실제 `id`가 `BIGINT`가 아닐 수 있으므로 실제 스키마를 우선한다. 다른 회원관리용 테이블/데이터 보존.
@@ -367,7 +367,7 @@ WHERE n.nspname = 'public'
 ORDER BY c.relname, p.contype, p.conname;
 ```
 
-실제 DB 조회 결과와 SQLAlchemy 메타데이터의 일치 확인, 로컬 안전한 import 테스트가 끝나야 **STEP 07 PASS** 처리한다. 그 전까지 **HOLD**.
+다음 확인은 (1) `products.id`의 실제 타입이 SQLAlchemy `BigInteger`와 맞는지 확인, (2) `orders`와 `order_items` 실제 테이블/PK/FK/CHECK 생성 및 조회, (3) 로컬 안전한 ORM import 테스트다. 이 항목까지 끝나야 **STEP 07 PASS** 처리한다. 현재는 products 제약조건 확인만 완료했고 전체 STEP은 **HOLD**.
 
 ---
 
@@ -551,7 +551,7 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 04: GitHub 설정 점검 후 사용자 보고에서 파일·설치 경로 항목 전부 True 확인. git status 및 HTTP 응답 코드 출력은 받지 못함 | **HOLD (실행·DB 연결 확정 불가)** |
 | 2026-11-12 | STEP 05: MATCHA HOUSE products 5필드 및 PK/CHECK 설계. 사용자가 이후 DBeaver에서 기존 회원 DB에 products를 생성했다고 보고했으나 실제 SQL과 제약은 미확인 | **설계 PASS / DB 실재·제약 확인 HOLD** |
 | 2026-11-12 | STEP 06: 주문 1:N 상세 및 상품 FK, 주문 당시 단가 스냅샷, orders/order_items 2개 테이블의 PK·CHECK·기본값·DDL 설계 | **설계 PASS / DB 생성 미실행** |
-| 2026-11-12 | STEP 07: DBeaver 조회 결과 정상이라는 사용자 보고 접수. 기존 Member 보존 및 Product/Order/OrderItem SQLAlchemy 모델을 GitHub `models.py`에 반영(693ea93). 실제 컬럼/제약 결과·로컬 import/DB 조회 미확인 | **HOLD (코드 반영 완료, DB·실행 증빙 대기)** |
+| 2026-11-12 | STEP 07: DBeaver 스크린샷으로 `products`의 PK(id), 5개 NOT NULL, `price >= 0`, `stock >= 0` CHECK 확인. `orders`/`order_items` 제약 및 컬럼 타입·ORM 일치·로컬 import는 미확인 | **부분 검증 완료 / STEP HOLD** |
 
 ---
 
