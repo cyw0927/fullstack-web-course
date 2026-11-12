@@ -84,3 +84,17 @@ class MemberResponse(BaseModel):
 
     # 기존 회원에게 값이 없을 수도 있음
     gender: Gender | None = None
+
+# ========================================
+# Chapter 09 — MATCHA HOUSE 상품 조회 응답
+# ========================================
+class ProductResponse(BaseModel):
+    """GET /products 응답의 상품 한 개 구조."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    name: str
+    price: int
+    category: str
+    stock: int
