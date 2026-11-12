@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 파일 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 진행 중/HOLD(`products` 컬럼 타입/identity 및 제약 스크린샷 확인, `orders`/`order_items` 테이블 미생성; ORM GitHub 반영, 로컬 미검증), STEP 08~30 미진행.**  
+> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(세 테이블 존재 사용자 확인; products 타입·주요 제약 스크린샷 확인; 주문 테이블 제약·ORM 로컬 import 미검증), STEP 08 진행 중/HOLD(기존 상품 행 조회 전), STEP 09~30 미진행.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -280,8 +280,8 @@ CREATE TABLE public.order_items (
 | 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (사용자: 파일/설치 경로 모두 True; Git·HTTP 상태 미확인) |
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
-| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (`products` 5필드 타입·identity 및 주요 제약 확인, 주문 2테이블 없음; ORM 로컬 미검증) |
-| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | ☐ |
+| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 테이블 존재 확인; products 주요 타입·제약 확인; orders/order_items 제약 및 ORM 로컬 미검증) |
+| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **HOLD** (기존 상품 데이터 SELECT 확인 후 Seed 입력 예정) |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | ☐ |
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | ☐ |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | ☐ |
@@ -337,7 +337,7 @@ CREATE TABLE public.order_items (
 
 ## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12)
 
-- **사용자 확인:** DBeaver 제약조건 조회 결과 스크린샷에서 `public.products`의 `products_pkey` (PRIMARY KEY(id)), `id/name/category/price/stock` NOT NULL, `price >= 0`, `stock >= 0` CHECK를 확인했다. **products 제약조건은 스크린샷 증빙으로 확인 완료.** 이어 제공된 `information_schema.columns` 스크린샷에서 **`products.id`가 `bigint`, `is_identity=YES`**, `name/category`가 character varying, `price/stock`이 integer이며 다섯 컬럼 모두 `is_nullable=NO`임을 확인했다. 이 조회에서는 `orders`, `order_items` 행이 없으므로 **해당 `public` 스키마에는 두 주문 테이블이 아직 존재하지 않는다.** `products`의 VARCHAR 길이/실제 로컬 ORM import는 아직 확인하지 않았다.
+- **사용자 확인:** DBeaver 제약조건 조회 결과 스크린샷에서 `public.products`의 `products_pkey` (PRIMARY KEY(id)), `id/name/category/price/stock` NOT NULL, `price >= 0`, `stock >= 0` CHECK를 확인했다. **products 제약조건은 스크린샷 증빙으로 확인 완료.** 이어 제공된 `information_schema.columns` 스크린샷에서 **`products.id`가 `bigint`, `is_identity=YES`**, `name/category`가 character varying, `price/stock`이 integer이며 다섯 컬럼 모두 `is_nullable=NO`임을 확인했다. 당시 첫 조회에서는 주문 테이블이 없었으나, 이후 사용자가 DBeaver에서 CREATE TABLE 구문 실행 후 `information_schema.tables` 조회 결과 **products, orders, order_items 3개가 모두 존재함을 확인**했다. `products`의 VARCHAR 길이/실제 로컬 ORM import는 아직 확인하지 않았다.
 - **GitHub 코드 작성:** `practice/phase03/backend/app/models.py`에 기존 `Member`를 보존하면서 `Product`, `Order`, `OrderItem` 모델 추가. 커밋 `693ea93`. `public.products`/`public.orders`/`public.order_items` 매핑, 고정 데이터 계약(정수 원화/주문 단가 스냅샷), PK/FK, 타입, 기본값, 제약의 *예상 메타데이터*를 정의했다.
 - **실행 범위:** GitHub 소스만 변경. 사용자 로컬 `C:\dev\fullstack-web-course` 동기화, 코드 import, DB 조회, `pytest` 실행 **하지 않음**. `CREATE TABLE`/`create_all`/`drop_all` 실행하지 않음.
 - **주의:** SQLAlchemy에 적은 `CheckConstraint`는 **이미 생성된 DB 테이블에 자동 추가되지 않는다.** 실제 스크린샷에서 `products.id`는 BIGINT IDENTITY로 확인되어 ORM `BigInteger`/`Identity`와 기본 타입이 일치한다. 추후 VARCHAR 길이/로컬 import는 확인 필요하다. 다른 회원관리용 테이블/데이터 보존.
@@ -367,11 +367,11 @@ WHERE n.nspname = 'public'
 ORDER BY c.relname, p.contype, p.conname;
 ```
 
-다음 확인은 (1) 기존 `public.products`를 보존한 채 `orders`/`order_items` 두 테이블만 아래 DDL로 생성, (2) PK/FK/CHECK 포함 실제 세 테이블 검증, (3) GitHub 코드를 로컬에 안전하게 반영한 후 ORM import 테스트다. 이 항목까지 끝나야 **STEP 07 PASS** 처리한다. 현재는 **products 타입·주요 제약 확인 완료 / 전체 STEP HOLD**.
+사용자가 DBeaver에서 세 테이블 존재를 확인했다. STEP 07의 남은 검증은 (1) orders/order_items PK·FK·CHECK 제약 조회, (2) products VARCHAR 길이 포함 실제 컬럼 정의와 ORM 일치 확인, (3) GitHub models.py를 로컬에 안전하게 반영한 뒤 읽기 전용 import/메타데이터 확인이다. 이 항목까지 끝나야 **STEP 07 PASS** 처리한다. 현재 테이블 존재 및 products 타입·주요 제약은 확인됐으나 전체 STEP은 HOLD.
 
 ### STEP 07 남은 작업 — orders/order_items DDL (미실행)
 
-2026-11-12 DBeaver 컬럼 조회에서 `public.products` 5컬럼만 확인됐고 `orders`, `order_items`는 존재하지 않았다. **아래 SQL은 실행 안내용이며 AI가 직접 DB에 적용하지 않았다.**
+초기 조회에서는 `products`만 존재했으나, 이후 사용자가 아래 DDL을 DBeaver에서 실행했고 세 테이블 존재 조회 결과를 확인했다. **주문 테이블 CREATE 작업은 사용자 수행이며 AI는 DB에 직접 접속하거나 DDL을 실행하지 않았다.**
 
 ```sql
 -- 기존 products/members는 손대지 않는다.
@@ -400,8 +400,36 @@ COMMIT;
 ```
 
 - 만약 다른 학습 작업에서 이미 두 테이블을 만든 경우에는 재실행하지 말고 스키마부터 비교한다. 동일 이름 테이블이 이미 있으면 `CREATE TABLE`이 오류로 멈추며 기존 테이블을 삭제하거나 덮어쓰지 않는다.
-- 확인: `SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_name IN ('products','orders','order_items') ORDER BY table_name;` 의 **3행**과 위 제약 조회 결과에서 두 FK 및 PK/CHECK를 점검한다.
+- **완료:** 위 테이블 존재 조회에서 3행 확인(사용자 보고). **남음:** 위 제약 조회에서 orders/order_items PK·FK·CHECK 점검 및 ORM 로컬 검증.
 - `products` 상품 데이터는 STEP 08에서 넣는다. 이 단계는 **테이블 생성 및 스키마 검증**만 수행한다.
+
+---
+
+## STEP 08 — MATCHA HOUSE Seed 상품 입력 (진행 중)
+
+사용자가 DBeaver에서 `products`, `orders`, `order_items` 세 테이블이 모두 존재한다고 확인했다. STEP 08에서는 **먼저 현재 products 행을 읽기 전용 SELECT로 확인**해 기존 데이터를 보존한다. 기존 상품이 있으면 중복 삽입하지 않고 누락 상품만 추가한다. 이름이 같지만 가격/카테고리가 다른 행이 있으면 자동 수정하지 말고 사용자에게 확인한다.
+
+현재 상품 목록 확인 SQL:
+
+```sql
+SELECT id, name, price, category, stock
+FROM public.products
+ORDER BY id;
+```
+
+Seed 목표(원 단위 INTEGER, 총 7종):
+
+| 상품 | 가격 | 카테고리 | 재고 |
+| --- | ---: | --- | ---: |
+| 아이스 말차 라떼 | 5500 | 음료 | 20 |
+| 말차 크림 라떼 | 6500 | 음료 | 15 |
+| 말차 아포가토 | 6000 | 음료 | 12 |
+| 말차 티라미수 | 7000 | 디저트 | 8 |
+| 말차 휘낭시에 | 3000 | 디저트 | 20 |
+| 말차 쿠키 | 2500 | 디저트 | 25 |
+| 말차 아이스크림 | 4500 | 디저트 | 0 |
+
+현재 행 조회 전이므로 INSERT SQL은 아직 실행하지 않는다. INSERT는 `WHERE NOT EXISTS` 방식으로 기존 상품명을 기준으로 누락된 행만 넣으며 기존 행의 가격/재고를 덮어쓰지 않는다. 이후 7개 상품을 SELECT해 이름·가격·카테고리·재고를 확인한다.
 
 ---
 
@@ -585,7 +613,8 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 04: GitHub 설정 점검 후 사용자 보고에서 파일·설치 경로 항목 전부 True 확인. git status 및 HTTP 응답 코드 출력은 받지 못함 | **HOLD (실행·DB 연결 확정 불가)** |
 | 2026-11-12 | STEP 05: MATCHA HOUSE products 5필드 및 PK/CHECK 설계. 사용자가 이후 DBeaver에서 기존 회원 DB에 products를 생성했다고 보고했으나 실제 SQL과 제약은 미확인 | **설계 PASS / DB 실재·제약 확인 HOLD** |
 | 2026-11-12 | STEP 06: 주문 1:N 상세 및 상품 FK, 주문 당시 단가 스냅샷, orders/order_items 2개 테이블의 PK·CHECK·기본값·DDL 설계 | **설계 PASS / DB 생성 미실행** |
-| 2026-11-12 | STEP 07: DBeaver 두 스크린샷으로 `products` PK/비음수 CHECK·NOT NULL 및 id BIGINT IDENTITY, name/category VARCHAR, price/stock INTEGER 확인. 해당 DB `public`에 orders/order_items가 없음을 확인; 두 테이블 DDL 실행 안내만 작성 | **products 확인 / 주문 테이블 및 ORM 로컬 검증 대기 (HOLD)** |
+| 2026-11-12 | STEP 07: DBeaver 스크린샷으로 products의 PK/NOT NULL/CHECK와 BIGINT IDENTITY, VARCHAR/INTEGER 타입 확인. 이후 사용자가 DDL 실행 후 products/orders/order_items 3개 테이블 존재 확인 | **테이블 존재 및 products 기본 스키마 확인 / 주문 테이블 제약·ORM 로컬 검증 대기 (HOLD)** |
+| 2026-11-12 | STEP 08: 기존 products 행을 먼저 읽고 중복 없이 7종 Seed를 넣는 계획과 SELECT 검증 절차 기록 | **HOLD (현재 데이터 확인 전, INSERT 미실행)** |
 
 ---
 
