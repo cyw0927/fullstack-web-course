@@ -322,6 +322,53 @@ npm run build
 
 ---
 
+### STEP 04 — 설치 반복 없이 확인할 항목 (2026-11-12)
+
+**GitHub에서 확인된 설정 (코드 정적 확인, 로컬 실행 PASS가 아님)**
+
+- `backend/app/main.py`: FastAPI `app.main:app`, 기존 `/members` Router, localhost:3000 허용 CORS 설정 존재.
+- `backend/app/db.py`: `backend/.env`에서 `DB_*` 로드, SQLAlchemy Engine/Session 구성. 실제 비밀번호·DB 연결 가능 여부는 미확인.
+- `member-next-app/package.json`: Next.js `16.4.6`, React `19.3.0`, `dev/build/lint` 스크립트 존재. 현재 커밋의 manifest에는 `@playwright/test` 또는 `playwright` 의존성이 등록돼 있지 않음. 사용자가 설치 완료를 보고했지만 프로젝트 로컬 사용 가능 여부는 확인 필요.
+- `backend/requirements.txt`: FastAPI, Uvicorn, SQLAlchemy, psycopg, dotenv 등 존재. pytest 의존성은 명시돼 있지 않으나 사용자 사전 설치 보고가 있음.
+- 기존 `member-next-app`에서 회원관리 API 주소는 `NEXT_PUBLIC_API_BASE_URL`로 설정, 기본 개발 서버 포트는 3000. `/diagnostics`의 이전 정상 접속은 과거 사용자 보고이지 이번 STEP 04의 새 실행 증빙은 아님.
+
+**현재 로컬 미확인:** `git status`, Python 가상환경/환경설정 파일 실재, 현재 Swagger 및 GET `/members` DB 연동 HTTP 200, Next.js 진단 페이지 HTTP 200, Playwright 실행 파일 및 Chromium 캐시. 이들은 **실제 PC의 읽기 전용 출력으로만 확인**한다. 프로그램/브라우저를 재설치하거나 DB 쓰기 작업을 하지 않는다.
+
+**최소 PowerShell 점검 (설치/DB 변경 없음):**
+
+```powershell
+$root = 'C:\dev\fullstack-web-course'
+$phase = Join-Path $root 'practice\phase03'
+git -C $root branch --show-current
+git -C $root status --short
+
+[pscustomobject]@{
+  PythonVenv = Test-Path (Join-Path $phase '.venv\Scripts\python.exe')
+  BackendEnv = Test-Path (Join-Path $phase 'backend\.env')
+  FrontendEnv = Test-Path (Join-Path $phase 'member-next-app\.env.local')
+  FrontendNodeModules = Test-Path (Join-Path $phase 'member-next-app\node_modules')
+  PlaywrightLocalCmd = Test-Path (Join-Path $phase 'member-next-app\node_modules\.bin\playwright.cmd')
+  BrowserCacheFolder = Test-Path (Join-Path $env:LOCALAPPDATA 'ms-playwright')
+} | Format-List
+
+foreach ($url in @(
+  'http://127.0.0.1:8000/docs',
+  'http://127.0.0.1:8000/members',
+  'http://localhost:3000/diagnostics'
+)) {
+  try {
+    $response = Invoke-WebRequest -Uri $url -Method GET -TimeoutSec 5 -UseBasicParsing
+    Write-Output "$url : HTTP $($response.StatusCode)"
+  } catch {
+    Write-Output "$url : OFFLINE / ERROR $($_.Exception.Message)"
+  }
+}
+```
+
+주의: `BackendEnv`/`FrontendEnv`는 **존재 여부만** 표시하며 파일 내용과 비밀번호는 공유하지 않는다. 서버가 꺼져 있어 HTTP 접속이 실패한 경우 곧바로 환경 실패로 단정하지 않고 기존 실행 명령으로 켠 뒤 재확인한다. 프론트 HTML 200만으로 DB 연동을 검증했다고 판단하지 않는다. 현재 STEP 04는 **HOLD (로컬 출력 대기)**.
+
+---
+
 ## 8. SQL 조회용 Evidence (실제 실습용 DB에서만)
 
 ```sql
@@ -386,7 +433,7 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
 | 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
 | 2026-11-12 | STEP 03: 기존 `backend/app/routers/member_router.py`, `services/member_service.py`, `repositories/member_repository.py`에서 요청→Service→DB 조회 흐름을 확인해 설명. 기존 회원 Repository는 commit 수행하나 신규 주문은 Service가 전체 commit/rollback을 관리하는 설계를 적용할 예정 | **개념 학습 PASS (사용자 확인, 코드·실행 없음)** |
-| 2026-11-12 | STEP 04: 기존 설치 완료 보고를 존중해 불필요한 재설치 생략. 저장소 설정 확인과 로컬 증빙을 구분하여 점검 진행 | **HOLD (로컬 실측 전)** |
+| 2026-11-12 | STEP 04: GitHub에서 FastAPI/DB/Next.js 설정·폴더 구조 점검, 로컬 변경 없는 PowerShell 최소 검사 명령 정리. Playwright는 package.json에 미등록됨을 확인 | **HOLD (로컬 Git/HTTP/Playwright 증빙 대기)** |
 
 ---
 
