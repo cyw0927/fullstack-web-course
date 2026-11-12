@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(3개 테이블 존재·products 스키마 확인, 주문 제약·ORM 로컬 import 미검증), STEP 08 진행 중/HOLD(products SELECT 결과 0행 확인; Seed INSERT/후속 SELECT 대기), STEP 09~30 미진행.**  
+> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(3개 테이블 존재·products 스키마 확인, orders/order_items 제약·ORM 로컬 import 미검증), STEP 08 PASS(7종 Seed INSERT RETURNING 결과 스크린샷 확인), STEP 09 PASS(기존 사전점검에서 FastAPI Swagger/회원 API 정상 완료 사용자 보고), STEP 10~30 미진행.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -270,7 +270,7 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08~30 미진행.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08은 DBeaver INSERT RETURNING 스크린샷에서 7종 상품·가격·카테고리·재고를 확인하여 PASS. STEP 09는 인계 전 사전 점검에서 Swagger 및 기존 회원 API를 정상 확인했다는 사용자 보고를 근거로 PASS 처리. STEP 10~30 미진행.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
@@ -281,9 +281,9 @@ CREATE TABLE public.order_items (
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
 | 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 테이블 존재 확인; products 주요 타입·제약 확인; orders/order_items 제약 및 ORM 로컬 미검증) |
-| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **HOLD** (products SELECT 0행 확인; 안전한 Seed SQL 작성, 실행·7행 확인 대기) |
-| 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | ☐ |
-| 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | ☐ |
+| 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **PASS** (DBeaver INSERT RETURNING 스크린샷에서 7종 이름·가격·카테고리·재고 확인) |
+| 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | **PASS** (인계 전 사전 점검에서 Swagger 및 회원 API 정상 완료 사용자 보고) |
+| 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **HOLD** (실제 backend DB 연결/동일 DB 증빙 대기) |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | ☐ |
 | 12 | Product Service 조회 | Service → Repository → DB | ☐ |
 | 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | ☐ |
@@ -612,7 +612,7 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(3개 테이블 존재 및 products 주요 타입·제약 확인, 주문 제약·ORM 로컬 미검증), **STEP 08 HOLD**(상품 SELECT 0행, Seed SQL 실행 및 최종 SELECT 대기), STEP 09~30 미진행이다. API 구현/실행/테스트는 미실시다.  
+> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(3개 테이블 존재 및 products 주요 타입·제약 확인, orders/order_items 제약·ORM 로컬 미검증), **STEP 08~09 PASS**, **STEP 10 HOLD**(Backend와 DBeaver가 동일 DB를 보는지 실제 연결 증빙 대기), STEP 11~30 미진행이다. API 구현/실행/테스트는 미실시다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -647,7 +647,9 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 05: MATCHA HOUSE products 5필드 및 PK/CHECK 설계. 사용자가 이후 DBeaver에서 기존 회원 DB에 products를 생성했다고 보고했으나 실제 SQL과 제약은 미확인 | **설계 PASS / DB 실재·제약 확인 HOLD** |
 | 2026-11-12 | STEP 06: 주문 1:N 상세 및 상품 FK, 주문 당시 단가 스냅샷, orders/order_items 2개 테이블의 PK·CHECK·기본값·DDL 설계 | **설계 PASS / DB 생성 미실행** |
 | 2026-11-12 | STEP 07: DBeaver 스크린샷으로 products의 PK/NOT NULL/CHECK와 BIGINT IDENTITY, VARCHAR/INTEGER 타입 확인. 이후 사용자가 DDL 실행 후 products/orders/order_items 3개 테이블 존재 확인 | **테이블 존재 및 products 기본 스키마 확인 / 주문 테이블 제약·ORM 로컬 검증 대기 (HOLD)** |
-| 2026-11-12 | STEP 08: DBeaver에서 products SELECT 결과 0행 사용자 확인. 7종 MATCHA HOUSE Seed를 기존 이름을 덮어쓰지 않는 `WHERE NOT EXISTS` INSERT와 후속 SELECT로 문서화 | **HOLD (INSERT 실행 및 7행 확인 대기)** |
+| 2026-11-12 | STEP 08: DBeaver INSERT RETURNING 스크린샷으로 7종 상품, 원화 정수 가격, 카테고리, 재고(아이스크림 0) 확인 | **PASS (실제 DB INSERT 결과 증빙)** |
+| 2026-11-12 | STEP 09: 인계 전 사전 점검에서 기존 FastAPI Swagger 및 회원 API가 정상 동작했다고 사용자가 보고한 사실을 재사용. 설치/서버 점검 반복 생략 | **PASS (사용자 사전점검 보고 기반; 이번 turn 새 HTTP 출력은 아님)** |
+| 2026-11-12 | STEP 10: Backend SQLAlchemy Session이 DBeaver와 동일한 PostgreSQL DB에 연결되는지 확인 예정 | **HOLD (DB 식별 결과 대기)** |
 
 ---
 
