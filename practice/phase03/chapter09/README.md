@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **NOT STARTED / 계획 및 강의안 정리만 완료. 구현·테스트·DB 생성은 아직 하지 않음.**  
+> **현재 상태:** **STEP 01 IN PROGRESS / 사용자 흐름 개념 설명 제공, 이해 확인 대기(HOLD). 구현·테스트·DB 생성은 아직 하지 않음.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -181,11 +181,11 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. 강의안의 30 STEP은 모두 **아직 수행하지 않은 상태**로 기록한다.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01은 개념 설명을 제공했으나 사용자 이해 확인 전이므로 HOLD, STEP 02~30은 미진행이다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
-| 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | ☐ |
+| 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | **HOLD** (설명 제공, 이해 확인 대기) |
 | 02 | PRD 및 MVP 범위 고정 | 필수 API 2개, DB 3개, 제외 기능 구분 | ☐ |
 | 03 | 데이터 흐름 이해 | Router/Service/Repository 역할 설명 | ☐ |
 | 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | ☐ |
@@ -342,7 +342,7 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 00 (자료 정리만 완료), STEP 01~30 모두 미실행**이다.  
+> 현재 진도는 **STEP 01 개념 설명 제공, 사용자 이해 확인 대기(HOLD)**이며, STEP 02~30은 미진행이다. 구현·실행·테스트는 전부 미실행이다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -352,7 +352,8 @@ FROM products ORDER BY id;
 
 ### 즉시 시작할 다음 행동
 
-- [ ] STEP 01~03: 서비스 흐름·PRD·계층 구분 요약
+- [ ] STEP 01: 사용자 이해 확인 후 PASS 여부 기록 (현재 HOLD)
+- [ ] STEP 02~03: PRD·MVP 및 계층 구분 요약
 - [ ] STEP 04: 현재 로컬 Git 상태와 Python·Node·DB·Swagger·pytest·Playwright 환경 **실측**
 - [ ] 상품 테마 결정 및 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -363,6 +364,7 @@ FROM products ORDER BY id;
 | 일자 | 진행 내용 | 검증 상태 |
 | --- | --- | --- |
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
+| 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 서버 검증 → PostgreSQL 단일 트랜잭션 흐름 안내. 사용자 이해 확인 전; 코드/DB/테스트 변경 없음 | **학습 이해 확인 대기(HOLD)** |
 
 ---
 
