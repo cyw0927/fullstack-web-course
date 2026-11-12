@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태 (2026-11-12):** **STEP 01~03 PASS, STEP 04 HOLD, STEP 05~12 PASS, STEP 13 코드 반영/HTTP 검증 HOLD, STEP 14 pytest 코드 준비/실행 HOLD, STEP 15~30 미진행.**
+> **현재 상태 (2026-11-12):** **STEP 01~03 PASS, STEP 04 HOLD, STEP 05~12 PASS, STEP 13 코드 반영/HTTP 검증 HOLD, STEP 14 pytest PASS(5 passed, 1 warning), STEP 15 로컬 실행 대기, STEP 15~30 미진행.**
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -272,7 +272,7 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**진도 원칙:** 개념 학습·코드 구현·실제 실행·Evidence를 구분한다. 아래 표와 최신 검증 기록이 현재 상태이며 과거 작업 일지의 HOLD 및 public 스키마 설명은 해당 시점의 이력이다. STEP 04 전체 점검은 HOLD, STEP 13~14는 GitHub 코드만 반영됐으므로 HOLD다.
+**진도 원칙:** 개념 학습·코드 구현·실제 실행·Evidence를 구분한다. 아래 표와 최신 검증 기록이 현재 상태이며 과거 작업 일지의 HOLD 및 public 스키마 설명은 해당 시점의 이력이다. STEP 04 전체 점검은 HOLD, STEP 13은 HTTP 증빙 대기(HOLD)이고 STEP 14는 사용자 로컬 pytest 5 passed 결과로 PASS다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
@@ -289,8 +289,8 @@ CREATE TABLE public.order_items (
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | **PASS** (읽기 전용 DB 조회 7건, 직접 SQL과 비교) |
 | 12 | Product Service 조회 | Service → Repository → DB | **PASS** (Service 결과가 Repository·SQL 결과와 동일) |
 | 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | **HOLD** (ProductResponse/Router/main.py GitHub 반영, 실제 HTTP 200·7종 JSON·Swagger 미검증) |
-| 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | **HOLD** (SQLite 인메모리 DB 격리 테스트 5개 GitHub 반영, pytest 미실행) |
-| 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | ☐ |
+| 14 | pytest 상품 API | 200, 배열, 상품 필드·타입, 격리 fixture | **PASS** (사용자 로컬 pytest 결과 `5 passed, 1 warning in 0.75s`; SQLite 인메모리 격리 테스트) |
+| 15 | Next.js 개발 서버 | 기존 앱 보존, 브라우저·Console | **HOLD** (기존 member-next-app 설치 확인 전·로컬 서버 및 브라우저 콘솔 증빙 대기) |
 | 16 | ProductCard + Product 타입 | Props, 품절 표시, 담기 버튼 설계 | ☐ |
 | 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | ☐ |
 | 18 | 같은 카드에 서로 다른 Props | 서로 다른 상품 2개 표시 | ☐ |
@@ -625,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~12 PASS; STEP 04 HOLD; STEP 13 GitHub 구현 완료/HTTP 증빙 대기; STEP 14 테스트 코드 작성 완료/pytest 실행 대기; STEP 15~30 미진행**이다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 검증 기록을 따른다.
+> 현재 진도는 **STEP 01~03, 05~12 PASS; STEP 04 HOLD; STEP 13 GitHub 구현 완료/HTTP 증빙 대기; STEP 14 로컬 pytest PASS(5 passed), STEP 15 기존 Next.js 실행 확인 대기; STEP 15~30 미진행**이다. STEP 07의 CHECK 제약 이름 차이는 스키마 분리 검증 기록을 따른다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -659,6 +659,8 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 | 2026-11-12 | Work의 스키마 분리·DB/ORM 비교 및 동일 DB 확인 결과를 최신 상태로 반영 | **STEP 07·10 PASS (Work 증빙 기록)** |
 | 2026-11-12 | Product Repository·Service GitHub 반영 및 Work의 상품 7건 조회 검증 확인 | **STEP 11·12 PASS** |
 | 2026-11-12 | GET /products Router·Pydantic 응답·main.py 등록 완료, pytest 격리 테스트 5개 및 테스트 의존성 문서 GitHub 반영 | **STEP 13·14 구현 완료 / HTTP·pytest 미실행(HOLD)** |
+| 2026-11-12 | STEP 14: 사용자 로컬에서 pytest 상품 API 5개 실행, 5 passed/1 warning/0.75s 결과 전달. 경고는 Starlette TestClient httpx 사용 관련 deprecation | **PASS (로컬 실행 결과)** |
+| 2026-11-12 | STEP 15: 기존 Next.js member-next-app 개발 서버/브라우저/Console 확인 시작 | **HOLD (사용자 실행 결과 대기)** |
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
 | 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
 | 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
@@ -707,7 +709,7 @@ Invoke-WebRequest http://127.0.0.1:8000/members -UseBasicParsing | Select-Object
 
 ---
 
-## STEP 14 — pytest 상품 조회 API (테스트 코드 반영, 실행 대기)
+## STEP 14 — pytest 상품 조회 API (사용자 로컬 실행 PASS)
 
 - `backend/tests/test_products_api.py`: `get_db` 의존성을 SQLite 인메모리 DB로 오버라이드하여 기존 PostgreSQL 데이터를 절대 변경하지 않는 5개 테스트.
 - 확인 범위: 빈 목록 200/배열, 상품 필드·타입·정렬, 품절상품 재고 0, GET 이후 재고 불변, OpenAPI의 상품 및 회원 경로.
@@ -721,7 +723,16 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 & '..\.venv\Scripts\python.exe' -m pytest tests/test_products_api.py -q
 ```
 
-**STEP 14 PASS 조건:** 5개 테스트 실제 PASS 로그 확보 및 운영 DB 미변경. **현재 HOLD.**
+**STEP 14 결과:** 사용자 로컬 PowerShell에서 `5 passed, 1 warning in 0.75s` 확인. 경고는 StarletteDeprecationWarning(`httpx` 관련)이며 테스트 실패가 아니다. 이 테스트는 격리 SQLite DB를 사용하고 운영 PostgreSQL에 연결하지 않도록 의존성을 교체한다. **PASS**.
+
+---
+
+## STEP 15 — 기존 Next.js 개발 서버 확인 (HOLD)
+
+- 기존 `practice/phase03/member-next-app`을 유지하고 새 프로젝트나 패키지 설치를 반복하지 않는다.
+- 로컬 Git 미커밋 변경은 보존한다. Next.js가 설치된 기존 로컬 경로에서 `npm run dev`로 구동한다.
+- 브라우저 `http://localhost:3000/`, `/members`, `/diagnostics`를 열고 개발자도구 Console 오류 유무를 확인한다. 기존 회원 데이터 삭제·수정 테스트는 하지 않는다.
+- **PASS 조건:** Next.js 서버 Ready, 실제 브라우저에서 기존 화면 표시, 콘솔 치명적 오류 없음. 환경 및 페이지 확인 전까지 HOLD.
 
 ---
 
