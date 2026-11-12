@@ -3,8 +3,10 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 경로 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 HOLD(3개 테이블 존재·products 스키마 확인, orders/order_items 제약·ORM 로컬 import 미검증), STEP 08 PASS(7종 Seed INSERT RETURNING 결과 스크린샷 확인), STEP 09 PASS(기존 사전점검에서 FastAPI Swagger/회원 API 정상 완료 사용자 보고), STEP 10~30 미진행.**  
+> **현재 상태:** STEP 01~03 PASS, STEP 04 HOLD, STEP 05~10 PASS (STEP 07은 CHECK 이름 차이를 아래에 기록). 다음 작업은 STEP 11 Product Repository 조회다.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
+
+**현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
 
@@ -270,20 +272,20 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08은 DBeaver INSERT RETURNING 스크린샷에서 7종 상품·가격·카테고리·재고를 확인하여 PASS. STEP 09는 인계 전 사전 점검에서 Swagger 및 기존 회원 API를 정상 확인했다는 사용자 보고를 근거로 PASS 처리. STEP 10~30 미진행.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. 다음 문단은 스키마 분리 이전의 진행 기록이며, 최신 결과는 표와 「스키마 분리 검증」을 따른다. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08은 DBeaver INSERT RETURNING 스크린샷에서 7종 상품·가격·카테고리·재고를 확인하여 PASS. STEP 09는 인계 전 사전 점검에서 Swagger 및 기존 회원 API를 정상 확인했다는 사용자 보고를 근거로 PASS 처리. STEP 10~30 미진행.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
 | 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | **PASS** (개념 설명 후 사용자 다음 단계 진행 승인) |
 | 02 | PRD 및 MVP 범위 고정 | 필수 API 2개, DB 3개, 제외 기능 구분 | **PASS** (MATCHA HOUSE 7종 및 범위 확정, 문서 기록) |
 | 03 | 데이터 흐름 이해 | Router/Service/Repository 역할 설명 | **PASS** (실제 회원관리 코드 확인, 사용자 이해 확인) |
-| 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (사용자: 파일/설치 경로 모두 True; Git·HTTP 상태 미확인) |
-| 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
-| 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
-| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 테이블 존재 확인; products 주요 타입·제약 확인; orders/order_items 제약 및 ORM 로컬 미검증) |
+| 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (Git과 Backend HTTP 확인; 전체 환경 검증은 보류) |
+| 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (실제 DB 구조와 제약 확인) |
+| 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (실제 DB FK 확인) |
+| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **PASS** (컬럼 타입·NULL·PK·FK·CHECK 확인; CHECK 제약 이름은 모델과 DB가 다름) |
 | 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | **PASS** (DBeaver INSERT RETURNING 스크린샷에서 7종 이름·가격·카테고리·재고 확인) |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | **PASS** (인계 전 사전 점검에서 Swagger 및 회원 API 정상 완료 사용자 보고) |
-| 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **HOLD** (실제 backend DB 연결/동일 DB 증빙 대기) |
+| 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | **PASS** (DBeaver와 Backend가 localhost:5432/postgres에 연결; ORM 상품 7건 조회) |
 | 11 | Product Repository 조회 | SQLAlchemy `select(Product)`, DB 건수 확인 | ☐ |
 | 12 | Product Service 조회 | Service → Repository → DB | ☐ |
 | 13 | GET /products 연결 | Swagger 200 + JSON 배열 + Seed 데이터 | ☐ |
@@ -335,7 +337,7 @@ CREATE TABLE public.order_items (
 
 ---
 
-## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12)
+## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12, 스키마 이동 전 이력)
 
 - **사용자 확인:** DBeaver 제약조건 조회 결과 스크린샷에서 `public.products`의 `products_pkey` (PRIMARY KEY(id)), `id/name/category/price/stock` NOT NULL, `price >= 0`, `stock >= 0` CHECK를 확인했다. **products 제약조건은 스크린샷 증빙으로 확인 완료.** 이어 제공된 `information_schema.columns` 스크린샷에서 **`products.id`가 `bigint`, `is_identity=YES`**, `name/category`가 character varying, `price/stock`이 integer이며 다섯 컬럼 모두 `is_nullable=NO`임을 확인했다. 당시 첫 조회에서는 주문 테이블이 없었으나, 이후 사용자가 DBeaver에서 CREATE TABLE 구문 실행 후 `information_schema.tables` 조회 결과 **products, orders, order_items 3개가 모두 존재함을 확인**했다. `products`의 VARCHAR 길이/실제 로컬 ORM import는 아직 확인하지 않았다.
 - **GitHub 코드 작성:** `practice/phase03/backend/app/models.py`에 기존 `Member`를 보존하면서 `Product`, `Order`, `OrderItem` 모델 추가. 커밋 `693ea93`. `public.products`/`public.orders`/`public.order_items` 매핑, 고정 데이터 계약(정수 원화/주문 단가 스냅샷), PK/FK, 타입, 기본값, 제약의 *예상 메타데이터*를 정의했다.
@@ -576,43 +578,50 @@ foreach ($url in @(
 
 ---
 
-## 8. SQL 조회용 Evidence (실제 실습용 DB에서만)
 
-```sql
--- 실제 연결 DB와 스키마 확인
-SELECT current_database() AS db_name, current_schema() AS schema_name;
+## 스키마 분리 검증 — 2026-11-12 (최신)
 
--- 테이블 실재 확인
-SELECT table_name
-FROM information_schema.tables
-WHERE table_schema = 'public'
-  AND table_name IN ('products', 'orders', 'order_items')
-ORDER BY table_name;
+회원관리와 매장 테이블을 분리해 기존 `public.members`를 유지한다. 기존 상품·주문 테이블을 삭제하거나 다시 만들지 않고 한 트랜잭션에서 `ALTER TABLE ... SET SCHEMA matcha_store`로 이동했다.
 
--- 상품 목록 / 건수
-SELECT id, name, price, category, stock
-FROM products ORDER BY id;
-SELECT COUNT(*) AS product_count FROM products;
-
--- 주문 성공 후 응답 ID와 맞춰서 조회
-SELECT id, total_price, status, created_at
-FROM orders ORDER BY id DESC LIMIT 5;
-
-SELECT id, order_id, product_id, quantity, price
-FROM order_items ORDER BY id DESC LIMIT 10;
-
-SELECT id, name, price, stock
-FROM products ORDER BY id;
+```text
+postgres
+├─ public.members
+├─ matcha_store.products
+├─ matcha_store.orders
+└─ matcha_store.order_items
 ```
 
-현재 테이블 미생성 단계에서 SQL을 실행하면 실패할 수 있다. **STEP 07 이후**에 실습용 DB에서 확인한다. 개인정보, DB 비밀번호, 전체 접속 문자열은 로그·스크린샷·Git에 올리지 않는다.
+- 이동 전 스키마 부재 및 세 원본 테이블을 확인했다. 이동 전후 테이블 객체 ID, 전체 행의 해시, PK/FK/CHECK 제약을 비교하고 모두 같을 때 커밋했다. 상품 7건, 주문 0건, 주문 상세 0건, 회원 14건이 보존됐다. `expense_app`과 `practice` 스키마도 존재한다.
+- `OrderItem.order_id → matcha_store.orders.id`, `product_id → matcha_store.products.id`를 DB에서 확인했다. Identity 컬럼과 컬럼 타입·길이·NULL 허용 여부도 로컬 SQLAlchemy 모델과 비교했다.
+- CHECK 조건의 **내용은 일치**하지만 이름은 다르다. DB는 예를 들어 `products_price_check`, 모델은 `ck_products_price_nonnegative`를 사용한다. 기존 제약을 유지했으며 이후 마이그레이션 도구를 쓸 때 이름 차이를 검토한다.
+- DBeaver의 연결 정보는 `localhost:5432/postgres`이며 새로고침한 트리에 `matcha_store`가 표시됐다. Backend SQLAlchemy Session도 같은 호스트·포트·DB에 연결해 상품 7건을 조회했다. DBeaver 화면에서 이동 후 상품별 행을 다시 조회하지는 않았으며, 행 보존은 DB 트랜잭션 내부 비교로 검증했다.
+- FastAPI `TestClient`에서 `GET /members`는 200·14건, `/openapi.json`은 200이었다. 별도 포트의 Uvicorn을 실제 실행해 HTTP `GET /members` 200·14건과 `GET /docs` 200도 확인했다. Swagger UI에서 별도 조작은 하지 않았다.
+- **STEP 07 PASS**, **STEP 10 PASS**. STEP 04의 전체 환경 검사는 별도 HOLD. 다음은 **STEP 11 Product Repository 조회 구현**이다.
+
+---
+
+## 8. SQL 조회용 Evidence (현재 스키마)
+
+```sql
+SELECT current_database(), current_schema(), current_user;
+SELECT table_schema, table_name FROM information_schema.tables
+WHERE table_schema IN ('public', 'matcha_store')
+  AND table_name IN ('members', 'products', 'orders', 'order_items')
+ORDER BY table_schema, table_name;
+SELECT id, name, price, category, stock FROM matcha_store.products ORDER BY id;
+SELECT COUNT(*) AS product_count FROM matcha_store.products;
+SELECT id, total_price, status, created_at FROM matcha_store.orders ORDER BY id DESC LIMIT 5;
+SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items ORDER BY id DESC LIMIT 10;
+```
+
+접속 비밀번호나 회원 개인정보는 로그·스크린샷·Git에 올리지 않는다.
 
 ---
 
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(3개 테이블 존재 및 products 주요 타입·제약 확인, orders/order_items 제약·ORM 로컬 미검증), **STEP 08~09 PASS**, **STEP 10 HOLD**(Backend와 DBeaver가 동일 DB를 보는지 실제 연결 증빙 대기), STEP 11~30 미진행이다. API 구현/실행/테스트는 미실시다.  
+> 현재 진도는 **STEP 01~03, 05~10 PASS; STEP 04 HOLD**다. STEP 07의 CHECK 제약 이름 차이는 아래 검증 기록을 참고한다. 다음은 **STEP 11 Product Repository 조회**이며 이후 API/주문 구현과 테스트는 아직 진행하지 않았다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -625,11 +634,13 @@ FROM products ORDER BY id;
 - [x] STEP 01: 상품 조회 → 장바구니 → 주문 → DB 사용자 흐름 학습
 - [x] STEP 02: MATCHA HOUSE 테마 및 7종 상품·필수 API 2개·DB 3개·제외 기능 확정
 - [x] STEP 03: 기존 회원관리의 Router/Service/Repository 계층 확인, 사용자 이해 확인 후 PASS
-- [ ] STEP 04: 환경 경로는 사용자 모두 True 보고, 로컬 Git 상태·HTTP 응답 코드 확인만 남음
-- [ ] STEP 04: 서버 실제 HTTP 응답 및 git status 출력 확인 후 PASS 처리
+- [ ] STEP 04: 전체 개발환경 검증은 보류 (기존 사용자 경로 확인 보고)
+- [x] STEP 04 일부: 로컬 git status 및 Backend HTTP 응답 확인
 - [x] STEP 05: products 5개 필드·PK·CHECK/DDL 설계; DBeaver 사용자 생성 보고 접수, 실제 구조 미확인
 - [x] STEP 06: orders/order_items PK·FK·1:N·주문 가격 스냅샷 설계
-- [ ] STEP 07: ORM 모델 3종 GitHub 반영(완료), DB 실제 타입/PK/FK/CHECK 확인 및 로컬 import 테스트 후 PASS
+- [x] STEP 07: ORM import, DB 실제 타입/PK/FK/CHECK 확인 (CHECK 이름 차이 기록)
+- [x] STEP 10: DBeaver와 Backend 연결 대상 확인, ORM 상품 7건 조회
+- [ ] STEP 11: Product Repository의 상품 목록 조회 구현
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
