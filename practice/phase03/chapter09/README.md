@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(파일 존재 True 보고; Git·HTTP 출력 미확인), STEP 05 설계 PASS(사용자가 기존 DB에 products 생성 보고, 실제 구조 검증 전), STEP 06 관계 설계 PASS, STEP 07~30 미진행. 앱 구현·테스트는 아직 하지 않음.**  
+> **현재 상태:** **STEP 01~03 PASS, STEP 04 HOLD(환경 파일 존재 True 보고; Git·HTTP 출력 미확인), STEP 05~06 설계 PASS, STEP 07 진행 중/HOLD(SQLAlchemy 모델 GitHub 반영; 사용자의 DBeaver 조회 보고, 실제 컬럼·제약·로컬 테스트 미검증), STEP 08~30 미진행. API·화면·테스트는 아직 구현하지 않음.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -270,7 +270,7 @@ CREATE TABLE public.order_items (
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07~30 미진행.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03은 기존 Backend의 실제 3계층 코드를 확인하고 사용자 이해 확인을 받아 PASS로 기록했다. STEP 04는 사용자가 파일/설치 경로 검사 항목 전부 True라고 보고했으나 실제 HTTP 상태 코드 및 git status 출력은 전달되지 않아 HOLD다. STEP 05는 products 설계 PASS이고 DBeaver 생성은 사용자 보고(미검증)다. STEP 06은 관계·PK/FK·단가 스냅샷 설계 PASS. STEP 07에서는 사용자가 DBeaver에서 조회 결과가 잘 보인다고 보고했고 GitHub에 SQLAlchemy 모델을 추가했으나 정확한 컬럼/제약 및 로컬 동작은 확인 전이라 HOLD. STEP 08~30 미진행.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
@@ -280,7 +280,7 @@ CREATE TABLE public.order_items (
 | 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | **HOLD** (사용자: 파일/설치 경로 모두 True; Git·HTTP 상태 미확인) |
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | **PASS** (설계 확정, DBeaver 생성 사용자 보고·실재 검증 전) |
 | 06 | orders/order_items 관계 | PK/FK, 주문 1:N, 단가 스냅샷 | **PASS** (관계·DDL 설계 문서화, DB 적용 미확인) |
-| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | ☐ |
+| 07 | SQLAlchemy 모델 및 DB 테이블 | 실제 DB 테이블 3개와 제약조건 SELECT 확인 | **HOLD** (3개 ORM 모델 GitHub 반영; DBeaver 사용자 조회 보고, 실제 스키마·제약·로컬 실행 미검증) |
 | 08 | 상품 Seed 6~8개 | 중복 없이 입력 후 SELECT 건수 확인 | ☐ |
 | 09 | FastAPI/Swagger 실행 | 기존 서버 및 /docs 정상 접속 | ☐ |
 | 10 | DB 세션 및 동일 DB 확인 | Backend와 SQL 클라이언트 조회 값 일치 | ☐ |
@@ -332,6 +332,42 @@ CREATE TABLE public.order_items (
 - 마지막 상품은 **초기 재고 0**으로 품절 상태/담기 버튼 비활성화 기능을 검증한다.
 - **이 표는 계획 데이터다.** DB 테이블 생성 및 Seed INSERT/SELECT는 STEP 07~08에서 진행한다.
 - Seed는 반복 실행해도 상품이 중복되지 않도록 설계한다. Seed를 다시 넣기 위해 기존 DB를 전부 삭제하지 않는다.
+
+---
+
+## STEP 07 작업 기록 — 기존 DB와 SQLAlchemy 모델 연결 (2026-11-12)
+
+- **사용자 확인:** DBeaver에서 이전에 안내한 `information_schema.columns` 조회를 실행한 후 "잘있네"라고 답했다. 테이블/컬럼을 볼 수 있었다는 **사용자 보고**로만 해석하며 실제 출력, 제약조건 세부 사항은 전달되지 않았다.
+- **GitHub 코드 작성:** `practice/phase03/backend/app/models.py`에 기존 `Member`를 보존하면서 `Product`, `Order`, `OrderItem` 모델 추가. 커밋 `693ea93`. `public.products`/`public.orders`/`public.order_items` 매핑, 고정 데이터 계약(정수 원화/주문 단가 스냅샷), PK/FK, 타입, 기본값, 제약의 *예상 메타데이터*를 정의했다.
+- **실행 범위:** GitHub 소스만 변경. 사용자 로컬 `C:\dev\fullstack-web-course` 동기화, 코드 import, DB 조회, `pytest` 실행 **하지 않음**. `CREATE TABLE`/`create_all`/`drop_all` 실행하지 않음.
+- **주의:** SQLAlchemy에 적은 `CheckConstraint`는 **이미 생성된 DB 테이블에 자동 추가되지 않는다.** 또 DB 실제 `id`가 `BIGINT`가 아닐 수 있으므로 실제 스키마를 우선한다. 다른 회원관리용 테이블/데이터 보존.
+
+**남은 읽기 전용 검증 (DBeaver, 결과에서 실제 DB 이름/계정·암호를 공유할 필요 없음):**
+
+```sql
+SELECT table_name, column_name, data_type, is_nullable, is_identity
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name IN ('products', 'orders', 'order_items')
+ORDER BY table_name, ordinal_position;
+
+SELECT c.relname AS table_name, p.conname AS constraint_name,
+       CASE p.contype
+         WHEN 'p' THEN 'PRIMARY KEY'
+         WHEN 'f' THEN 'FOREIGN KEY'
+         WHEN 'c' THEN 'CHECK'
+         ELSE p.contype::text
+       END AS constraint_type,
+       pg_get_constraintdef(p.oid) AS definition
+FROM pg_constraint p
+JOIN pg_class c ON c.oid = p.conrelid
+JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = 'public'
+  AND c.relname IN ('products', 'orders', 'order_items')
+ORDER BY c.relname, p.contype, p.conname;
+```
+
+실제 DB 조회 결과와 SQLAlchemy 메타데이터의 일치 확인, 로컬 안전한 import 테스트가 끝나야 **STEP 07 PASS** 처리한다. 그 전까지 **HOLD**.
 
 ---
 
@@ -481,7 +517,7 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05 설계 PASS 및 products 테이블 생성 사용자 보고(미검증), STEP 06 관계 설계 PASS**, STEP 07~30 미진행이다. 사용자 DBeaver 변경 외 GitHub 코드·API 구현/실행/테스트는 미실시다.  
+> 현재 진도는 **STEP 01~03 PASS, STEP 04 HOLD**(환경경로 True 보고/HTTP 미확인), **STEP 05~06 설계 PASS, STEP 07 HOLD**(DBeaver 조회 정상 사용자 보고 및 SQLAlchemy 모델 GitHub 반영, 스키마·제약·로컬 실행 검증 전), STEP 08~30 미진행이다. API 구현/실행/테스트는 미실시다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -498,7 +534,7 @@ FROM products ORDER BY id;
 - [ ] STEP 04: 서버 실제 HTTP 응답 및 git status 출력 확인 후 PASS 처리
 - [x] STEP 05: products 5개 필드·PK·CHECK/DDL 설계; DBeaver 사용자 생성 보고 접수, 실제 구조 미확인
 - [x] STEP 06: orders/order_items PK·FK·1:N·주문 가격 스냅샷 설계
-- [ ] STEP 07: 기존 DB의 products 구조 확인 후 나머지 테이블·SQLAlchemy 모델을 안전하게 작성/검증
+- [ ] STEP 07: ORM 모델 3종 GitHub 반영(완료), DB 실제 타입/PK/FK/CHECK 확인 및 로컬 import 테스트 후 PASS
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -515,6 +551,7 @@ FROM products ORDER BY id;
 | 2026-11-12 | STEP 04: GitHub 설정 점검 후 사용자 보고에서 파일·설치 경로 항목 전부 True 확인. git status 및 HTTP 응답 코드 출력은 받지 못함 | **HOLD (실행·DB 연결 확정 불가)** |
 | 2026-11-12 | STEP 05: MATCHA HOUSE products 5필드 및 PK/CHECK 설계. 사용자가 이후 DBeaver에서 기존 회원 DB에 products를 생성했다고 보고했으나 실제 SQL과 제약은 미확인 | **설계 PASS / DB 실재·제약 확인 HOLD** |
 | 2026-11-12 | STEP 06: 주문 1:N 상세 및 상품 FK, 주문 당시 단가 스냅샷, orders/order_items 2개 테이블의 PK·CHECK·기본값·DDL 설계 | **설계 PASS / DB 생성 미실행** |
+| 2026-11-12 | STEP 07: DBeaver 조회 결과 정상이라는 사용자 보고 접수. 기존 Member 보존 및 Product/Order/OrderItem SQLAlchemy 모델을 GitHub `models.py`에 반영(693ea93). 실제 컬럼/제약 결과·로컬 import/DB 조회 미확인 | **HOLD (코드 반영 완료, DB·실행 증빙 대기)** |
 
 ---
 
