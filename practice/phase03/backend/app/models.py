@@ -1,5 +1,5 @@
 
-"""실제 public.members 테이블 매핑."""
+"""기존 public.members 및 MATCHA HOUSE 전용 스키마 모델 매핑."""
 
 from datetime import datetime
 
@@ -56,7 +56,7 @@ class Member(Base):
 
 # ========================================
 # Chapter 09 — MATCHA HOUSE 상품/주문 모델
-# 기존 public.members 매핑은 변경하지 않음.
+# 기존 public.members 매핑은 유지하고, 매장 테이블은 matcha_store로 분리.
 #
 # 주의: 이 클래스들은 DB 테이블을 생성/삭제하지 않는다.
 # 실제 DB 스키마와 타입/제약을 STEP 07에서 별도 확인한다.
@@ -68,7 +68,7 @@ class Product(Base):
     __table_args__ = (
         CheckConstraint("price >= 0", name="ck_products_price_nonnegative"),
         CheckConstraint("stock >= 0", name="ck_products_stock_nonnegative"),
-        {"schema": "public"},
+        {"schema": "matcha_store"},
     )
 
     id: Mapped[int] = mapped_column(
@@ -86,7 +86,7 @@ class Order(Base):
         CheckConstraint(
             "total_price >= 0", name="ck_orders_total_price_nonnegative"
         ),
-        {"schema": "public"},
+        {"schema": "matcha_store"},
     )
 
     id: Mapped[int] = mapped_column(
@@ -106,7 +106,7 @@ class OrderItem(Base):
     __table_args__ = (
         CheckConstraint("quantity >= 1", name="ck_order_items_quantity_positive"),
         CheckConstraint("price >= 0", name="ck_order_items_price_nonnegative"),
-        {"schema": "public"},
+        {"schema": "matcha_store"},
     )
 
     id: Mapped[int] = mapped_column(
@@ -114,12 +114,12 @@ class OrderItem(Base):
     )
     order_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("public.orders.id"),
+        ForeignKey("matcha_store.orders.id"),
         nullable=False,
     )
     product_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("public.products.id"),
+        ForeignKey("matcha_store.products.id"),
         nullable=False,
     )
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
