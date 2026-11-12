@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태:** **STEP 01 IN PROGRESS / 사용자 흐름 개념 설명 제공, 이해 확인 대기(HOLD). 구현·테스트·DB 생성은 아직 하지 않음.**  
+> **현재 상태:** **STEP 01 PASS (사용자 흐름 학습), STEP 02 PASS (PRD·MVP·상품 테마 확정). STEP 03~30 미진행. 구현·테스트·DB 생성은 아직 하지 않음.**  
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 이 문서는 강의안의 **학습용 요약·재개 체크리스트**다. 강의안의 모든 예시 코드나 설명을 복제한 원문은 아니다. 강의 원문의 세부 주의사항과 예시는 사용자가 제공한 자료를 함께 참고한다.
@@ -28,7 +28,7 @@
 1. 현재 Git 브랜치와 `git status --short`를 확인한다. 과거 Phase 02에 **미커밋 변경 및 충돌 해결 이력**이 있었으므로 `git reset --hard`·`git clean -fd`를 사용하지 않는다.
 2. 기존 FastAPI의 `app.main:app`, SQLAlchemy `get_db`, PostgreSQL 연결 방식과 Next.js `package.json`·`app`·`lib`의 **실제 파일**을 먼저 읽는다.
 3. 기존 앱을 유지하면서 상품 실습을 둘 **안전한 별도 경로**를 결정한다. 강의안 예시는 Next.js `/store` 라우트나 별도 `chapter09` 구조를 허용하지만, **아직 구현 위치는 확정하지 않았다**.
-4. **상품 테마는 아직 선택하지 않았다.** 예: 카페, 간식, 여행 굿즈, 반려동물, 게임 굿즈. 먼저 사용자가 선택하거나 추후 원하는 테마를 확인한다.
+4. **상품 테마는 MATCHA HOUSE (말차 전문 팝업 카페)로 확정했다.** 디자인은 말차 그린 + 크림 화이트의 일본식 미니멀 카페 분위기. 상세 상품 및 가격은 아래 §6 참조.
 5. 기존 DB를 초기화하거나 `drop_all` 하지 않는다. 학습용 DB/스키마와 권한을 확인한 후 필요한 테이블만 안전하게 준비한다.
 
 ---
@@ -83,6 +83,19 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 
 **범위 제외:** 로그인/JWT, 실제 결제(PG), 배송, 관리자 페이지, Redux/Zustand, WebSocket, 운영 배포, 과도한 최적화. `GET /orders`는 시간이 남을 때만 선택 Challenge.
 
+### STEP 02 — 확정된 MVP/PRD (2026-11-12)
+
+- **매장명/테마:** MATCHA HOUSE — 말차 전문 카페.
+- **화면 방향:** 말차 그린 + 크림 화이트, 일본식 미니멀 디자인. 과도한 부가 기능은 추가하지 않는다.
+- **상품:** 음료 및 디저트 7종; 상품명·가격·카테고리·재고 표시. 말차 아이스크림은 초기 재고 0개로 품절 UI를 검증한다.
+- **장바구니:** React State에서 담기·제거·수량 증감, 상품별 재고 상한, 총수량 Badge 및 합계 표시. DB에 장바구니 테이블은 만들지 않는다.
+- **주문:** 상품 ID와 수량만 POST, 서버가 DB 가격/재고 재확인, 단일 트랜잭션으로 주문·상세 저장과 재고 차감. 성공 201, 상품 없음 404, 재고 부족 409, 잘못된 요청 422.
+- **필수 API/테이블:** `GET /products`, `POST /orders` / `products`, `orders`, `order_items`.
+- **검증:** Swagger, SQL SELECT, pytest, Playwright. 기존 회원관리와 Phase 02 작업물 보존.
+- **범위:** 위 항목이 최소기능제품(MVP)의 전체 범위이며 추가 결제/회원/배송 기능은 하지 않는다.
+
+**상태: STEP 02 기획·범위 확정 PASS.** 실제 Seed 데이터 입력·API 구현·DB 검증은 아직 하지 않았다.
+
 ---
 
 ## 4. 고정 데이터 계약
@@ -128,10 +141,10 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 [
   {
     "id": 1,
-    "name": "초코 쿠키",
-    "price": 3000,
-    "category": "간식",
-    "stock": 15
+    "name": "아이스 말차 라떼",
+    "price": 5500,
+    "category": "음료",
+    "stock": 20
   }
 ]
 ```
@@ -151,7 +164,7 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 ```json
 {
   "id": 10,
-  "total_price": 6000,
+  "total_price": 11000,
   "status": "created"
 }
 ```
@@ -181,12 +194,12 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 
 ## 5. 30개 STEP 진도표 (Sync Board)
 
-**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01은 개념 설명을 제공했으나 사용자 이해 확인 전이므로 HOLD, STEP 02~30은 미진행이다.
+**원칙:** 각 STEP에서 개념 이해 → 필요한 코드 작성 → 실제 실행 → Evidence → PASS 확인 후 다음 단계. STEP 01·02는 개념 학습 및 기획 확정으로 PASS이며 구현·실행은 요구되지 않았다. STEP 03~30은 미진행이다.
 
 | STEP | 실습 목표 | 필수 확인 / Evidence | 상태 |
 | --- | --- | --- | --- |
-| 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | **HOLD** (설명 제공, 이해 확인 대기) |
-| 02 | PRD 및 MVP 범위 고정 | 필수 API 2개, DB 3개, 제외 기능 구분 | ☐ |
+| 01 | 사용자 흐름 이해 | GET → cart State → POST → DB 설명 | **PASS** (개념 설명 후 사용자 다음 단계 진행 승인) |
+| 02 | PRD 및 MVP 범위 고정 | 필수 API 2개, DB 3개, 제외 기능 구분 | **PASS** (MATCHA HOUSE 7종 및 범위 확정, 문서 기록) |
 | 03 | 데이터 흐름 이해 | Router/Service/Repository 역할 설명 | ☐ |
 | 04 | 개발환경 사전 검사 | Python·pytest·Node·npm·DB·Swagger·Playwright | ☐ |
 | 05 | products 테이블 설계 | 5개 필드, PK, 가격·재고 제약 | ☐ |
@@ -207,7 +220,7 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 | 20 | TypeScript cart State | `CartItem = Product & {quantity:number}` | ☐ |
 | 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | ☐ |
 | 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | ☐ |
-| 23 | Derived State 합계 | `reduce`, 3000×2 + 2500×1 = 8500원 / 3개 | ☐ |
+| 23 | Derived State 합계 | `reduce`, 5500×2 + 3000×1 = 14000원 / 3개 | ☐ |
 | 24 | useEffect 이해 | GET은 초기 로드, POST는 버튼 클릭 | ☐ |
 | 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | ☐ |
 | 26 | Loading/Error/Empty/재시도 | 실패 후 API 복구, 재조회 확인 | ☐ |
@@ -226,20 +239,23 @@ Frontend E2E: Playwright (브라우저 + 격리된 테스트 DB)
 
 ---
 
-## 6. Seed 상품 예시 (테마 확정 전 예시일 뿐)
+## 6. MATCHA HOUSE 상품 Seed 계획 (STEP 02 확정, 미입력)
 
-강의안의 기본 예시 6개. 테마 선택 시 **이 표를 사용자 취향에 맞춰 바꿔도 되지만 필드·검증 규칙은 유지한다.**
+**2026-11-12 사용자 확정:** 말차 전문 팝업 카페 `MATCHA HOUSE`. 상품은 아래 7종으로 구성한다. 가격은 원 단위 정수이며 카테고리는 `음료`·`디저트` 두 종류다.
 
-| 상품 | 가격(원) | 카테고리 | 재고 |
+| 상품 | 가격(원) | 카테고리 | 초기 재고 |
 | --- | ---: | --- | ---: |
-| 초코 쿠키 | 3,000 | 간식 | 15 |
-| 아메리카노 | 2,500 | 음료 | 20 |
-| 딸기 케이크 | 5,500 | 디저트 | 8 |
-| 감자칩 | 2,000 | 간식 | 12 |
-| 탄산수 | 1,500 | 음료 | 25 |
-| 샌드위치 | 4,500 | 식사 | 10 |
+| 아이스 말차 라떼 | 5,500 | 음료 | 20 |
+| 말차 크림 라떼 | 6,500 | 음료 | 15 |
+| 말차 아포가토 | 6,000 | 음료 | 12 |
+| 말차 티라미수 | 7,000 | 디저트 | 8 |
+| 말차 휘낭시에 | 3,000 | 디저트 | 20 |
+| 말차 쿠키 | 2,500 | 디저트 | 25 |
+| 말차 아이스크림 | 4,500 | 디저트 | 0 |
 
-**Seed는 다시 실행해도 기존 상품이 중복되지 않도록** 기존 데이터와 식별 기준을 확인한다. Seed를 다시 넣기 위해 DB를 전부 삭제하지 않는다.
+- 마지막 상품은 **초기 재고 0**으로 품절 상태/담기 버튼 비활성화 기능을 검증한다.
+- **이 표는 계획 데이터다.** DB 테이블 생성 및 Seed INSERT/SELECT는 STEP 07~08에서 진행한다.
+- Seed는 반복 실행해도 상품이 중복되지 않도록 설계한다. Seed를 다시 넣기 위해 기존 DB를 전부 삭제하지 않는다.
 
 ---
 
@@ -342,20 +358,22 @@ FROM products ORDER BY id;
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01 개념 설명 제공, 사용자 이해 확인 대기(HOLD)**이며, STEP 02~30은 미진행이다. 구현·실행·테스트는 전부 미실행이다.  
+> 현재 진도는 **STEP 01 개념 학습 PASS, STEP 02 기획·MVP 범위 확정 PASS**이며, STEP 03~30은 미진행이다. 구현·실행·테스트는 전부 미실행이다.  
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
-> 상품 테마/실습용 DB를 확정한 후 STEP 01부터 진행하고, 한 단계씩 **코드 → 실행 → Swagger/Network/DB/pytest/Playwright Evidence → PASS** 순서를 지켜라.  
+> 상품 테마는 MATCHA HOUSE로 확정했고, 실제 DB 연결/격리 여부는 STEP 04 이후 확인한다. 다음은 STEP 03 Router/Service/Repository 계층 학습이다. 구현 단계에서는 **코드 → 실행 → Swagger/Network/DB/pytest/Playwright Evidence → PASS** 순서를 지켜라.  
 > 사용자에게 긴 대화 내용을 다시 요구하지 말고 이 문서의 데이터 계약을 우선하되, 강의안과 실제 코드에 차이가 있으면 그 차이를 명시하고 검증하라.  
 > 이미 구현하지 않은 기능이나 실행하지 않은 테스트를 완료로 표시하지 마라.
 
 ### 즉시 시작할 다음 행동
 
-- [ ] STEP 01: 사용자 이해 확인 후 PASS 여부 기록 (현재 HOLD)
-- [ ] STEP 02~03: PRD·MVP 및 계층 구분 요약
+- [x] STEP 01: 상품 조회 → 장바구니 → 주문 → DB 사용자 흐름 학습
+- [x] STEP 02: MATCHA HOUSE 테마 및 7종 상품·필수 API 2개·DB 3개·제외 기능 확정
+- [ ] STEP 03: Router/Service/Repository 계층 역할 설명
 - [ ] STEP 04: 현재 로컬 Git 상태와 Python·Node·DB·Swagger·pytest·Playwright 환경 **실측**
-- [ ] 상품 테마 결정 및 실제 구현 폴더/라우트 검토
+- [x] 상품 테마 결정: MATCHA HOUSE
+- [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
 - [ ] STEP 05 이후에는 Gate마다 사용자에게 실제 검증 결과를 설명
 
@@ -364,7 +382,8 @@ FROM products ORDER BY id;
 | 일자 | 진행 내용 | 검증 상태 |
 | --- | --- | --- |
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
-| 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 서버 검증 → PostgreSQL 단일 트랜잭션 흐름 안내. 사용자 이해 확인 전; 코드/DB/테스트 변경 없음 | **학습 이해 확인 대기(HOLD)** |
+| 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
+| 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
 
 ---
 
