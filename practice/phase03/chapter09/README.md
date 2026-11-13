@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태 (2026-11-13):** STEP 01~03, 05~19 PASS(커밋 검증 기록); STEP 20~23 **로컬 구현 PASS(사용자 동작 확인·테스트 성공 보고, 코드 GitHub 미동기화)**. STEP 04 전체 환경 점검 HOLD. **다음은 STEP 24 `useEffect` 이해**. 로컬 변경을 먼저 보존·확인하고 GitHub 코드와 혼동하지 말 것.
+> **현재 상태 (2026-11-13):** STEP 01~03, 05~19 PASS(커밋 검증 기록); STEP 20~23 **로컬 구현 PASS(사용자 동작 확인·테스트 성공 보고, 코드 GitHub 미동기화)**. STEP 04 전체 환경 점검 HOLD. **STEP 24~25 사용자 검증 PASS; 다음 STEP 26 오류·빈 목록·재시도**. 로컬 변경을 먼저 보존·확인하고 GitHub 코드와 혼동하지 말 것.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -299,8 +299,8 @@ CREATE TABLE public.order_items (
 | 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | **로컬 PASS / GitHub 코드 미동기화** (`onAdd`, 같은 상품 수량 누적, 품절/재고 제한; 사용자 Playwright 성공 보고) |
 | 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | **로컬 PASS / GitHub 코드 미동기화** (사용자 브라우저에서 +/−·제거 정상 동작 확인; 테스트 출력 전문 미보관) |
 | 23 | Derived State 합계 | `reduce`, 5500×2 + 3000×1 = 14000원 / 3개 | **로컬 PASS / GitHub 코드 미동기화** (`cartTotal = cart.reduce(...)`, 사용자 이상 없음 보고; 테스트 출력 전문 미보관) |
-| 24 | useEffect 이해 | GET은 초기 로드, POST는 버튼 클릭 | ☐ |
-| 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | **부분 확인** (API 200 및 7개 카드 확인, Playwright와 Network 패널은 미검증) |
+| 24 | useEffect 이해 | GET은 초기 로드, POST는 버튼 클릭 | **PASS (사용자 Network 스크린샷)**: GET 1건 canceled + GET 1건 200 (개발 모드/AbortController 정상), +/− 이후 추가 요청 없음 |
+| 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | **사용자 보고 PASS (2026-11-13)**: DBeaver 7건, Network GET 200, DB/API 일치 및 기존 실제 API Playwright 스모크 재확인했다고 보고; 테스트 원문 미보관 |
 | 26 | Loading/Error/Empty/재시도 | 실패 후 API 복구, 재조회 확인 | **부분 구현** (상태·재시도 UI 구현, 장애·빈 목록·복구는 미검증) |
 | 27 | POST /orders 구현 | Swagger 201, DB 가격·재고, 원자적 주문 저장 | ☐ |
 | 28 | 주문 pytest·rollback | 201/404/409/422, 재고, 실패 시 전부 rollback | ☐ |
@@ -625,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~19 GitHub 반영 PASS; STEP 20~23 로컬 PASS(사용자 보고, 코드 GitHub 미동기화); STEP 04 HOLD**다. 다음은 **STEP 24 `useEffect` 동작 이해**다. STEP 25~26의 별도 전체 검증과 주문 기능도 남아 있다.
+> 현재 진도는 **STEP 01~03, 05~19 GitHub 반영 PASS; STEP 20~23 로컬 PASS(사용자 보고, 코드 GitHub 미동기화); STEP 24~25 사용자 검증 PASS; STEP 04 HOLD**다. 다음은 **STEP 26 Loading/Error/Empty/재시도 테스트**다. 주문 기능(STEP 27~30)은 미진행이다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -650,7 +650,9 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 15: Next.js 실행, 브라우저 및 Console 확인
 - [x] STEP 16~19: ProductCard 분리, Props 예시 및 실제 API 목록 Playwright 검증
 - [x] STEP 20~23: 로컬 React 장바구니 State·담기/Badge·수량 +/−·합계 구현 및 사용자 동작 확인 (**GitHub 코드 반영은 미완료**)
-- [ ] STEP 24: `useEffect`는 초기/재조회 GET에 사용, 주문 POST는 버튼 클릭으로만 호출한다는 차이 확인
+- [x] STEP 24: 사용자 Network 스크린샷에서 GET /products 200 및 개발 모드 요청 취소 확인, 장바구니 +/−는 React State만 변경
+- [x] STEP 25: 사용자가 DBeaver 상품 7건·Network GET 200·실제 API 스모크 검증이 모두 정상이라고 보고 (최종 테스트 로그 원문은 미보관)
+- [ ] STEP 26: Playwright 오류/빈 목록/재시도/로딩 화면 검증
 - [ ] STEP 20~23 로컬 소스와 테스트를 기존 미커밋 파일 보호하며 선별 커밋·푸시 (`git status --short` 먼저 확인)
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
@@ -789,3 +791,9 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 1. `git status --short`, `git diff -- app/store/store-front.tsx` 등의 읽기 전용 확인으로 사용자 변경사항 파악. 경로는 프론트엔드 기준.
 2. 특히 Phase 02 미커밋 작업 및 기존 회원 API·`/members`·`/diagnostics` 보호. `git reset --hard`, `git clean -fd`, `git add -A` 금지.
 3. STEP 20~23 관련 **확인된 파일만 선별 스테이징**, TypeScript·ESLint·Playwright 테스트 확인 후 커밋·푸시. GitHub README 기록은 이미 선반영했으므로 불필요한 덮어쓰기 금지.
+
+## STEP 24~25 로컬 검증 기록 — 2026-11-13
+
+- **STEP 24 PASS:** 사용자가 브라우저 Network 화면을 제공. `GET /products` 요청 2개 중 앞선 요청은 `canceled`, 다음 요청은 HTTP `200`. 현재 `useEffect`는 AbortController 정리를 수행하며, Next.js 개발 모드 Strict Mode에서는 이 패턴이 나타날 수 있음. `+`/`−` 클릭 시 상품 GET/주문 POST가 추가되지 않고 React State·화면 수량·총액만 변경되는 점을 사용자와 함께 확인. 스크린샷상 라떼 2개 총 11,000원.
+- **STEP 25 PASS(사용자 보고):** 사용자는 DBeaver `matcha_store.products` SELECT 7행, Network `GET /products` 200 및 응답/화면 데이터 일치, Playwright 실제 API 스모크 검사 지시 후 `다 잘나왔어`라고 보고. 검증 결과 원문은 보관하지 않았으므로 Playwright 실행 수치는 단정하지 않는다.
+- **다음:** STEP 26은 프로덕션 PostgreSQL을 건드리거나 서버를 실제로 중지하지 않고 Playwright `page.route("**/products", ...)`로 GET만 모킹하여 로딩/HTTP 오류·빈 배열/재시도 성공을 검증한다. 현재 로컬 코드 변경사항은 GitHub와 미동기화 상태이므로 기존 로컬 파일을 보존할 것.
