@@ -3,7 +3,7 @@
 
 > **기록일:** 2026-11-12  
 > **원본 강의:** 아토믹데브, 「[Phase 03 실습 집중 8강 · 확장] Chapter 09 — 4시간 1-Day 종합 프로젝트: React Mini Pop-up Store」 (사용자가 제공한 강의안, 총 30개 Sync STEP)  
-> **현재 상태 (2026-11-12):** STEP 01~03, 05~19 PASS (STEP 14는 사용자 테스트 결과). STEP 04 전체 점검 HOLD. 다음은 Part 5 STEP 20 장바구니 State이며 아직 구현하지 않았다.
+> **현재 상태 (2026-11-13):** STEP 01~03, 05~19 PASS(커밋 검증 기록); STEP 20~23 **로컬 구현 PASS(사용자 동작 확인·테스트 성공 보고, 코드 GitHub 미동기화)**. STEP 04 전체 환경 점검 HOLD. **다음은 STEP 24 `useEffect` 이해**. 로컬 변경을 먼저 보존·확인하고 GitHub 코드와 혼동하지 말 것.
 > **목적:** 나중에 이 파일만 읽어도 강의의 목표, API·DB 계약, STEP별 순서, 검증 기준, 다음 할 일을 복원할 수 있게 기록한다.
 
 **현재 DB 구조:** 회원은 `public.members`, 매장은 `matcha_store.products` / `matcha_store.orders` / `matcha_store.order_items`에 있다. 아래 과거 STEP 05~08의 `public` DDL과 결과는 당시 이력이며 현재 실행용 SQL은 8절을 사용한다.
@@ -295,10 +295,10 @@ CREATE TABLE public.order_items (
 | 17 | 카드 한 개 표시 | 브라우저에 가상 상품 1개 | **PASS** (테스트 응답 1개, 이름·가격·분류·재고 확인) |
 | 18 | 같은 카드에 서로 다른 Props | 서로 다른 상품 2개 표시 | **PASS** (테스트 응답 2개, 음료·디저트 및 품절 확인) |
 | 19 | map/key 상품 리스트 | 카드 6개 이상, key 경고 없음, Playwright Smoke ① | **PASS** (실제 API 7개·품절·Console 검사, Playwright 통과) |
-| 20 | TypeScript cart State | `CartItem = Product & {quantity:number}` | ☐ |
-| 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | ☐ |
-| 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | ☐ |
-| 23 | Derived State 합계 | `reduce`, 5500×2 + 3000×1 = 14000원 / 3개 | ☐ |
+| 20 | TypeScript cart State | `CartItem = Product & {quantity:number}` | **로컬 PASS / GitHub 코드 미동기화** (사용자 `types/cart.ts`, `useState<CartItem[]>([])` 구현) |
+| 21 | 담기 Event 및 Badge | 담기 수량 증가, 중복 행 없음, Smoke ② | **로컬 PASS / GitHub 코드 미동기화** (`onAdd`, 같은 상품 수량 누적, 품절/재고 제한; 사용자 Playwright 성공 보고) |
+| 22 | 장바구니 +/− | 재고 상한, 1→0이면 제거 | **로컬 PASS / GitHub 코드 미동기화** (사용자 브라우저에서 +/−·제거 정상 동작 확인; 테스트 출력 전문 미보관) |
+| 23 | Derived State 합계 | `reduce`, 5500×2 + 3000×1 = 14000원 / 3개 | **로컬 PASS / GitHub 코드 미동기화** (`cartTotal = cart.reduce(...)`, 사용자 이상 없음 보고; 테스트 출력 전문 미보관) |
 | 24 | useEffect 이해 | GET은 초기 로드, POST는 버튼 클릭 | ☐ |
 | 25 | 실제 GET /products 연동 | Network 200, DB와 화면 일치, Smoke ③ | **부분 확인** (API 200 및 7개 카드 확인, Playwright와 Network 패널은 미검증) |
 | 26 | Loading/Error/Empty/재시도 | 실패 후 API 복구, 재조회 확인 | **부분 구현** (상태·재시도 UI 구현, 장애·빈 목록·복구는 미검증) |
@@ -625,7 +625,7 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 ## 9. 다음에 다시 시작할 때의 작업 지침 (AI/Claude/Codex 인계 겸용)
 
 > 우리는 `cyw0927/fullstack-web-course`의 **Phase 03 확장 Chapter 09: React Mini Pop-up Store**를 공부한다.  
-> 현재 진도는 **STEP 01~03, 05~19 PASS; STEP 04 HOLD**다. 다음은 **Part 5 STEP 20 장바구니 State**이며 아직 구현하지 않았다. STEP 25~26의 별도 전체 검증과 주문 기능도 남아 있다.
+> 현재 진도는 **STEP 01~03, 05~19 GitHub 반영 PASS; STEP 20~23 로컬 PASS(사용자 보고, 코드 GitHub 미동기화); STEP 04 HOLD**다. 다음은 **STEP 24 `useEffect` 동작 이해**다. STEP 25~26의 별도 전체 검증과 주문 기능도 남아 있다.
 > 이 `practice/phase03/chapter09/README.md`를 먼저 읽고, 기존 Phase 03 회원관리 코드·설정·Git 상태를 확인하라.  
 > 로컬 저장소는 `C:\dev\fullstack-web-course`이고, Backend `practice/phase03/backend`, Frontend `practice/phase03/member-next-app`가 있다.  
 > 회원관리(1~7강) 구현을 보존하고 `/members`·`/diagnostics`와 충돌하지 않는 별도 상품 실습 경로를 계획하라. 다른 미커밋 Phase 02 작업도 건드리지 마라.  
@@ -649,7 +649,9 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 - [x] STEP 13: 실제 GET /products HTTP 200·7종, Swagger 실행 및 회원 페이지 조회 확인
 - [x] STEP 15: Next.js 실행, 브라우저 및 Console 확인
 - [x] STEP 16~19: ProductCard 분리, Props 예시 및 실제 API 목록 Playwright 검증
-- [ ] STEP 20: 장바구니 State 학습 및 구현 (아직 미진행)
+- [x] STEP 20~23: 로컬 React 장바구니 State·담기/Badge·수량 +/−·합계 구현 및 사용자 동작 확인 (**GitHub 코드 반영은 미완료**)
+- [ ] STEP 24: `useEffect`는 초기/재조회 GET에 사용, 주문 POST는 버튼 클릭으로만 호출한다는 차이 확인
+- [ ] STEP 20~23 로컬 소스와 테스트를 기존 미커밋 파일 보호하며 선별 커밋·푸시 (`git status --short` 먼저 확인)
 - [x] 상품 테마 결정: MATCHA HOUSE
 - [ ] 실제 구현 폴더/라우트 검토
 - [ ] DB/Backend/Frontend에 대한 **변경 전 백업 및 영향 범위 확인**
@@ -664,6 +666,8 @@ SELECT id, order_id, product_id, quantity, price FROM matcha_store.order_items O
 | 2026-11-12 | GET /products Router·Pydantic 응답·main.py 등록 완료, pytest 격리 테스트 5개 및 테스트 의존성 문서 GitHub 반영 | **STEP 13·14 구현 완료 / HTTP·pytest 미실행(HOLD)** |
 | 2026-11-12 | STEP 14: 사용자 로컬에서 pytest 상품 API 5개 실행, 5 passed/1 warning/0.75s 결과 전달. 경고는 Starlette TestClient httpx 사용 관련 deprecation | **PASS (로컬 실행 결과)** |
 | 2026-11-12 | STEP 15: 기존 Next.js member-next-app 개발 서버/브라우저/Console 확인 시작 | **HOLD (사용자 실행 결과 대기)** |
+| 2026-11-13 | STEP 20: 사용자가 `types/cart.ts`와 `StoreFront`의 CartItem/useState를 로컬 구현. STEP 21: onAdd, Badge, 중복 방지·재고 상한 구현, 초기 Playwright 실행은 3000 포트 서버 꺼짐으로 6 failed였으나 서버 기동 후 사용자가 성공 보고 | **STEP 20~21 로컬 PASS (GitHub 소스 미반영, 최종 로그 원문 미보관)** |
+| 2026-11-13 | STEP 22: +/−, 재고 상한·1→0 제거를 사용자 브라우저에서 정상 확인. STEP 23: 상품별 소계 및 reduce 총액·수량 갱신 후 사용자가 `이상없음` 보고 | **STEP 22~23 로컬 PASS (GitHub 소스 미반영, 자동 테스트 로그 원문 미보관)** |
 | 2026-11-12 | 사용자 제공 9강 강의안 기반으로 이 학습 노트 기록 및 GitHub 반영 | **문서만 완료; 구현·실행 전부 HOLD** |
 | 2026-11-12 | STEP 01: GET → React 장바구니 State → POST → FastAPI 검증 → PostgreSQL 단일 트랜잭션 흐름 학습 후 사용자 다음 단계 진행 의사 확인 | **학습 PASS (코드/실행 없음)** |
 | 2026-11-12 | STEP 02: MATCHA HOUSE 말차 전문 카페, 제품 7종(품절 1종), 필수 UI/장바구니/주문·API 2개·DB 3개·제외 범위와 테스트 기준 확정 | **기획 PASS (Seed/구현/테스트 없음)** |
@@ -764,3 +768,24 @@ Set-Location C:\dev\fullstack-web-course\practice\phase03\backend
 - `tests/store-smoke.spec.ts`: 위 3개 및 기존 `/members`, `/diagnostics` 읽기 전용 회귀 확인을 실행해 **4 passed**. 기존 서버 사용, 회원 데이터 쓰기/삭제 없음.
 - `npx tsc --noEmit`, `npm run lint`, `npm run build` 통과. 테스트 실행 전 `localhost:3000` Next.js와 `127.0.0.1:8000` Backend를 실행해야 한다. 실행 명령: `npx playwright test tests/store-smoke.spec.ts --workers=1`.
 - 다음: **Part 5 STEP 20 장바구니 State**. 현재 `StoreFront`는 `onAdd`를 전달하지 않아 담기 버튼이 비활성화되며, 주문/재고 변경 기능은 구현하지 않았다.
+
+---
+
+## STEP 20~23 로컬 작업 인계 — 2026-11-13 (GitHub 코드 반영 전)
+
+**이 절은 2026-11-13 사용자 로컬 실행·대화 기반 최신 상태 기록이다.** 이 README만 GitHub에 먼저 갱신되었고, 다음 로컬 코드 파일은 아직 해당 GitHub 커밋에서 확인된 것이 아니다. **GitHub의 `store-front.tsx`는 이전 STEP 19 기준일 수 있다.** 다음 작업자는 로컬 변경을 우선 읽고 덮어쓰지 말 것.
+
+- 로컬 루트: `C:\dev\fullstack-web-course`; 프론트엔드: `practice/phase03/member-next-app`.
+- 로컬 신규 타입: `types/cart.ts` — `import type { Product } from "./products"; export type CartItem = Product & { quantity: number };` (실제 현재 파일 존재 여부는 다음 작업 시 확인).
+- 로컬 변경: `app/store/store-front.tsx` — `cart`/ `setCart` (React State), `handleAdd` (같은 상품 중복행 방지 및 수량 누적), `onAdd={handleAdd}` (기존 ProductCard 연결), 수량 Badge, `handleIncrease`/ `handleDecrease` (+/−, 재고 상한, 1→0 시 행 제거), `cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)` 및 상품별 소계·합계 UI.
+- 로컬 Playwright 테스트: `tests/store-smoke.spec.ts`에서 기존 STEP 17~19 및 회원/진단 회귀 테스트 유지하면서 STEP 21 담기/Badge·재고 상한 검증 2개 추가. `tests/store-cart-step22.spec.ts` (2개), `tests/store-cart-step23.spec.ts` (2개) 작업 안내·코드 전달됨. 실제 로컬 파일 생성/실행 여부는 다음 작업 때 직접 확인할 것.
+- 실행 이력: 처음 `npx playwright test tests/store-smoke.spec.ts --workers=1`에서 **6 failed**. 원인은 `http://localhost:3000` 프론트엔드 미기동으로 인한 `ERR_CONNECTION_REFUSED`. Next.js (3000) / FastAPI (8000) 서버 기동 후 사용자가 **성공** 보고. 이후 STEP 22 수동 버튼 조작 정상, STEP 23 결과 **이상 없음** 보고. 자동 테스트 8개/10개의 최종 로그 전문은 이 대화에 없으므로 해당 수치를 확정 증빙으로 기록하지 않는다.
+- 로컬 TEST 권장: 두 서버를 켠 상태에서 `npx tsc --noEmit`, `npm run lint`, `npx playwright test tests/store-smoke.spec.ts tests/store-cart-step22.spec.ts tests/store-cart-step23.spec.ts --workers=1`로 재검증. 테스트는 GET만 호출하거나 Playwright에서 GET을 모킹하므로 주문 DB를 쓰지 않는다.
+- 기능 범위: 장바구니는 React 메모리 State에만 있고 새로고침 시 초기화되며 **PostgreSQL 주문/재고는 변하지 않는다**. 실제 주문 API `POST /orders`는 STEP 27에서 구현할 예정.
+- 다음 진도: **STEP 24 — `useEffect`가 처음 로드/재조회 `GET /products`에 사용되는 이유, 실제 `POST /orders`는 사용자 버튼 클릭 이벤트에서만 호출해야 하는 이유를 학습**. STEP 25~26의 API/로딩·오류 복구 테스트 및 27 이후 주문 로직은 진행하지 않았음.
+
+### 로컬 코드 GitHub 업로드 전 안전 절차
+
+1. `git status --short`, `git diff -- app/store/store-front.tsx` 등의 읽기 전용 확인으로 사용자 변경사항 파악. 경로는 프론트엔드 기준.
+2. 특히 Phase 02 미커밋 작업 및 기존 회원 API·`/members`·`/diagnostics` 보호. `git reset --hard`, `git clean -fd`, `git add -A` 금지.
+3. STEP 20~23 관련 **확인된 파일만 선별 스테이징**, TypeScript·ESLint·Playwright 테스트 확인 후 커밋·푸시. GitHub README 기록은 이미 선반영했으므로 불필요한 덮어쓰기 금지.
